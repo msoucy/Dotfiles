@@ -1,0 +1,13 @@
+[ui]
+username = Matt Soucy <msoucy@csh.rit.edu>
+verbose = True
+[web]
+#cacerts = /etc/ssl/certs/ca-certificates.crt
+cacerts = /etc/pki/tls/certs/ca-bundle.crt
+[extensions]
+hgext.convert=
+color=
+hgext.hgshelve=~/.hgext/hgshelve.py
+eol=
+hgk=
+hggit=

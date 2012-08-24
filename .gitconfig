@@ -1,0 +1,7 @@
+[user]
+	name = Matt Soucy
+	email = msoucy@csh.rit.edu
+[alias]
+	tree = log --graph --decorate --pretty=short --abbrev-commit
+[color]
+	ui = true
