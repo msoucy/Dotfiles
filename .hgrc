@@ -11,3 +11,5 @@ hgext.hgshelve=~/.hgext/hgshelve.py
 eol=
 hgk=
 hggit=
+graphlog=
+mq=

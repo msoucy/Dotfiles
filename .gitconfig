@@ -3,5 +3,37 @@
 	email = msoucy@csh.rit.edu
 [alias]
 	tree = log --graph --decorate --pretty=short --abbrev-commit
+	co = checkout
+	ci = commit
+	st = status -sb
+	br = branch
+	serve = daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
+	ls = log --color --graph --pretty=format:'%C(yellow)%h%Creset -%Cred%d%Creset %s %Cgreen(%cr) %C(blue)[%an]%Creset' --abbrev-commit --all
+	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]%Creset" --decorate --numstat
+	l1 = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]%Creset" --decorate --numstat -1
+	ld = log --pretty=format:'%C(yellow)%h%Creset %Cgreen%ad%Cred%d %Creset%s%Cblue [%cn]%Creset' --decorate --date=relative
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	fl = log -u
 [color]
 	ui = true
+	[color "branch"]
+		current = green
+		local = yellow
+		remote = red
+	[color "diff"]
+		meta = yellow bold
+		frag = magenta bold
+		old = red bold
+		new = green bold
+	[color "status"]
+		added = green
+		changed = yellow
+		untracked = red
+[core]
+	filemode = false
+	pager = less -r
+[mergetool "sublime"]
+	cmd = sublime -w $MERGED
+	trustExitCode = false
+[merge]
+	tool = sublime

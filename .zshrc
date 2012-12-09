@@ -3,7 +3,7 @@
 HISTFILE=~/.zhist
 HISTSIZE=1000
 SAVEHIST=1000
-setopt autocd notify sharehistory histignoredups
+setopt autocd notify sharehistory histignorealldups
 unsetopt appendhistory beep extendedglob nomatch
 bindkey -e
 # End of lines configured by zsh-newuser-install
@@ -71,9 +71,9 @@ autoload -U colors && colors
 autoload zsh/terminfo
 autoload -Uz vcs_info
 
-###############################################################################################
+################################################################################
 # Taken from Ryan's zshrc
-###############################################################################################
+################################################################################
 
 # utility functions {{{
 # this function checks if a command exists and returns either true
@@ -268,8 +268,9 @@ alias engorgio='extract'
 
 # Color some things and tweak settings
 alias ls='ls --color=auto '
-alias landslide="landslide -cr -x tables "
+alias landslide="landslide -cr -x tables,abbr "
 alias grep='egrep'
+alias make="make -s"
 
 # Reverse manpage lookup
 alias gman="man -k "
@@ -284,8 +285,44 @@ function warnmake() {
 	make clean && make | grep "warning|error"
 }
 
+################################################################################
+# PROMPT
+################################################################################
+
+# git/hg info
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' enable git svn hg
+zstyle ':vcs_info:*' branchformat '%b'
+zstyle ':vcs_info:*' formats '%s%m|%b%u%c|%0.6i'
+zstyle ':vcs_info:*' get-revision true
+#zstyle ':vcs_info:*' stagedstr '²'
+#zstyle ':vcs_info:*' unstagedstr '¹'
+zstyle ':vcs_info:*' stagedstr '[38;5;208m✔[38;5;028m'
+zstyle ':vcs_info:*' unstagedstr '[38;5;231m✗[38;5;028m'
+zstyle ':vcs_info:*' check-for-changes true
+
+precmd () {
+    vcs_info prompt
+
+    # version control info
+    if [[ "x$vcs_info_msg_0_" != "x" ]]; then
+      PR_vcs_info="${PR_HBAR}[${PR_LIGHT_GREEN}$vcs_info_msg_0_${PR_BODY_COLOR}]"
+    else
+      PR_vcs_info=""
+    fi
+
+    # Deal with virtualenv stuff
+    local venv_name="`basename \"$VIRTUAL_ENV\"`"
+    if [[ "x$venv_name" != "x" ]] ; then
+      PR_venv_name="${PR_op}%{$FG[209]%}$venv_name%{$PR_rc%}${PR_cp}"
+    else
+      PR_venv_name=""
+    fi
+}
 
 setprompt() {
+  vcs_info prompt
 	###
 	# See if we can use extended characters to look nicer.
 
@@ -294,30 +331,41 @@ setprompt() {
 	PR_SET_CHARSET="%{$terminfo[enacs]%}"
 	PR_SHIFT_IN="%{$terminfo[smacs]%}"
 	PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-	PR_HBAR=$PR_SHIFT_IN${altchar[q]:--}$PR_SHIFT_OUT
-	PR_ULCORNER=$PR_SHIFT_IN${altchar[l]:--}$PR_SHIFT_OUT
-	PR_LLCORNER=$PR_SHIFT_IN${altchar[m]:--}$PR_SHIFT_OUT
-	PR_LRCORNER=$PR_SHIFT_IN${altchar[j]:--}$PR_SHIFT_OUT
-	PR_URCORNER=$PR_SHIFT_IN${altchar[k]:--}$PR_SHIFT_OUT
+	PR_HBAR=${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}
+	PR_ULCORNER=${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}
+	PR_LLCORNER=${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}
+	PR_LRCORNER=${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}
+	PR_URCORNER=${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}
+  PR_FORKRIGHT=${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}
 	
 	autoload colors zsh/terminfo
 	if [[ "$terminfo[colors]" -ge 8 ]]; then
 		colors
 	fi
 	for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-		eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+    eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
 		eval PR_LIGHT_$color='%{$terminfo[sgr0]$fg[${(L)color}]%}'
 		(( count = $count + 1 ))
 	done
 	PR_NO_COLOR="%{$terminfo[sgr0]%}"
-	PR_BOLD="%{$terminfo[bold]%}"
-	
-	PS1="$PR_LIGHT_CYAN┌[$PR_RED%n$PR_YELLOW@%M$PR_LIGHT_CYAN]─[$PR_WHITE%*$PR_LIGHT_CYAN]────────[$PR_NO_COLOR%(?.%{$PR_LIGHT_GREEN%}^_^$PR_NO_COLOR.%{$PR_LIGHT_RED%}O_O [%?]$PR_NO_COLOR)$PR_LIGHT_CYAN]$PR_NO_COLOR
-$PR_LIGHT_CYAN├[%{$reset_color%}$PR_YELLOW%~$PR_LIGHT_CYAN]$PR_NO_COLOR
-$PR_LIGHT_CYAN└>$PR_NO_COLOR"
-	PS2='$PR_LIGHT_CYAN└>(\
-$PR_LIGHT_GREEN%_$PR_LIGHT_CYAN)\
-$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT>$PR_NO_COLOUR '
+
+  PR_BODY_COLOR=$PR_LIGHT_CYAN
+
+  PR_user_host="$PR_RED%n$PR_YELLOW@%M${PR_BODY_COLOR}"
+  PR_time="$PR_WHITE%*${PR_BODY_COLOR}"
+  PR_smiley="${PR_NO_COLOR}%(?.%{${PR_LIGHT_GREEN}%}^_^${PR_NO_COLOR}.%{$PR_LIGHT_RED%}O_O [%?]${PR_NO_COLOR})${PR_BODY_COLOR}"
+  PR_pwd="%{$reset_color%}$PR_YELLOW%~${PR_BODY_COLOR}"
+
+    #opening and closing parens
+    PR_op="%{$PR_BODY_COLOR%}─[%{$reset_color%}"
+    PR_cp="%{$PR_BODY_COLOR%}]%{$reset_color%}"
+
+	PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_time}]${PR_venv_name}${PR_vcs_info}${PR_NO_COLOR}
+${PR_BODY_COLOR}${PR_FORKRIGHT}[${PR_pwd}]${PR_NO_COLOR}
+${PR_BODY_COLOR}${PR_LLCORNER}[${PR_smiley}]>${PR_NO_COLOR} '
+	PS2='${PR_BODY_COLOR}└>(\
+${PR_LIGHT_GREEN}%_${PR_BODY_COLOR})\
+${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
 }
 
 setprompt
@@ -413,17 +461,18 @@ man() {
 			man "$@"
 }
 
+alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
+
 export LESS="-F -R"
 
 # Aliases for various computers
-alias andromeda='ssh-x mas5997@andromeda.cs.rit.edu'
-alias vermont='ssh-x mas5997@vermont.cs.rit.edu'
-alias gibson='ssh mas5997@gibson.rit.edu'
-alias rancor='ssh-x rancor.csh.rit.edu'
 alias nethack='telnet nethack.csh.rit.edu'
-alias prospit='ssh-x laserblade@prospit.csh.rit.edu'
 alias skaia='ssh-x msoucy@skaia.csh.rit.edu'
-alias glados='ssh-x mas5997@glados.cs.rit.edu'
+
+# Allow C-xC-e to edit the current command line
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
 
 case $TERM in
       linux)
