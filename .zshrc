@@ -1,75 +1,168 @@
 #!/usr/bin/sh
-# Lines configured by zsh-newuser-install
+
+################################################################################
+# Make it so that we can use $ZDOTDIR
+################################################################################
+
+[ -n "${ZDOTDIR+x}" ] || export ZDOTDIR=$HOME
+
+################################################################################
+# History settings
+################################################################################
+
 HISTFILE=~/.zhist
 HISTSIZE=1000
 SAVEHIST=1000
-setopt autocd notify sharehistory histignorealldups
-unsetopt appendhistory beep extendedglob nomatch
-bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
 
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' original true
+################################################################################
+# ZSH options
+################################################################################
+
+setopt \
+        NO_append_history\
+        auto_cd\
+        auto_list\
+        NO_beep\
+        bsd_echo\
+        NO_chase_links\
+        complete_aliases\
+        extended_glob\
+        hist_ignore_all_dups\
+        interactive_comments\
+        multios\
+        notify\
+        numeric_glob_sort\
+        NO_nomatch\
+        path_dirs\
+        prompt_subst\
+        share_history\
+        zle
+bindkey -e
+
+################################################################################
+# Autocomplete
+################################################################################
+
+# {{{ General completion technique
+
+zstyle ':completion:*' completer _complete _prefix _ignored _complete:-extended
+
+zstyle ':completion::prefix-1:*' completer _complete
+zstyle ':completion:incremental:*' completer _complete _correct
+zstyle ':completion:predict:*' completer _complete
+
+# e.g. f-1.j<TAB> would complete to foo-123.jpeg
+zstyle ':completion:*:complete-extended:*' matcher-list 'r:|[._-]=** r:|=**'
+
+# }}}
+# {{{ Completion caching
 
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
 
-zstyle ':completion:*' completer _expand _complete _correct _approximate
+# }}}
+# {{{ Expand partial paths
 
-#zstyle ':completion:*' menu select=1 eval "$(dircolors -b)"
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
-zstyle ':completion:*' menu select=1 _complete _ignored _approximate
-zstyle -e ':completion:*:approximate:*' max-errors \
-    'reply=( $(( ($#PREFIX+$#SUFFIX)/2 )) numeric )'
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+# e.g. /u/s/l/D/fs<TAB> would complete to
+# /usr/src/linux/Documentation/fs
+zstyle ':completion:*' expand 'yes'
+zstyle ':completion:*' squeeze-slashes 'yes'
 
-zstyle ':completion:*' completions 1
-zstyle ':completion:*' glob 1
-zstyle ':completion:*' substitute 0
+# }}}
+# {{{ Include non-hidden dirs in globbed file completions for certain commands
 
-zstyle ':completion:*:correct:::' max-errors 1
+#zstyle ':completion::complete:*' \
+# tag-order 'globbed-files directories' all-files
+#zstyle ':completion::complete:*:tar:directories' file-patterns '*~.*(-/)'
 
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-zstyle '*' hosts $(awk '/^[^#]/ {print $2 $3" "$4" "$5}' /etc/hosts | grep -v ip6-)
+# }}}
+# {{{ Don't complete backup files (e.g. 'bin/foo~') as executables
+
+zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~'
+
+# }}}
+# {{{ Don't complete uninteresting users
+
+zstyle ':completion:*:*:*:users' ignored-patterns \
+        adm amanda apache avahi beaglidx bin cacti canna clamav daemon \
+        dbus distcache dovecot fax ftp games gdm gkrellmd gopher \
+        hacluster haldaemon halt hsqldb ident junkbust ldap lp mail \
+        mailman mailnull mldonkey mysql nagios \
+        named netdump news nfsnobody nobody nscd ntp nut nx openvpn \
+        operator pcap postfix postgres privoxy pulse pvm quagga radvd \
+        rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs \
+        \
+        bin daemon adm lp sync shutdown halt mail uucp operator games gopher \
+        ftp nobody oprofile dbus polkitd abrt rpc hsqldb saslauth colord rtkit \
+        openvpn usbmuxd apache tss avahi-autoipd gdm mailnull smmsp \
+        nm-openconnect backuppc rpcuser nfsnobody sshd chrony tcpdump pulse \
+        qemu radvd avahi gitosis
+
+# ... unless we really want to.
+zstyle '*' single-ignored show
+
+# }}}
+# {{{ Output formatting
+
+# Separate matches into groups
+zstyle ':completion:*:matches' group 'yes'
+
+# Describe each match group.
+zstyle ':completion:*:descriptions' format "%B---- %d%b"
+
+# Messages/warnings format
+zstyle ':completion:*:messages' format '%B%U---- %d%u%b'
+zstyle ':completion:*:warnings' format '%B%U---- no match for: %d%u%b'
+
+# Describe options in full
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+
+# }}}
+# {{{ Array/association subscripts
+
+# When completing inside array or association subscripts, the array
+# elements are more useful than parameters so complete them first:
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+# }}}
+# {{{ Completion for processes
+
+zstyle ':completion:*:*:*:*:processes' menu yes select
+zstyle ':completion:*:*:*:*:processes' force-list always
+
+# }}}
 
 # SSH Completion
-zstyle ':completion:*:scp:*' tag-order \
-   files users 'hosts:-host hosts:-domain:domain hosts:-ipaddr"IP\ Address *'
-zstyle ':completion:*:scp:*' group-order \
-   files all-files users hosts-domain hosts-host hosts-ipaddr
-zstyle ':completion:*:ssh:*' tag-order \
-   users 'hosts:-host hosts:-domain:domain hosts:-ipaddr"IP\ Address *'
-zstyle ':completion:*:ssh:*' group-order \
-   hosts-domain hosts-host users hosts-ipaddr
-zstyle '*' single-ignored show 
+zstyle -e ':completion::*:hosts' hosts 'reply=($(sed -e "/^#/d" -e "s/ .*\$//" -e "s/,/ /g" /etc/ssh_known_hosts(N) ~/.ssh/known_hosts(N) 2>/dev/null | xargs) $(grep \^Host ~/.ssh/config(N) | cut -f2 -d\  2>/dev/null | xargs))'
+#zstyle -e ':completion::*:hosts' hosts 'reply=($(grep \^Host ~/.ssh/config(N) | cut -f2 -d\  2>/dev/null | xargs))'
 
+################################################################################
+# All the plugins we want
+################################################################################
+
+# Load all the plugins we want to use
 autoload -Uz compinit
 compinit
-# End of lines added by compinstall
-# Run compinstall again:
-#autoload -Uz zsh-newuser-install
-#zsh-newuser-install -f
-
-setopt promptsubst prompt_subst completealiases
 
 autoload -U colors && colors
+
 autoload zsh/terminfo
 autoload -Uz vcs_info
+
+autoload -U zmv
+
+autoload -U zsh-mime-setup
+zsh-mime-setup
+
+autoload -U edit-command-line
+
+autoload -U promptinit
+promptinit
+
+autoload -U zrecompile
+
+zmodload zsh/regex
 
 ################################################################################
 # Taken from Ryan's zshrc
@@ -123,7 +216,7 @@ check_com() {
 # Check if we can read given files and source those we can.
 xsource() {
     if (( ${#argv} < 1 )) ; then
-        printf 'usage: xsource FILE(s)...\n' >&2
+        printf 'usage: source FILE(s)...\n' >&2
         return 1
     fi
 
@@ -133,6 +226,7 @@ xsource() {
     done
     return 0
 }
+alias source=xsource
 # }}}
 
 # grep for running process, like: 'any vim'
@@ -162,9 +256,7 @@ makereadable() {
 # Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
 regcheck() {
     emulate -L zsh
-    zmodload -i zsh/pcre
-    pcre_compile $1 && \
-    pcre_match $2 && echo "regex matches" || echo "regex does not match"
+    [[ "$2" -regex-match "$1" ]] && echo "regex matches" || echo "regex does not match"
 }
 
 # List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
@@ -191,8 +283,6 @@ modified() {
 # less risky than the global aliases but powerful as well
 # just type the abbreviation key and afterwards ',.' to expand it
 declare -A abk
-setopt extendedglob
-setopt interactivecomments
 abk=(
 #   key   # value                  (#d additional doc string)
 #A# start
@@ -265,24 +355,36 @@ alias imperio='su'
 alias avada-kedavra='kill -9'
 alias stupefy='bg'
 alias engorgio='extract'
+alias please='sudo'
 
 # Color some things and tweak settings
-alias ls='ls --color=auto '
-alias landslide="landslide -cr -x tables,abbr "
+alias ls='ls --color=auto'
+alias landslide="landslide -cr -x tables,abbr"
 alias grep='egrep'
 alias make="make -s"
+alias cp="scp"
+alias mv="zmv"
 
 # Reverse manpage lookup
 alias gman="man -k "
 
 # Convert all png files in a directory into svg
 # TODO: convert this into a proper function
-alias mksvg='for a in $(find `pwd` -type f -name "*.png"); do inkscape -z -f "$a" -l "${a%.png}.svg"; done'
+mksvg() {
+  for a in $(find $(pwd) -type f -name "*.png"); do
+    inkscape -z -f "$a" -l "${a%.png}.svg";
+  done
+}
+
 function remake() {
-	make clean && make
+  make clean && make
 }
 function warnmake() {
-	make clean && make | grep "warning|error"
+  make clean && make | grep "warning|error"
+}
+
+function rot13 () {
+  tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]"
 }
 
 ################################################################################
@@ -290,16 +392,14 @@ function warnmake() {
 ################################################################################
 
 # git/hg info
-autoload -Uz vcs_info
-
 zstyle ':vcs_info:*' enable git svn hg
 zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:*' formats '%s%m|%b%u%c|%0.6i'
 zstyle ':vcs_info:*' get-revision true
 #zstyle ':vcs_info:*' stagedstr '²'
 #zstyle ':vcs_info:*' unstagedstr '¹'
-zstyle ':vcs_info:*' stagedstr '[38;5;208m✔[38;5;028m'
-zstyle ':vcs_info:*' unstagedstr '[38;5;231m✗[38;5;028m'
+zstyle ':vcs_info:*' stagedstr '%{[38;5;208m%}✔%{[38;5;028m%}'
+zstyle ':vcs_info:*' unstagedstr '%{[38;5;231m%}✗%{[38;5;028m%}'
 zstyle ':vcs_info:*' check-for-changes true
 
 precmd () {
@@ -307,7 +407,7 @@ precmd () {
 
     # version control info
     if [[ "x$vcs_info_msg_0_" != "x" ]]; then
-      PR_vcs_info="${PR_HBAR}[${PR_LIGHT_GREEN}$vcs_info_msg_0_${PR_BODY_COLOR}]"
+      PR_vcs_info="%{${PR_BODY_COLOR}%}[%{${PR_LIGHT_GREEN}%}$vcs_info_msg_0_%{${PR_BODY_COLOR}%}]"
     else
       PR_vcs_info=""
     fi
@@ -315,7 +415,7 @@ precmd () {
     # Deal with virtualenv stuff
     local venv_name="`basename \"$VIRTUAL_ENV\"`"
     if [[ "x$venv_name" != "x" ]] ; then
-      PR_venv_name="${PR_op}%{$FG[209]%}$venv_name%{$PR_rc%}${PR_cp}"
+      PR_venv_name="%{$PR_BODY_COLOR%}[%{$PR_LIGHT_GREEN%}$venv_name%{$PR_BODY_COLOR%}]%{${PR_NO_COLOR}%}"
     else
       PR_venv_name=""
     fi
@@ -323,31 +423,28 @@ precmd () {
 
 setprompt() {
   vcs_info prompt
-	###
-	# See if we can use extended characters to look nicer.
+  ###
+  # See if we can use extended characters to look nicer.
 
-	typeset -A altchar
-	set -A altchar ${(s..)terminfo[acsc]}
-	PR_SET_CHARSET="%{$terminfo[enacs]%}"
-	PR_SHIFT_IN="%{$terminfo[smacs]%}"
-	PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-	PR_HBAR=${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}
-	PR_ULCORNER=${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}
-	PR_LLCORNER=${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}
-	PR_LRCORNER=${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}
-	PR_URCORNER=${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}
+  typeset -A altchar
+  set -A altchar ${(s..)terminfo[acsc]}
+  PR_SET_CHARSET="%{$terminfo[enacs]%}"
+  PR_SHIFT_IN="%{$terminfo[smacs]%}"
+  PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
+  PR_HBAR=${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}
+  PR_ULCORNER=${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}
+  PR_LLCORNER=${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}
+  PR_LRCORNER=${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}
+  PR_URCORNER=${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}
   PR_FORKRIGHT=${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}
-	
-	autoload colors zsh/terminfo
-	if [[ "$terminfo[colors]" -ge 8 ]]; then
-		colors
-	fi
-	for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-    eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-		eval PR_LIGHT_$color='%{$terminfo[sgr0]$fg[${(L)color}]%}'
-		(( count = $count + 1 ))
-	done
-	PR_NO_COLOR="%{$terminfo[sgr0]%}"
+
+
+  for color in BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+    eval PR_$color='%{$fg_bold[${(L)color}]%}'
+    eval PR_LIGHT_$color='%{$fg_no_bold[${(L)color}]%}'
+    #(( count = $count + 1 ))
+  done
+  PR_NO_COLOR="%{$reset_color%}"
 
   PR_BODY_COLOR=$PR_LIGHT_CYAN
 
@@ -356,14 +453,10 @@ setprompt() {
   PR_smiley="${PR_NO_COLOR}%(?.%{${PR_LIGHT_GREEN}%}^_^${PR_NO_COLOR}.%{$PR_LIGHT_RED%}O_O [%?]${PR_NO_COLOR})${PR_BODY_COLOR}"
   PR_pwd="%{$reset_color%}$PR_YELLOW%~${PR_BODY_COLOR}"
 
-    #opening and closing parens
-    PR_op="%{$PR_BODY_COLOR%}─[%{$reset_color%}"
-    PR_cp="%{$PR_BODY_COLOR%}]%{$reset_color%}"
-
-	PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_time}]${PR_venv_name}${PR_vcs_info}${PR_NO_COLOR}
-${PR_BODY_COLOR}${PR_FORKRIGHT}[${PR_pwd}]${PR_NO_COLOR}
+  PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_time}]${PR_HBAR}[${PR_pwd}]${PR_NO_COLOR}
 ${PR_BODY_COLOR}${PR_LLCORNER}[${PR_smiley}]>${PR_NO_COLOR} '
-	PS2='${PR_BODY_COLOR}└>(\
+  RPS1='${PR_venv_name}${PR_vcs_info}'
+  PS2='${PR_BODY_COLOR}${PR_LLCORNER}>(\
 ${PR_LIGHT_GREEN}%_${PR_BODY_COLOR})\
 ${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
 }
@@ -373,9 +466,7 @@ setprompt
 # Always check the current working directory for executables
 export PATH=.:$PATH
 
-if which nano > /dev/null; then
-	export EDITOR=nano
-fi
+export EDITOR=vim
 
 # SSH with X forwarding
 alias ssh-x='ssh -c arcfour,blowfish-cbc -YC'
@@ -387,18 +478,18 @@ extract() {
       print -P "       Extract the file specified based on the extension"
    elif [[ -f $1 ]]; then
       case ${(L)1} in
-	  *.tar.bz2)  tar -jxvf $1;;
-	  *.tar.gz)   tar -zxvf $1;;
-	  *.bz2)      bunzip2 $1   ;;
-	  *.gz)       gunzip $1   ;;
-	  *.jar)      unzip $1       ;;
-	  *.rar)      unrar x $1   ;;
-	  *.tar)      tar -xvf $1   ;;
-	  *.tbz2)     tar -jxvf $1;;
-	  *.tgz)      tar -zxvf $1;;
-	  *.zip)      unzip $1      ;;
-	  *.Z)        uncompress $1;;
-         *)          echo "Unable to extract '$1' :: Unknown extension"
+          *.tar.bz2)  tar -jxvf $1;;
+          *.tar.gz)   tar -zxvf $1;;
+          *.bz2)      bunzip2 $1   ;;
+          *.gz)       gunzip $1   ;;
+          *.jar)      unzip $1       ;;
+          *.rar)      unrar x $1   ;;
+          *.tar)      tar -xvf $1   ;;
+          *.tbz2)     tar -jxvf $1;;
+          *.tgz)      tar -zxvf $1;;
+          *.zip)      unzip $1      ;;
+          *.Z)        uncompress $1;;
+          *)          echo "Unable to extract '$1' :: Unknown extension"
       esac
    else
       echo "File ('$1') does not exist!"
@@ -406,125 +497,142 @@ extract() {
 }
 
 ennervate(){
-	if [[ -z "$1" ]]; then
-		print -P "usage: \e[1;36mennervate\e[1;0m < process >"
-		print -P "       Bring the process with that name to the foreground"
-	else
-		fg `jobs | grep "$1" | grep -E "\[([0-9]*)\]" -o | grep -E "([0-9]*)" -o | head -1`
-	fi
+  if [[ -z "$1" ]]; then
+    print -P "usage: \e[1;36mennervate\e[1;0m < process >"
+    print -P "       Bring the process with that name to the foreground"
+  else
+    fg $(jobs | grep "$1" | grep -E "\[([0-9]*)\]" -o | grep -E "([0-9]*)" -o | head -1)
+  fi
 }
 
 build(){
-	if [[ -f Makefile ]]; then
-		make
-	else
-		ant
-	fi
+  if [[ -f Makefile ]]; then
+    make
+  else
+    ant
+  fi
 }
 
 code-pull(){
-	if [[ -d ".git" ]]; then
-		git pull
-	elif [[ -d ".svn" ]]; then
-		svn update
-	elif [[ -d ".hg" ]]; then
-		hg pull -u
-	else
-		print -P "No known repository"
-	fi
+  if [[ -d ".git" ]]; then
+    git pull
+  elif [[ -d ".svn" ]]; then
+    svn update
+  elif [[ -d ".hg" ]]; then
+    hg pull -u
+  else
+    print -P "No known repository"
+  fi
 }
 
 update-all() {
-	for i in *; do
-		echo "	Now checking: $i"
-		cd $i
-		code-pull
-		cd ..
-	done
+  for i in *; do
+    echo "  Now checking: $i"
+    cd $i
+    code-pull
+    cd ..
+  done
 }
 
 update-all-code() {
-	pushd ~/Code
-	update-all
-	popd
+  pushd ~/Code
+  update-all
+  popd
+}
+
+function mandelbrot {
+   local lines columns colour a b p q i pnew
+   ((columns=COLUMNS-1, lines=LINES-1, colour=0))
+   for ((b=-1.5; b<=1.5; b+=3.0/lines)) do
+       for ((a=-2.0; a<=1; a+=3.0/columns)) do
+           for ((p=0.0, q=0.0, i=0; p*p+q*q < 4 && i < 32; i++)) do
+               ((pnew=p*p-q*q+a, q=2*p*q+b, p=pnew))
+           done
+           ((colour=(i/4)%8))
+            echo -ne "\\e[4${colour}m "
+        done
+        echo
+    done
 }
 
 man() {
-	env \
-		LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-		LESS_TERMCAP_md=$(printf "\e[1;31m") \
-		LESS_TERMCAP_me=$(printf "\e[0m") \
-		LESS_TERMCAP_se=$(printf "\e[0m") \
-		LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-		LESS_TERMCAP_ue=$(printf "\e[0m") \
-		LESS_TERMCAP_us=$(printf "\e[1;32m") \
-			man "$@"
+  env \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+      man "$@"
 }
 
 alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
 
 export LESS="-F -R"
 
-# Aliases for various computers
+# Alias to play Bingehack as Nethack
 alias nethack='telnet nethack.csh.rit.edu'
-alias skaia='ssh-x msoucy@skaia.csh.rit.edu'
 
 # Allow C-xC-e to edit the current command line
-autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
 
-case $TERM in
-      linux)
-      bindkey "^[[2~" yank
-      bindkey "^[[3~" delete-char
-      bindkey "^[[5~" up-line-or-history
-      bindkey "^[[6~" down-line-or-history
-      bindkey "^[[1~" beginning-of-line
-      bindkey "^[[4~" end-of-line
-      bindkey "^E" expand-cmd-path ## C-e for expanding path of typed comman
-      bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
-      bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[1;5D" backward-word
-      bindkey " " magic-space ## do history expansion on space
-      ;;
-      *xterm*)
-      bindkey "^[[2~" yank
-      bindkey "^[[3~" delete-char
-      bindkey "^[[5~" up-line-or-history
-      bindkey "^[[6~" down-line-or-history
-      bindkey "^[[1~" beginning-of-line
-      bindkey "^[[4~" end-of-line
-      bindkey "^[OH" beginning-of-line
-      bindkey "^[OF" end-of-line
-      bindkey "^E" expand-cmd-path ## C-e for expanding path of typed command
-      bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
-      bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[1;5D" backward-word
-      bindkey " " magic-space ## do history expansion on space
-      ;;
-      screen)
-      bindkey "^[[2~" yank
-      bindkey "^[[3~" delete-char
-      bindkey "^[[5~" up-line-or-history
-      bindkey "^[[6~" down-line-or-history
-      bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
-      bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[1;5D" backward-word
-      bindkey "^[[1~" beginning-of-line
-      bindkey "^[[4~" end-of-line
-      ;;
-esac
+# Meta-S prepends "sudo " to the command
+insert_sudo () { zle beginning-of-line; zle -U "sudo " }
+zle -N insert-sudo insert_sudo
+bindkey "^[s" insert-sudo
 
-if [[ -f ~/.zshlocal ]]; then
-	source ~/.zshlocal
+# create a zkbd compatible hash;
+# to add other keys to this hash, see: man 5 terminfo
+typeset -A key
+
+key[Home]=${terminfo[khome]}
+key[End]=${terminfo[kend]}
+key[Insert]=${terminfo[kich1]}
+key[Delete]=${terminfo[kdch1]}
+key[Up]=${terminfo[kcuu1]}
+key[Down]=${terminfo[kcud1]}
+key[Left]=${terminfo[kcub1]}
+key[Right]=${terminfo[kcuf1]}
+key[PageUp]=${terminfo[kpp]}
+key[PageDown]=${terminfo[knp]}
+
+# setup key accordingly
+[[ -n "${key[Home]}"    ]]  && bindkey  "${key[Home]}"    beginning-of-line
+[[ -n "${key[End]}"     ]]  && bindkey  "${key[End]}"     end-of-line
+[[ -n "${key[Insert]}"  ]]  && bindkey  "${key[Insert]}"  overwrite-mode
+[[ -n "${key[Delete]}"  ]]  && bindkey  "${key[Delete]}"  delete-char
+[[ -n "${key[Up]}"      ]]  && bindkey  "${key[Up]}"      up-line-or-history
+[[ -n "${key[Down]}"    ]]  && bindkey  "${key[Down]}"    down-line-or-history
+[[ -n "${key[Left]}"    ]]  && bindkey  "${key[Left]}"    backward-char
+[[ -n "${key[Right]}"   ]]  && bindkey  "${key[Right]}"   forward-char
+
+# Word forward/back
+export WORDCHARS='*?_[]~=&;!#$%^(){}'
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+# Finally, make sure the terminal is in application mode, when zle is
+# active. Only then are the values from $terminfo valid.
+if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+    function zle-line-init () {
+        printf '%s' ${terminfo[smkx]}
+    }
+    function zle-line-finish () {
+        printf '%s' ${terminfo[rmkx]}
+    }
+    zle -N zle-line-init
+    zle -N zle-line-finish
 fi
 
-if [[ -d ~/zsh-syntax-highlighting/ ]]; then
-	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
-	source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
+bindkey " " magic-space ## do history expansion on space
 
+[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+
+[[ -f ~/.zshlocal ]] && source ~/.zshlocal
+
+if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
+  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+  source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
