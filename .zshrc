@@ -23,7 +23,7 @@ setopt \
         auto_cd\
         auto_list\
         NO_beep\
-        bsd_echo\
+        NO_bsd_echo\
         NO_chase_links\
         complete_aliases\
         extended_glob\
@@ -152,8 +152,8 @@ autoload -Uz vcs_info
 
 autoload -U zmv
 
-autoload -U zsh-mime-setup
-zsh-mime-setup
+#autoload -U zsh-mime-setup
+#zsh-mime-setup
 
 autoload -U edit-command-line
 
@@ -221,8 +221,8 @@ xsource() {
     fi
 
     while (( ${#argv} > 0 )) ; do
-        [[ -r "$1" ]] && source "$1"
-        shift
+        [[ -r "$1" ]] && builtin source "$1"
+        builtin shift
     done
     return 0
 }
@@ -349,27 +349,18 @@ fi # end of check whether we have the 'hg'-executable
 # }}}
 
 
-
-# ...geek moment when I did these, and I like them
-alias imperio='su'
-alias avada-kedavra='kill -9'
-alias stupefy='bg'
-alias engorgio='extract'
-alias please='sudo'
-
 # Color some things and tweak settings
+alias please='sudo'
 alias ls='ls --color=auto'
 alias landslide="landslide -cr -x tables,abbr"
 alias grep='egrep'
 alias make="make -s"
 alias cp="scp"
-alias mv="zmv"
-
+export LESS="-F -R"
 # Reverse manpage lookup
 alias gman="man -k "
 
 # Convert all png files in a directory into svg
-# TODO: convert this into a proper function
 mksvg() {
   for a in $(find $(pwd) -type f -name "*.png"); do
     inkscape -z -f "$a" -l "${a%.png}.svg";
@@ -384,7 +375,10 @@ function warnmake() {
 }
 
 function rot13 () {
-  tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]"
+  if (( $# == 0 ))
+  then tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]"
+  else echo $* | tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]"
+  fi
 }
 
 ################################################################################
@@ -398,8 +392,8 @@ zstyle ':vcs_info:*' formats '%s%m|%b%u%c|%0.6i'
 zstyle ':vcs_info:*' get-revision true
 #zstyle ':vcs_info:*' stagedstr '²'
 #zstyle ':vcs_info:*' unstagedstr '¹'
-zstyle ':vcs_info:*' stagedstr '%{[38;5;208m%}✔%{[38;5;028m%}'
-zstyle ':vcs_info:*' unstagedstr '%{[38;5;231m%}✗%{[38;5;028m%}'
+zstyle ':vcs_info:*' stagedstr '%{[38;5;208m%}✔%{[22;32m%}'
+zstyle ':vcs_info:*' unstagedstr '%{[38;5;231m%}✗%{[22;32m%}'
 zstyle ':vcs_info:*' check-for-changes true
 
 precmd () {
@@ -407,7 +401,7 @@ precmd () {
 
     # version control info
     if [[ "x$vcs_info_msg_0_" != "x" ]]; then
-      PR_vcs_info="%{${PR_BODY_COLOR}%}[%{${PR_LIGHT_GREEN}%}$vcs_info_msg_0_%{${PR_BODY_COLOR}%}]"
+      PR_vcs_info="${PR_BODY_COLOR}[${PR_LIGHT_GREEN}$vcs_info_msg_0_${PR_BODY_COLOR}]${PR_HBAR}${PR_NO_COLOR}"
     else
       PR_vcs_info=""
     fi
@@ -415,7 +409,7 @@ precmd () {
     # Deal with virtualenv stuff
     local venv_name="`basename \"$VIRTUAL_ENV\"`"
     if [[ "x$venv_name" != "x" ]] ; then
-      PR_venv_name="%{$PR_BODY_COLOR%}[%{$PR_LIGHT_GREEN%}$venv_name%{$PR_BODY_COLOR%}]%{${PR_NO_COLOR}%}"
+      PR_venv_name="${PR_BODY_COLOR}[${PR_LIGHT_GREEN}$venv_name${PR_BODY_COLOR}]${PR_HBAR}${PR_NO_COLOR}"
     else
       PR_venv_name=""
     fi
@@ -431,31 +425,29 @@ setprompt() {
   PR_SET_CHARSET="%{$terminfo[enacs]%}"
   PR_SHIFT_IN="%{$terminfo[smacs]%}"
   PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-  PR_HBAR=${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}
-  PR_ULCORNER=${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}
-  PR_LLCORNER=${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}
-  PR_LRCORNER=${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}
-  PR_URCORNER=${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}
-  PR_FORKRIGHT=${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}
-
+  PR_HBAR="${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}"
+  PR_ULCORNER="${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}"
+  PR_LLCORNER="${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}"
+  PR_LRCORNER="${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}"
+  PR_URCORNER="${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}"
+  PR_FORKRIGHT="${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}"
 
   for color in BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
     eval PR_$color='%{$fg_bold[${(L)color}]%}'
     eval PR_LIGHT_$color='%{$fg_no_bold[${(L)color}]%}'
-    #(( count = $count + 1 ))
   done
   PR_NO_COLOR="%{$reset_color%}"
 
   PR_BODY_COLOR=$PR_LIGHT_CYAN
 
-  PR_user_host="$PR_RED%n$PR_YELLOW@%M${PR_BODY_COLOR}"
-  PR_time="$PR_WHITE%*${PR_BODY_COLOR}"
-  PR_smiley="${PR_NO_COLOR}%(?.%{${PR_LIGHT_GREEN}%}^_^${PR_NO_COLOR}.%{$PR_LIGHT_RED%}O_O [%?]${PR_NO_COLOR})${PR_BODY_COLOR}"
-  PR_pwd="%{$reset_color%}$PR_YELLOW%~${PR_BODY_COLOR}"
+  PR_user_host="${PR_RED}%n${PR_YELLOW}@%M${PR_BODY_COLOR}"
+  PR_time="${PR_BODY_COLOR}[$PR_WHITE%*${PR_BODY_COLOR}]"
+  PR_smiley="${PR_NO_COLOR}%(?.${PR_LIGHT_GREEN}^_^${PR_NO_COLOR}.${PR_LIGHT_RED}O_O [%?]${PR_NO_COLOR})${PR_BODY_COLOR}"
+  PR_pwd="${PR_NO_COLOR}${PR_YELLOW}%~${PR_BODY_COLOR}"
 
-  PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_time}]${PR_HBAR}[${PR_pwd}]${PR_NO_COLOR}
+  PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_pwd}]${PR_NO_COLOR}
 ${PR_BODY_COLOR}${PR_LLCORNER}[${PR_smiley}]>${PR_NO_COLOR} '
-  RPS1='${PR_venv_name}${PR_vcs_info}'
+  RPS1='${PR_venv_name}${PR_vcs_info}${PR_time}${PR_NO_COLOR}'
   PS2='${PR_BODY_COLOR}${PR_LLCORNER}>(\
 ${PR_LIGHT_GREEN}%_${PR_BODY_COLOR})\
 ${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
@@ -471,7 +463,7 @@ export EDITOR=vim
 # SSH with X forwarding
 alias ssh-x='ssh -c arcfour,blowfish-cbc -YC'
 
-# A handy Extract tool I found from dotfiles by algorithm
+# A handy Extract tool for most common archive types
 extract() {
    if [[ -z "$1" ]]; then
       print -P "usage: \e[1;36mextract\e[1;0m < filename >"
@@ -496,23 +488,6 @@ extract() {
    fi
 }
 
-ennervate(){
-  if [[ -z "$1" ]]; then
-    print -P "usage: \e[1;36mennervate\e[1;0m < process >"
-    print -P "       Bring the process with that name to the foreground"
-  else
-    fg $(jobs | grep "$1" | grep -E "\[([0-9]*)\]" -o | grep -E "([0-9]*)" -o | head -1)
-  fi
-}
-
-build(){
-  if [[ -f Makefile ]]; then
-    make
-  else
-    ant
-  fi
-}
-
 code-pull(){
   if [[ -d ".git" ]]; then
     git pull
@@ -525,34 +500,18 @@ code-pull(){
   fi
 }
 
-update-all() {
-  for i in *; do
-    echo "  Now checking: $i"
-    cd $i
-    code-pull
-    cd ..
-  done
-}
-
-update-all-code() {
-  pushd ~/Code
-  update-all
-  popd
-}
-
-function mandelbrot {
-   local lines columns colour a b p q i pnew
-   ((columns=COLUMNS-1, lines=LINES-1, colour=0))
-   for ((b=-1.5; b<=1.5; b+=3.0/lines)) do
-       for ((a=-2.0; a<=1; a+=3.0/columns)) do
-           for ((p=0.0, q=0.0, i=0; p*p+q*q < 4 && i < 32; i++)) do
-               ((pnew=p*p-q*q+a, q=2*p*q+b, p=pnew))
-           done
-           ((colour=(i/4)%8))
-            echo -ne "\\e[4${colour}m "
-        done
-        echo
-    done
+up() {
+        if (( $# != 1 ))
+        then
+                cd ..
+        else
+                upstr="."
+                for i in {1..$1}
+                do
+                        upstr="$upstr/.."
+                done
+                cd $upstr
+        fi
 }
 
 man() {
@@ -567,9 +526,6 @@ man() {
       man "$@"
 }
 
-alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
-
-export LESS="-F -R"
 
 # Alias to play Bingehack as Nethack
 alias nethack='telnet nethack.csh.rit.edu'
@@ -579,7 +535,11 @@ zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
 
 # Meta-S prepends "sudo " to the command
-insert_sudo () { zle beginning-of-line; zle -U "sudo " }
+function insert_sudo {
+	if [[ $BUFFER != "sudo "* ]]; then
+		BUFFER="sudo $BUFFER"; CURSOR+=5
+	fi
+}
 zle -N insert-sudo insert_sudo
 bindkey "^[s" insert-sudo
 
@@ -630,7 +590,7 @@ bindkey " " magic-space ## do history expansion on space
 
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
-[[ -f ~/.zshlocal ]] && source ~/.zshlocal
+[[ -f $ZDOTDIR/.zshlocal ]] && source $ZDOTDIR/.zshlocal
 
 if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
