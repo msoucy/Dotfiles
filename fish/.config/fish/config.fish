@@ -14,7 +14,7 @@ set VIRTUALFISH_HOME "$HOME/.virtualenv"
 set VIRTUALFISH_COMPAT_ALIASES 'yes'
 . ~/.config/fish/virtualfish/virtual.fish
 . ~/.config/fish/virtualfish/global_requirements.fish
-complete -f -c workon -a "(find $VIRTUALFISH_HOME -maxdepth 1 -type d -printf '%P\n')[2..-1]"
+complete -f -c workon -a "(vf ls)"
 
 set -g LESS "-FR"
 set -g EDITOR "vim"
