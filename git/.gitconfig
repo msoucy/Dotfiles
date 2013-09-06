@@ -36,10 +36,5 @@
 [core]
 	filemode = false
 	pager = less -r
-[mergetool "sublime"]
-	cmd = sublime -w $MERGED
-	trustExitCode = false
-[merge]
-	tool = sublime
 [push]
 	default = simple
