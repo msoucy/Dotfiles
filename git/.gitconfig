@@ -12,8 +12,12 @@
 	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]%Creset" --decorate --numstat
 	l1 = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]%Creset" --decorate --numstat -1
 	ld = log --pretty=format:'%C(yellow)%h%Creset %Cgreen%ad%Cred%d %Creset%s%Cblue [%cn]%Creset' --decorate --date=relative
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	fl = log -u
+	purr = pull --rebase
+	ignored = ls-files -–others --i -–exclude-standard
+	wipe = reset -–hard HEAD
+	standup = "!git log --since yesterday --author `git config user.email` --pretty=short"
 [color]
 	ui = true
 	[color "branch"]
