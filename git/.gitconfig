@@ -16,7 +16,7 @@
 	fl = log -u
 	purr = pull --rebase
 	ignored = ls-files -–others --i -–exclude-standard
-	wipe = reset -–hard HEAD
+	wipe = reset --hard HEAD
 	standup = "!git log --since yesterday --author `git config user.email` --pretty=short"
 [color]
 	ui = true
