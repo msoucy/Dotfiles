@@ -14,6 +14,7 @@ endif
 set nocp
 set ls=2
 set tabstop=4
+set shiftwidth=4
 set ruler
 set number
 set ignorecase
