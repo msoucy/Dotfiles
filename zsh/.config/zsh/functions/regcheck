@@ -1,0 +1,3 @@
+# Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
+emulate -L zsh
+[[ "$2" -regex-match "$1" ]] && echo "regex matches" || echo "regex does not match"

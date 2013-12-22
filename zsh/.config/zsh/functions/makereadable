@@ -1,0 +1,6 @@
+# Create PDF file from source code
+emulate -L zsh
+output = $1
+builtin shift
+a2ps --medium A4dj -E -o $output $*
+ps2pdf $output

@@ -165,105 +165,27 @@ autoload -U zrecompile
 zmodload zsh/regex
 
 ################################################################################
-# Taken from Ryan's zshrc
+# All of the functions
 ################################################################################
 
+fpath=(${ZDOTDIR}/.config/zsh/functions $fpath)
+
 # utility functions {{{
-# this function checks if a command exists and returns either true
-# or false. This avoids using 'which' and 'whence', which will
-# avoid problems with aliases for which on certain weird systems. :-)
-# Usage: check_com [-c|-g] word
-#   -c  only checks for external commands
-#   -g  does the usual tests and also checks for global aliases
-check_com() {
-    emulate -L zsh
-    local -i comonly gatoo
-
-    if [[ $1 == '-c' ]] ; then
-        (( comonly = 1 ))
-        shift
-    elif [[ $1 == '-g' ]] ; then
-        (( gatoo = 1 ))
-    else
-        (( comonly = 0 ))
-        (( gatoo = 0 ))
-    fi
-
-    if (( ${#argv} != 1 )) ; then
-        printf 'usage: check_com [-c] <command>\n' >&2
-        return 1
-    fi
-
-    if (( comonly > 0 )) ; then
-        [[ -n ${commands[$1]}  ]] && return 0
-        return 1
-    fi
-
-    if   [[ -n ${commands[$1]}    ]] \
-      || [[ -n ${functions[$1]}   ]] \
-      || [[ -n ${aliases[$1]}     ]] \
-      || [[ -n ${reswords[(r)$1]} ]] ; then
-
-        return 0
-    fi
-
-    if (( gatoo > 0 )) && [[ -n ${galiases[$1]} ]] ; then
-        return 0
-    fi
-
-    return 1
-}
-# Check if we can read given files and source those we can.
-xsource() {
-    if (( ${#argv} < 1 )) ; then
-        printf 'usage: source FILE(s)...\n' >&2
-        return 1
-    fi
-
-    while (( ${#argv} > 0 )) ; do
-        [[ -r "$1" ]] && builtin source "$1"
-        builtin shift
-    done
-    return 0
-}
+autoload -Uz check_com
+autoload -Uz xsource
 alias source=xsource
 # }}}
 
 # grep for running process, like: 'any vim'
-any() {
-    emulate -L zsh
-    if [[ -z "$1" ]] ; then
-        echo "any - grep for process(es) by keyword" >&2
-        echo "Usage: any <keyword>" >&2 ; return 1
-    else
-        local STRING=$1
-        local LENGTH=$(expr length $STRING)
-        local FIRSCHAR=$(echo $(expr substr $STRING 1 1))
-        local REST=$(echo $(expr substr $STRING 2 $LENGTH))
-        ps xauwww| grep "[$FIRSCHAR]$REST"
-    fi
-}
+autoload -Uz any
 
 # Create PDF file from source code
-makereadable() {
-    emulate -L zsh
-    output=$1
-    shift
-    a2ps --medium A4dj -E -o $output $*
-    ps2pdf $output
-}
+autoload -Uz makereadable
 
 # Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
-regcheck() {
-    emulate -L zsh
-    [[ "$2" -regex-match "$1" ]] && echo "regex matches" || echo "regex does not match"
-}
-
+autoload -Uz regcheck
 # List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
-accessed() {
-    emulate -L zsh
-    print -l -- *(a-${1:-1})
-}
+autoload -Uz accessed
 
 # List files which have been changed within the last {\it n} days, {\it n} defaults to 1
 changed() {
@@ -526,6 +448,17 @@ man() {
       man "$@"
 }
 
+man2() {
+  env \
+    LESS_TERMCAP_mb=$'\e[01;31m' \
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[1;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+      man "$@"
+}
 
 # Alias to play Bingehack as Nethack
 alias nethack='telnet nethack.csh.rit.edu'

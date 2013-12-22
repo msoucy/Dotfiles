@@ -1,0 +1,11 @@
+# Check if we can read the given files, and source those that we can
+if (( ${#argv} < 1 )) ; then
+	printf 'usage: source FILE(s)...\n' >&2
+	return 1
+fi
+
+while (( ${#argv} > 0 )) ; do
+	[[ -r "$1" ]] && builtin source "$1"
+	builtin shift
+done
+return 0
