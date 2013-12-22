@@ -9,8 +9,6 @@ set __fish_git_prompt_char_stashstate '↩'
 set __fish_git_prompt_char_upstream_ahead '↑'
 set __fish_git_prompt_char_upstream_behind '↓'
 
-set -g PATH $HOME/bin $PATH
-
 
 set VIRTUALFISH_HOME "$HOME/.virtualenv"
 set VIRTUALFISH_COMPAT_ALIASES 'yes'

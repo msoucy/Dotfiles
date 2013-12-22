@@ -592,6 +592,8 @@ bindkey " " magic-space ## do history expansion on space
 
 [[ -f $ZDOTDIR/.zshlocal ]] && source $ZDOTDIR/.zshlocal
 
+[[ -f $HOME/.pystartup.py ]] && export PYTHONSTARTUP=$HOME/.pystartup.py
+
 if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
   source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
