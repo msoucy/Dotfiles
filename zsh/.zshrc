@@ -531,3 +531,5 @@ if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
   source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

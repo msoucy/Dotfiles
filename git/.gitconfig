@@ -18,6 +18,7 @@
 	ignored = ls-files -–others --i -–exclude-standard
 	wipe = reset --hard HEAD
 	standup = "!git log --since yesterday --author `git config user.email` --pretty=short"
+	unstage = reset --
 [color]
 	ui = true
 	[color "branch"]
