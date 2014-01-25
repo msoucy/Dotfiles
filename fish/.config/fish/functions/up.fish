@@ -3,7 +3,7 @@ function up --description 'Move up N directories'
 				cd ..
 		else
 				set upstr "."
-				for i in {1..$argv[1]}
+				for i in (seq $argv[1])
 						set upstr "$upstr/.."
 				end
 				cd $upstr
