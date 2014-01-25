@@ -1,7 +1,5 @@
 function fish_right_prompt --description 'Print out useful information on the side'
 	
-	set last_status $status
-
 	# Colors
 	set -l normal (set_color normal)
 	set -l pbase $normal(set_color cyan)
@@ -16,13 +14,11 @@ function fish_right_prompt --description 'Print out useful information on the si
 		set PR_venv $pbase"[$green"(basename "$VIRTUAL_ENV")"$pbase]─"
 	end
 	
-	set PR_git ""
+	set -l __git_cb_hash ""
 	if git rev-parse --is-inside-work-tree > /dev/null 2>&1
-		set -l __git_cb_branch (git branch ^/dev/null | grep \* | sed 's/* //')
-		set -l __git_cb_hash (git rev-parse --short=6 HEAD)
-		# TODO: Convert staging status
-		set PR_git $pbase"["$green"git|$__git_cb_branch|$__git_cb_hash$pbase]─"
+		set __git_cb_hash (git rev-parse --short=6 HEAD)
 	end
+	set PR_git (__fish_git_prompt $green"[git|%s$green|$__git_cb_hash]")$pbase"-"
 
 	set PR_time $white(date "+%H:%M:%S")$pbase
 	echo -n "$PR_venv$PR_git$pbase""[$PR_time$pbase]"
