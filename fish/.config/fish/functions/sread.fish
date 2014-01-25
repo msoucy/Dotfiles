@@ -1,3 +1,3 @@
-function read
+function sread
 	command read -s $argv
 end
