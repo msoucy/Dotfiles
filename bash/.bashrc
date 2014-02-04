@@ -1,5 +1,10 @@
 # .bashrc
 
+if [ -t 0 ]; then
+	fish
+	exit
+fi
+
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
