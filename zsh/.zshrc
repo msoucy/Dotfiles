@@ -188,16 +188,10 @@ autoload -Uz regcheck
 autoload -Uz accessed
 
 # List files which have been changed within the last {\it n} days, {\it n} defaults to 1
-changed() {
-    emulate -L zsh
-    print -l -- *(c-${1:-1})
-}
+autoload -Uz changed
 
 # List files which have been modified within the last {\it n} days, {\it n} defaults to 1
-modified() {
-    emulate -L zsh
-    print -l -- *(m-${1:-1})
-}
+autoload -Uz modified
 
 # power completion - abbreviation expansion {{{
 # power completion / abbreviation expansion / buffer expansion
