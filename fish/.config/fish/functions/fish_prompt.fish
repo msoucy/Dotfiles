@@ -16,6 +16,6 @@ function fish_prompt --description 'Print out the main prompt'
 		set PR_status $red"O_O [$last_status]"$pbase
 	end
 
-	printf "%s┌[%s]-[%s]\n└[%s]>%s " $pbase $PR_user_host $PR_pwd $PR_status $normal
+	printf "%s┌[%s]─[%s]\n└[%s]>%s " $pbase $PR_user_host $PR_pwd $PR_status $normal
 
 end
