@@ -39,3 +39,5 @@
 	pager = less -r
 [push]
 	default = simple
+[merge]
+	conflictstyle = diff3
