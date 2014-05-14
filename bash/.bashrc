@@ -1,8 +1,7 @@
 # .bashrc
 
-if [ -t 0 ]; then
-	fish
-	exit
+if [ ! -z $PS1 ]; then
+	fish; exit
 fi
 
 # Source global definitions
