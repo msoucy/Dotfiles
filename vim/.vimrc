@@ -11,6 +11,7 @@ if &shell =~# 'fish$'
 	set shell=sh
 endif
 
+set nocompatible
 set nocp
 set ls=2
 set tabstop=4
@@ -74,3 +75,7 @@ nnoremap gj j
 nnoremap gk k
 
 let g:vim_markdown_folding_disabled=1
+
+" Highlight line and column
+" set cursorline cursorcolumn
+set cursorline
