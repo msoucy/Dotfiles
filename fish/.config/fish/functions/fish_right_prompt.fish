@@ -16,9 +16,9 @@ function fish_right_prompt --description 'Print out useful information on the si
 	
 	set -l __git_cb_hash ""
 	if git rev-parse --is-inside-work-tree > /dev/null 2>&1
-		set __git_cb_hash (git rev-parse --short=6 HEAD)
+		set __git_cb_hash (git rev-parse --short=6 HEAD 2> /dev/null)
 	end
-	set PR_git (__fish_git_prompt $green"[git|%s$green|$__git_cb_hash]")$pbase"─"
+	set PR_git (__fish_git_prompt $pbase"["$green"git|%s$green|$__git_cb_hash")$pbase"]─"
 
 	set PR_time $white(date "+%H:%M:%S")$pbase
 	echo -n "$PR_venv$PR_git$pbase""[$PR_time$pbase]"
