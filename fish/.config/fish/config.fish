@@ -32,7 +32,11 @@ set -g __fish_git_prompt_color_cleanstate green bold
 set VIRTUALFISH_HOME "$HOME/.virtualenv"
 function __cdsetup --on-variable PWD --description 'Do per-cwd init'
 	status --is-command-substitution; and return
-	test -f ".env"; and source ".env"
+	if test -f ".envrc.fish"
+		source ".envrc.fish"
+	else if test -f ".envrc"
+		source ".envrc"
+	end
 end
 
 set VIRTUALFISH_COMPAT_ALIASES 'yes'
