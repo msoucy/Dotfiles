@@ -1,7 +1,7 @@
 function extract --description 'Automatically determine the command to extract a file'
 	if test (count $argv) -ne 1
-		print -P "usage: extract < filename >"
-		print -P "	   Extract the file specified based on the extension"
+		echo "usage: extract < filename >"
+		echo "	   Extract the file specified based on the extension"
 	else if test -f $argv[1]
 		set arg $argv[1]
 		switch $arg
