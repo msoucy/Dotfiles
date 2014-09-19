@@ -41,6 +41,7 @@ end
 
 set VIRTUALFISH_COMPAT_ALIASES 'yes'
 . ~/.config/fish/virtualfish/virtual.fish
+. ~/.config/fish/virtualfish/auto_activation.fish
 . ~/.config/fish/virtualfish/global_requirements.fish
 complete -f -c workon -a "(vf ls)"
 
