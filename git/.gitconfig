@@ -19,6 +19,7 @@
 	wipe = reset --hard HEAD
 	standup = "!git log --since yesterday --author `git config user.email` --pretty=short"
 	unstage = reset --
+	forget = rm --cached
 [color]
 	ui = true
 	[color "branch"]
