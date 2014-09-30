@@ -8,5 +8,5 @@ function man
 	setenv -x LESS_TERMCAP_so (set_color -b blue -o yellow)
 	setenv -x LESS_TERMCAP_ue (set_color normal)
 	setenv -x LESS_TERMCAP_us (set_color -o green)
-	/usr/bin/man "$argv"
+	/usr/bin/man $argv
 end
