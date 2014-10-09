@@ -1,3 +1,4 @@
 fishd.*
 fish_*history
 .netrwhist
+*.sw[po]
