@@ -29,7 +29,15 @@ set backspace=indent,eol,start
 "Syntax highlighting
 syntax on
 
-"Yes filetype matter
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'sjl/badwolf'
+Plugin 'dag/vim-fish'
+Plugin 'othree/html5.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+call vundle#end()
 filetype plugin indent on
 
 "Set a nice Omnifunc - <CTRL>X <CTRL>O
@@ -44,7 +52,8 @@ map <F9> :cnext<Return>
 :nnoremap <F5> :buffers<CR>:buffer<Space>
 
 set background=dark
-colorscheme desert
+colorscheme desert " Use desert if badwolf isn't installed yet
+colorscheme badwolf
 
 "Set the color for the popup menu
 :highlight Pmenu ctermbg=blue ctermfg=white
@@ -78,6 +87,6 @@ let g:vim_markdown_folding_disabled=1
 
 " Highlight line and column
 set cursorline cursorcolumn
-hi CursorLine     cterm=NONE ctermbg=darkgrey
-hi CursorColumn   cterm=NONE ctermbg=darkgrey
+hi CursorLine     cterm=NONE ctermbg=black
+hi CursorColumn   cterm=NONE ctermbg=black
 nnoremap H :set cursorline! cursorcolumn!<CR>
