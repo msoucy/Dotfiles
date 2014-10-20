@@ -43,8 +43,8 @@ map <F9> :cnext<Return>
 "This is a nice buffer switcher
 :nnoremap <F5> :buffers<CR>:buffer<Space>
 
-colorscheme desert
 set background=dark
+colorscheme desert
 
 "Set the color for the popup menu
 :highlight Pmenu ctermbg=blue ctermfg=white
@@ -77,5 +77,7 @@ nnoremap gk k
 let g:vim_markdown_folding_disabled=1
 
 " Highlight line and column
-" set cursorline cursorcolumn
-set cursorline
+set cursorline cursorcolumn
+hi CursorLine     cterm=NONE ctermbg=darkgrey
+hi CursorColumn   cterm=NONE ctermbg=darkgrey
+nnoremap H :set cursorline! cursorcolumn!<CR>
