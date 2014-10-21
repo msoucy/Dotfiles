@@ -32,6 +32,7 @@ syntax on
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
 Plugin 'sjl/badwolf'
 Plugin 'dag/vim-fish'
 Plugin 'othree/html5.vim'
