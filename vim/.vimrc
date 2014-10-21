@@ -84,6 +84,7 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 let g:vim_markdown_folding_disabled=1
 
 " Highlight line and column
