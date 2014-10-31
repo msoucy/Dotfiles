@@ -42,8 +42,8 @@ Plugin 'othree/html5.vim'
 Plugin 'scrooloose/nerdcommenter'
 if restricted == 0
 	Plugin 'scrooloose/syntastic'
-	Plugin 'bling/vim-airline'
 endif
+Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-sensible'
 call vundle#end()
 filetype plugin indent on
