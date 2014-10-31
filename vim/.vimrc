@@ -25,6 +25,15 @@ set hidden
 "Syntax highlighting
 syntax on
 
+let restricted = 1
+try
+	if &readonly
+	    call system("")
+		let restricted = 0
+	endif
+catch /E145/
+endtry
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -33,8 +42,10 @@ Plugin 'sjl/badwolf'
 Plugin 'dag/vim-fish'
 Plugin 'othree/html5.vim'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'bling/vim-airline'
-Plugin 'scrooloose/syntastic'
+if restricted == 0
+	Plugin 'bling/vim-airline'
+	Plugin 'scrooloose/syntastic'
+endif
 Plugin 'tpope/vim-sensible'
 call vundle#end()
 filetype plugin indent on
