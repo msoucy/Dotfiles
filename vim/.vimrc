@@ -25,13 +25,11 @@ set hidden
 "Syntax highlighting
 syntax on
 
-let restricted = 1
 try
-	if &readonly
-	    call system("")
-		let restricted = 0
-	endif
-catch /E145/
+	call system("")
+	let restricted = 0
+catch /E\(145\|484\)/
+	let restricted = 1
 endtry
 
 " set the runtime path to include Vundle and initialize
@@ -43,8 +41,8 @@ Plugin 'dag/vim-fish'
 Plugin 'othree/html5.vim'
 Plugin 'scrooloose/nerdcommenter'
 if restricted == 0
-	Plugin 'bling/vim-airline'
 	Plugin 'scrooloose/syntastic'
+	Plugin 'bling/vim-airline'
 endif
 Plugin 'tpope/vim-sensible'
 call vundle#end()
@@ -63,7 +61,7 @@ map <F9> :cnext<Return>
 
 set background=dark
 colorscheme desert " Use desert if badwolf isn't installed yet
-colorscheme badwolf
+silent! colorscheme badwolf
 
 "Set the color for the popup menu
 :highlight Pmenu ctermbg=blue ctermfg=white
