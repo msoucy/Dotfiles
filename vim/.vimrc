@@ -11,20 +11,16 @@ if &shell =~# 'fish$'
 	set shell=sh
 endif
 
-set nocompatible
 set nocp
 set ls=2
 set tabstop=4
 set shiftwidth=4
-set ruler
 set number
 set ignorecase
 set modeline
-set autoindent
 set nobackup
 set wrap
 set hidden
-set backspace=indent,eol,start
 
 "Syntax highlighting
 syntax on
@@ -38,6 +34,10 @@ Plugin 'dag/vim-fish'
 Plugin 'othree/html5.vim'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'bling/vim-airline'
+Plugin 'scrooloose/syntastic'
+Plugin 'tpope/vim-sensible'
 call vundle#end()
 filetype plugin indent on
 
