@@ -2,3 +2,4 @@ fishd.*
 fish_*history
 .netrwhist
 *.sw[po]
+fish/.config/fish/generated_completions/
