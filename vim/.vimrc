@@ -25,12 +25,15 @@ set hidden
 "Syntax highlighting
 syntax on
 
+let restricted = 0
 try
 	call system("")
-	let restricted = 0
-catch /E\(145\|484\)/
+catch /E145/
 	let restricted = 1
+catch /E484/
 endtry
+
+let g:airline#extensions#whitespace#mixed_indent_algo = 1
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -77,7 +80,7 @@ inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
 
 "TAGLIST setup
 nnoremap <F3> :TlistToggle<CR>
-let Tlist_Use_Right_Window = 1 
+let Tlist_Use_Right_Window = 1
 let Tlist_WinWidth = 50
 
 imap jj <ESC>
