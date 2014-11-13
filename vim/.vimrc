@@ -43,6 +43,7 @@ Plugin 'sjl/badwolf'
 Plugin 'dag/vim-fish'
 Plugin 'othree/html5.vim'
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'Chiel92/vim-autoformat'
 if restricted == 0
 	Plugin 'scrooloose/syntastic'
 endif
@@ -59,18 +60,25 @@ map <F7> :make<Return>:copen<Return>
 map <F8> :cprevious<Return>
 map <F9> :cnext<Return>
 
+" paste mode toggle (needed when using autoindent/smartindent)
+map <F10> :set paste<CR>
+map <F11> :set nopaste<CR>
+imap <F10> <C-O>:set paste<CR>
+imap <F11> <nop>
+set pastetoggle=<F11>
+
 "This is a nice buffer switcher
-:nnoremap <F5> :buffers<CR>:buffer<Space>
+nnoremap <F5> :buffers<CR>:buffer<Space>
 
 set background=dark
 colorscheme desert " Use desert if badwolf isn't installed yet
 silent! colorscheme badwolf
 
 "Set the color for the popup menu
-:highlight Pmenu ctermbg=blue ctermfg=white
-:highlight PmenuSel ctermbg=blue ctermfg=red
-:highlight PmenuSbar ctermbg=cyan ctermfg=green
-:highlight PmenuThumb ctermbg=white ctermfg=red
+highlight Pmenu ctermbg=blue ctermfg=white
+highlight PmenuSel ctermbg=blue ctermfg=red
+highlight PmenuSbar ctermbg=cyan ctermfg=green
+highlight PmenuThumb ctermbg=white ctermfg=red
 
 " Make vim popup behave more like an IDE POPUP
 set completeopt=longest,menuone
