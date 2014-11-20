@@ -1,26 +1,21 @@
-""""""""""""""""""""""""""""""""""""""""""""""
-" .vimrc default setup file for Terminal IDE "
-"                                            "
-" Creator : Spartacus Rex                    "
-" Version : 1.0                              "
-" Date    : 9 Nov 2011                       "
-""""""""""""""""""""""""""""""""""""""""""""""
-
 "The basic settings
 if &shell =~# 'fish$'
-	set shell=sh
+	set shell=/bin/bash
 endif
 
-set nocp
-set ls=2
+set nocompatible
+set laststatus=2
 set tabstop=4
 set shiftwidth=4
 set number
 set ignorecase
 set modeline
 set nobackup
+set noswapfile
 set wrap
 set hidden
+set hlsearch
+set cc=80,120
 
 "Syntax highlighting
 syntax on
@@ -48,7 +43,9 @@ if restricted == 0
 	Plugin 'scrooloose/syntastic'
 endif
 Plugin 'bling/vim-airline'
+Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-sensible'
+Plugin 'editorconfig/editorconfig-vim'
 call vundle#end()
 filetype plugin indent on
 
@@ -56,16 +53,16 @@ filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 
 "Mapped some FUNCTION keys to be more useful
-map <F7> :make<Return>:copen<Return>
-map <F8> :cprevious<Return>
-map <F9> :cnext<Return>
+map <F9> :make<Return>:copen<Return>
+map <F10> :cprevious<Return>
+map <F11> :cnext<Return>
 
 " paste mode toggle (needed when using autoindent/smartindent)
-map <F10> :set paste<CR>
-map <F11> :set nopaste<CR>
-imap <F10> <C-O>:set paste<CR>
-imap <F11> <nop>
-set pastetoggle=<F11>
+map <F7> :set paste<CR>
+map <F8> :set nopaste<CR>
+imap <F7> <C-O>:set paste<CR>
+imap <F8> <nop>
+set pastetoggle=<F6>
 
 "This is a nice buffer switcher
 nnoremap <F5> :buffers<CR>:buffer<Space>
@@ -92,7 +89,7 @@ let Tlist_Use_Right_Window = 1
 let Tlist_WinWidth = 50
 
 imap jj <ESC>
-command C let @/=""
+nmap <silent> <Leader>/ :nohlsearch<CR>
 
 set shortmess+=I
 
