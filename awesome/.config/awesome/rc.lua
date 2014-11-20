@@ -194,8 +194,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-	right_layout:add(volume_widget)
-	right_layout:add(battery_widget)
+    right_layout:add(volume_widget)
+    right_layout:add(battery_widget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -218,7 +218,7 @@ root.buttons(awful.util.table.join(
 -- }}}
 
 function extern(cmd, sn)
-	return function() awful.util.spawn(cmd, sn or false) end
+    return function() awful.util.spawn(cmd, sn or false) end
 end
 
 -- {{{ Key bindings
@@ -226,18 +226,18 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
-	awful.key({ modkey, "Control"   }, "Left",
+    awful.key({ modkey, "Control"   }, "Left",
     function()
-		for i = 1, screen.count() do
-			awful.tag.viewprev(i)
-		end
+        for i = 1, screen.count() do
+            awful.tag.viewprev(i)
+        end
     end ),
 
     awful.key({ modkey, "Control"   }, "Right",
     function()
-		for i = 1, screen.count() do
-			awful.tag.viewnext(i)
-		end
+        for i = 1, screen.count() do
+            awful.tag.viewnext(i)
+        end
     end ),
 
     awful.key({ modkey,           }, "j",
@@ -271,7 +271,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
-	-- Layout
+    -- Layout
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
@@ -288,24 +288,24 @@ globalkeys = awful.util.table.join(
               end),
     -- Menubar
     awful.key({ modkey }, "p", menubar.show),
-	-- Volume
+    -- Volume
     awful.key({ }, "XF86AudioRaiseVolume", extern("amixer set Master 6%+")),
     awful.key({ }, "XF86AudioLowerVolume", extern("amixer set Master 6%-")),
     awful.key({ }, "XF86AudioMute", extern("amixer set Master toggle")),
-	-- Print Screen
-	--awful.key({ }, "Print", extern("scrot '~/screenshots/%F_%H-$M-$S.png'")),
-	awful.key({ }, "Print", extern("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'")),
-	-- Lock
-	awful.key({ modkey, "Control" }, "l", extern("xscreensaver-command -lock")),
-	awful.key({ modkey }, "XF86ScreenSaver", extern("xscreensaver-command -lock")),
-	-- Brightness
-	awful.key({ }, "XF86MonBrightnessDown", extern("xbacklight -dec 7")),
-	awful.key({ }, "XF86MonBrightnessUp", extern("xbacklight -inc 7")),
-	-- Buzzer
-	awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
-	awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg")),
-	-- Displays
-	awful.key({ modkey }, "XF86Display", extern("true"))
+    -- Print Screen
+    --awful.key({ }, "Print", extern("scrot '~/screenshots/%F_%H-$M-$S.png'")),
+    awful.key({ }, "Print", extern("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'")),
+    -- Lock
+    awful.key({ modkey, "Control" }, "l", extern("xscreensaver-command -lock")),
+    awful.key({ modkey }, "XF86ScreenSaver", extern("xscreensaver-command -lock")),
+    -- Brightness
+    awful.key({ }, "XF86MonBrightnessDown", extern("xbacklight -dec 7")),
+    awful.key({ }, "XF86MonBrightnessUp", extern("xbacklight -inc 7")),
+    -- Buzzer
+    awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
+    awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg")),
+    -- Displays
+    awful.key({ modkey }, "XF86Display", extern("true"))
 )
 
 clientkeys = awful.util.table.join(
@@ -393,15 +393,15 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Google-chrome-stable", role = "pop-up" },
       properties = { floating = true } },
-	{ rule = { class = "URxvt" },
-	  properties = { size_hints_honor = false } },
+    { rule = { class = "URxvt" },
+      properties = { size_hints_honor = false } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
-	{ rule = { instance = "plugin-container" },
-	  properties = { floating = true } },
-	{ rule = { instance = "exe" },
-	  properties = { floating = true } },
+    { rule = { instance = "plugin-container" },
+      properties = { floating = true } },
+    { rule = { instance = "exe" },
+      properties = { floating = true } },
 }
 -- }}}
 
@@ -484,10 +484,10 @@ function run_once(prg, arg_string, pname, screen)
 
     if not arg_string then
         awful.util.spawn_with_shell("sh -c 'pgrep -f -u $USER -x \\'" .. pname .. "\\' " ..
-		                            "|| (" .. prg .. ")'", screen)
+                                    "|| (" .. prg .. ")'", screen)
     else
         awful.util.spawn_with_shell("sh -c 'pgrep -f -u $USER -x \\'" .. pname .. " ".. arg_string .."\\' " ..
-		                            "|| (" .. prg .. " " .. arg_string .. ")'", screen)
+                                    "|| (" .. prg .. " " .. arg_string .. ")'", screen)
     end
 end
 
