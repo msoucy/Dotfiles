@@ -46,6 +46,8 @@ Plugin 'bling/vim-airline'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-sensible'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'lepture/vim-jinja'
+Plugin 'dpwright/vim-tup'
 call vundle#end()
 filetype plugin indent on
 
@@ -99,8 +101,9 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+au BufNewFile,BufReadPost *.md set filetype=markdown
 let g:vim_markdown_folding_disabled=1
+au BufNewFile,BufReadPost *.html,*.htm,*.shtml,*.stm set ft=jinja
 
 " Highlight line and column
 set cursorline cursorcolumn
