@@ -110,3 +110,6 @@ set cursorline cursorcolumn
 hi CursorLine     cterm=NONE ctermbg=black
 hi CursorColumn   cterm=NONE ctermbg=black
 nnoremap H :set cursorline! cursorcolumn!<CR>
+
+" Use <leader>p to paste-and-preserve (instead of shift-insert)
+noremap <leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
