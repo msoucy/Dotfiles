@@ -7,9 +7,9 @@ cacerts = /etc/pki/tls/certs/ca-bundle.crt
 [extensions]
 hgext.convert=
 color=
-hgshelve=
+shelve=
 eol=
 hgk=
-hggit=
+#hggit=
 graphlog=
 mq=
