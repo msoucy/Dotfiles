@@ -46,3 +46,7 @@ set VIRTUALFISH_COMPAT_ALIASES 'yes'
 complete -f -c workon -a "(vf ls)"
 
 set -g LESS "-FR"
+
+set -U fish_user_paths ~/bin
+set -Ux EDITOR vim
+set -Ux LD_LIBRARY_PATH /usr/local/lib

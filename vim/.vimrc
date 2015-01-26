@@ -58,6 +58,8 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'lepture/vim-jinja'
 Plugin 'dpwright/vim-tup'
 Plugin 'rhysd/vim-clang-format'
+Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'idanarye/vim-dutyl'
 call vundle#end()
 filetype plugin indent on
 
@@ -65,7 +67,7 @@ filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 
 "Mapped some FUNCTION keys to be more useful
-map <F9> :make<Return>:copen<Return>
+map <F9> :make<Return>:copen<Return><Return>
 map <F10> :cprevious<Return>
 map <F11> :cnext<Return>
 
@@ -74,7 +76,7 @@ map <F7> :set paste<CR>
 map <F8> :set nopaste<CR>
 imap <F7> <C-O>:set paste<CR>
 imap <F8> <nop>
-set pastetoggle=<F6>
+set pastetoggle=<F12>
 
 "This is a nice buffer switcher
 nnoremap <F5> :buffers<CR>:buffer<Space>

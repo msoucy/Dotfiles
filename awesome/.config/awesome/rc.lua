@@ -221,6 +221,20 @@ function extern(cmd, sn)
     return function() awful.util.spawn(cmd, sn or false) end
 end
 
+-- This is super sketchy, but works for my laptop...
+function newbright(mod)
+	return function()
+		local f = io.open("/sys/class/backlight/nv_backlight/brightness", "r")
+		local d = f:read("*number")
+		f.close()
+		d = math.max(0, math.min(d+mod, 100))
+
+		local f = io.open("/sys/class/backlight/nv_backlight/brightness", "w")
+		f:write(string.format("%d", d))
+		f.close()
+	end
+end
+
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
@@ -305,7 +319,11 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
     awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg")),
     -- Displays
-    awful.key({ modkey }, "XF86Display", extern("true"))
+    awful.key({ modkey }, "XF86Display", extern("~/bin/dock")),
+	awful.key({ modkey }, "F8", newbright(-7)),
+	awful.key({ modkey, "Shift" }, "F8", newbright(-15)),
+	awful.key({ modkey }, "F9", newbright(7)),
+	awful.key({ modkey, "Shift" }, "F9", newbright(15))
 )
 
 clientkeys = awful.util.table.join(
