@@ -10,7 +10,8 @@ function fish_prompt --description 'Print out the main prompt'
 	set -l green $normal(set_color green)
 
 	set -l PR_user_host $red(whoami)$yellow@(hostname)$pbase
-	set -l PR_pwd $yellow(prompt_pwd)$pbase
+	set -l pwd (echo $PWD | sed -e "s|^$HOME|~|" -e 's|^/private||' -e 's-\([^/]\)[^/]*/-\1/-g')
+	set -l PR_pwd $yellow$pwd$pbase
 	set -l PR_status "$green^_^$pbase"
 	if not test $last_status = 0
 		set PR_status $red"O_O [$last_status]"$pbase
