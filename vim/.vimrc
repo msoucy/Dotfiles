@@ -29,6 +29,15 @@ catch /E484/
 endtry
 
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
+let g:clang_format#auto_format = 1
+let g:clang_format#code_style = 'llvm'
+let g:clang_format#style_options = {
+			\ 'IndentWidth': 4,
+			\ 'TabWidth': 4,
+			\ 'UseTab': "Always",
+			\ 'AlwaysBreakTemplateDeclarations': "true",
+			\ 'ColumnLimit': 120
+			\}
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -48,6 +57,7 @@ Plugin 'tpope/vim-sensible'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'lepture/vim-jinja'
 Plugin 'dpwright/vim-tup'
+Plugin 'rhysd/vim-clang-format'
 call vundle#end()
 filetype plugin indent on
 
