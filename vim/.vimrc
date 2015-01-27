@@ -60,6 +60,12 @@ Plugin 'dpwright/vim-tup'
 Plugin 'rhysd/vim-clang-format'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'idanarye/vim-dutyl'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'kshenoy/vim-signature'
+Plugin 'majutsushi/tagbar'
+Plugin 'Raimondi/delimitMate'
+Plugin 'edkolev/tmuxline.vim'
+Plugin 'jmcantrell/vim-virtualenv'
 call vundle#end()
 filetype plugin indent on
 
@@ -97,13 +103,9 @@ set completeopt=longest,menuone
 " Make enter finish the completion popup menu
 inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
 
-"TAGLIST setup
-nnoremap <F3> :TlistToggle<CR>
-let Tlist_Use_Right_Window = 1
-let Tlist_WinWidth = 50
-
 imap jj <ESC>
 nmap <silent> <Leader>/ :nohlsearch<CR>
+nmap <silent> <Leader>t :TagbarToggle<CR>
 
 set shortmess+=I
 
