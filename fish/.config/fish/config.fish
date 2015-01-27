@@ -50,3 +50,4 @@ set -g LESS "-FR"
 set -U fish_user_paths ~/bin
 set -Ux EDITOR vim
 set -Ux LD_LIBRARY_PATH /usr/local/lib
+set -Ux PYTHONPATH $PYTHONPATH ~/.virtualenv/neovim/lib/python2.7/site-packages
