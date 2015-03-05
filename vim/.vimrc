@@ -20,14 +20,6 @@ set cc=80,120
 "Syntax highlighting
 syntax on
 
-let restricted = 0
-try
-	call system("")
-catch /E145/
-	let restricted = 1
-catch /E484/
-endtry
-
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:clang_format#auto_format = 1
 let g:clang_format#code_style = 'llvm'
@@ -36,36 +28,47 @@ let g:clang_format#style_options = {
 			\ 'TabWidth': 4,
 			\ 'UseTab': "Always",
 			\ 'AlwaysBreakTemplateDeclarations': "true",
-			\ 'ColumnLimit': 120
+			\ 'ColumnLimit': 80
 			\}
+let g:clang_format#auto_formatexpr = 1
+let g:syntastic_cpp_config_file = ".syntastic"
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-Plugin 'gmarik/Vundle.vim'
-Plugin 'sjl/badwolf'
-Plugin 'dag/vim-fish'
-Plugin 'othree/html5.vim'
-Plugin 'scrooloose/nerdcommenter'
+Plugin 'gmarik/Vundle.vim' " Vundle manages itself
+Plugin 'tpope/vim-sensible' " Reasonable defaults
+Plugin 'sjl/badwolf' " Theme
+" Syntax formatting and verification
+Plugin 'scrooloose/syntastic'
 Plugin 'Chiel92/vim-autoformat'
-if restricted == 0
-	Plugin 'scrooloose/syntastic'
-endif
-Plugin 'bling/vim-airline'
-Plugin 'kien/ctrlp.vim'
-Plugin 'tpope/vim-sensible'
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'lepture/vim-jinja'
-Plugin 'dpwright/vim-tup'
 Plugin 'rhysd/vim-clang-format'
-Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'Shougo/vimproc.vim'
+" Language syntaxes
+Plugin 'lepture/vim-jinja'
+Plugin 'dag/vim-fish'
+Plugin 'dpwright/vim-tup'
+Plugin 'othree/html5.vim'
 Plugin 'idanarye/vim-dutyl'
+Plugin 'eagletmt/ghcmod-vim'
+Plugin 'vim-jp/cpp-vim'
+Plugin 'SWIG-syntax'
+" Show more info
 Plugin 'airblade/vim-gitgutter'
+Plugin 'bling/vim-airline'
+"Plugin 'edkolev/tmuxline.vim'
 Plugin 'kshenoy/vim-signature'
 Plugin 'majutsushi/tagbar'
+" Misc plugins
 Plugin 'Raimondi/delimitMate'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'kien/ctrlp.vim'
+Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'scrooloose/nerdcommenter'
 call vundle#end()
 filetype plugin indent on
 
@@ -106,6 +109,8 @@ inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
 imap jj <ESC>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 nmap <silent> <Leader>t :TagbarToggle<CR>
+nmap <silent> <Leader>l :lclose<CR>
+nmap <silent> <Leader>r :so $MYVIMRC<CR>
 
 set shortmess+=I
 
@@ -115,9 +120,11 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-au BufNewFile,BufReadPost *.md set filetype=markdown
 let g:vim_markdown_folding_disabled=1
+au BufNewFile,BufReadPost *.md set filetype=markdown
 au BufNewFile,BufReadPost *.html,*.htm,*.shtml,*.stm set ft=jinja
+au BufNewFile,BufReadPost *.yaml,*.yml set ts=2 sw=2
+au BufNewFile,BufReadPost *.hs set expandtab
 
 " Highlight line and column
 set cursorline cursorcolumn
@@ -127,3 +134,34 @@ nnoremap H :set cursorline! cursorcolumn!<CR>
 
 " Use <leader>p to paste-and-preserve (instead of shift-insert)
 noremap <leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
+
+" Language-specific custom commands
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
+command! -complete=shellcmd -nargs=+ Hoogle call s:RunShellCommand('hoogle "'.<q-args>.'"')
+command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
+
+if &term =~ '^screen'
+    " tmux will send xterm-style keys when its xterm-keys option is on
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+endif

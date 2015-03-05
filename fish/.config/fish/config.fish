@@ -40,14 +40,14 @@ function __cdsetup --on-variable PWD --description 'Do per-cwd init'
 end
 
 set VIRTUALFISH_COMPAT_ALIASES 'yes'
-. ~/.config/fish/virtualfish/virtual.fish
-. ~/.config/fish/virtualfish/auto_activation.fish
-. ~/.config/fish/virtualfish/global_requirements.fish
+source ~/.config/fish/virtualfish/virtual.fish
+source ~/.config/fish/virtualfish/auto_activation.fish
+source ~/.config/fish/virtualfish/global_requirements.fish
 complete -f -c workon -a "(vf ls)"
 
 set -g LESS "-FR"
 
-set -U fish_user_paths ~/bin
+set -Ux PYTHONPATH $PYTHONPATH ~/.virtualenv/neovim/lib/python2.7/site-packages
+set -U fish_user_paths ~/bin ~/.cabal/bin
 set -Ux EDITOR vim
 set -Ux LD_LIBRARY_PATH /usr/local/lib
-set -Ux PYTHONPATH $PYTHONPATH ~/.virtualenv/neovim/lib/python2.7/site-packages

@@ -21,6 +21,8 @@ function extract --description 'Automatically determine the command to extract a
 				tar -xvf $arg
 			case '*.Z'
 				uncompress $arg
+			case '*.tar.xz'
+				tar -xvJf $arg
 			case '*'
 				echo "Unable to extract '$arg' :: Unknown extension"
 		end

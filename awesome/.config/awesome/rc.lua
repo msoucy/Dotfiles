@@ -318,6 +318,7 @@ globalkeys = awful.util.table.join(
     -- Buzzer
     awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
     awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg")),
+    awful.key({ "Control" }, "XF86Launch1", extern("mplayer Documents/Aiya.mp3")),
     -- Displays
     awful.key({ modkey }, "XF86Display", extern("~/bin/dock")),
 	awful.key({ modkey }, "F8", newbright(-7)),
@@ -410,6 +411,8 @@ awful.rules.rules = {
     { rule = { class = "gimp" },
       properties = { floating = true } },
     { rule = { class = "Google-chrome-stable", role = "pop-up" },
+      properties = { floating = true } },
+    { rule = { role = "bubble" },
       properties = { floating = true } },
     { rule = { class = "URxvt" },
       properties = { size_hints_honor = false } },
