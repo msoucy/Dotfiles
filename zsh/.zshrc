@@ -357,7 +357,7 @@ setprompt() {
   PR_BODY_COLOR=$PR_LIGHT_CYAN
 
   PR_user_host="${PR_RED}%n${PR_YELLOW}@%M${PR_BODY_COLOR}"
-  PR_time="${PR_BODY_COLOR}[$PR_WHITE%*${PR_BODY_COLOR}]"
+  PR_time="${PR_BODY_COLOR}[$PR_WHITE%D{%H:%m:%S}${PR_BODY_COLOR}]"
   PR_smiley="${PR_NO_COLOR}%(?.${PR_LIGHT_GREEN}^_^${PR_NO_COLOR}.${PR_LIGHT_RED}O_O [%?]${PR_NO_COLOR})${PR_BODY_COLOR}"
   PR_pwd="${PR_NO_COLOR}${PR_YELLOW}%~${PR_BODY_COLOR}"
 
