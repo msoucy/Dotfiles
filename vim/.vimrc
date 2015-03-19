@@ -33,9 +33,10 @@ let g:clang_format#style_options = {
 let g:clang_format#auto_formatexpr = 1
 let g:syntastic_cpp_config_file = ".syntastic"
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_aggregate_errors = 1
 let g:table_mode_corner = '|'
 
 " set the runtime path to include Vundle and initialize
@@ -116,6 +117,7 @@ nmap <silent> <Leader>t :TagbarToggle<CR>
 nmap <silent> <Leader>l :lclose<CR>
 nmap <silent> <Leader>r :so $MYVIMRC<CR>
 
+" Don't show the intro message
 set shortmess+=I
 
 " Move by row, not line
@@ -170,3 +172,8 @@ if &term =~ '^screen'
     execute "set <xRight>=\e[1;*C"
     execute "set <xLeft>=\e[1;*D"
 endif
+
+if filereadable(glob("~/.vimrc.local"))
+    source ~/.vimrc.local
+endif
+

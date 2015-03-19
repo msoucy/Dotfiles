@@ -47,7 +47,6 @@ complete -f -c workon -a "(vf ls)"
 
 set -g LESS "-FR"
 
-set -Ux PYTHONPATH $PYTHONPATH ~/.virtualenv/neovim/lib/python2.7/site-packages
-set -U fish_user_paths ~/bin ~/.cabal/bin
+set -Ux fish_user_paths ~/bin ~/.cabal/bin
 set -Ux EDITOR vim
 set -Ux LD_LIBRARY_PATH /usr/local/lib
