@@ -9,7 +9,8 @@ battery_widget:set_ticks(true)
 local wraparound = 0
 
 -- Create a battery monitor widget
-function update_battery(widget)
+battery_widget.update = function()
+	local widget = battery_widget
     local status = awful.util.pread("acpi -b")
 
 	widget:set_color('FF0000')
@@ -43,16 +44,16 @@ function update_battery(widget)
 		else
 			fg_color = "00FF00"
 		end
-		widget:set_value(battery * 100)
-		widget:set_color(fg_color)
-		widget.level = battery * 100
+		battery_widget.level = battery * 100
+		battery_widget:set_value(battery_widget.level)
+		battery_widget:set_color(fg_color)
 	end
 end
 
-update_battery(battery_widget)
+battery_widget.update()
 
 mytimer = timer({ timeout = 10 })
-mytimer:connect_signal("timeout", function () update_battery(battery_widget) end)
+mytimer:connect_signal("timeout", battery_widget.update)
 mytimer:start()
 
 battery_widget:buttons(awful.util.table.join(

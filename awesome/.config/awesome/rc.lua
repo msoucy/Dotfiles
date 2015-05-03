@@ -225,14 +225,14 @@ function extern(cmd, sn)
     return function() awful.util.spawn(cmd, sn or false) end
 end
 
-brightcalib = { value = 100.0 }
-function brightcalib.update(mod)
+brightness = { value = 100.0 }
+function brightness.update(mod)
 	return function ()
-		nv = brightcalib.value
+		nv = brightness.value
 		nv = math.max(20, math.min(100,nv + mod))
 		cmd = string.format('xrandr --output LVDS-1 --brightness %1.2f', nv/100.0)
 		awful.util.spawn(cmd)
-		brightcalib.value = nv
+		brightness.value = nv
 	end
 end
 
@@ -304,28 +304,26 @@ globalkeys = awful.util.table.join(
     -- Menubar
     awful.key({ modkey }, "p", menubar.show),
     -- Volume
-    awful.key({ }, "XF86AudioRaiseVolume", extern("amixer set Master 6%+")),
-    awful.key({ }, "XF86AudioLowerVolume", extern("amixer set Master 6%-")),
-    awful.key({ }, "XF86AudioMute", extern("amixer set Master toggle")),
+    awful.key({ }, "XF86AudioRaiseVolume", volume_widget.up),
+    awful.key({ }, "XF86AudioLowerVolume", volume_widget.down),
+    awful.key({ }, "XF86AudioMute", volume_widget.toggle),
     -- Print Screen
-    --awful.key({ }, "Print", extern("scrot '~/screenshots/%F_%H-$M-$S.png'")),
-    awful.key({ }, "Print", extern("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'")),
+	awful.key({ }, "Print", extern("scrot 'screenshots/%Y-%m-%d_%H%M%S.png'")),
     -- Lock
     awful.key({ modkey, "Control" }, "l", extern("xscreensaver-command -lock")),
     awful.key({ modkey }, "XF86ScreenSaver", extern("xscreensaver-command -lock")),
-    -- Brightness
-    awful.key({ }, "XF86MonBrightnessDown", extern("xbacklight -dec 7")),
-    awful.key({ }, "XF86MonBrightnessUp", extern("xbacklight -inc 7")),
     -- Buzzer
     awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
     awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg")),
     awful.key({ "Control" }, "XF86Launch1", extern("mplayer Documents/Aiya.mp3")),
     -- Displays
     awful.key({ modkey }, "XF86Display", extern("~/bin/dock")),
-	awful.key({ modkey }, "F8", brightcalib.update(-7)),
-	awful.key({ modkey, "Shift" }, "F8", brightcalib.update(-15)),
-	awful.key({ modkey }, "F9", brightcalib.update(7)),
-	awful.key({ modkey, "Shift" }, "F9", brightcalib.update(15))
+	awful.key({ modkey }, "F8", brightness.update(-7)),
+	awful.key({ modkey, "Shift" }, "F8", brightness.update(-15)),
+    awful.key({ }, "XF86MonBrightnessDown", brightness.update(-7)),
+	awful.key({ modkey }, "F9", brightness.update(7)),
+	awful.key({ modkey, "Shift" }, "F9", brightness.update(15)),
+    awful.key({ }, "XF86MonBrightnessUp", brightness.update(7))
 )
 
 clientkeys = awful.util.table.join(
@@ -413,9 +411,6 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule_any = { class = {"URxvt", "st-256color", "terminology"} },
       properties = { size_hints_honor = false } },
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
     { rule_any = { instance = {"plugin-container", "exe"} },
       properties = { floating = true } },
 }
@@ -497,14 +492,11 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 function run_once(prg, arg_string, pname, screen)
     if not prg then do return nil end end
     if not pname then pname = prg end
+	local spn = function(cmd) awful.util.spawn_with_shell(cmd, screen) end
+	local arg = function(x) return x end
+	if arg_string then arg = function(x) return (x .. " " .. arg_string) end end
 
-    if not arg_string then
-        awful.util.spawn_with_shell("sh -c 'pgrep -f -u $USER -x \\'" .. pname .. "\\' " ..
-                                    "|| (" .. prg .. ")'", screen)
-    else
-        awful.util.spawn_with_shell("sh -c 'pgrep -f -u $USER -x \\'" .. pname .. " ".. arg_string .."\\' " ..
-                                    "|| (" .. prg .. " " .. arg_string .. ")'", screen)
-    end
+	spn("sh -c 'pgrep -f -u $USER -x \\'" .. arg(pname) .. "\\' " .. "|| (" .. arg(prg) .. ")'")
 end
 
 run_once("xscreensaver","-no-splash")
