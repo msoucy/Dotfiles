@@ -13,6 +13,7 @@ local menubar = require("menubar")
 -- Plugins
 require("volume")
 require("battery")
+require("fish")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -100,11 +101,13 @@ myawesomemenu = {
    { "quit", awesome.quit }
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "(un)dock", "xrandr --output VGA-1 --right-of LVDS-1 --auto" },
-                                    { "open terminal", terminal }
-                                  }
-                        })
+mymainmenu = awful.menu({ items = {
+	{ "awesome", myawesomemenu, beautiful.awesome_icon },
+	{ "(un)dock", "xrandr --output VGA-1 --right-of LVDS-1 --auto" },
+	--{ "xprop", "sh -c 'notify-send XProp \"$(xprop | grep --color=none \"^WM_CLASS\\|^WM_NAME\")\"'" },
+	--{ "xprop-all", "sh -c 'notify-send XProp \"$(xprop)\"'" },
+	{ "open terminal", terminal }
+}})
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
@@ -196,6 +199,7 @@ for s = 1, screen.count() do
     if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(volume_widget)
     right_layout:add(battery_widget)
+	right_layout:add(fish.widget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -221,17 +225,14 @@ function extern(cmd, sn)
     return function() awful.util.spawn(cmd, sn or false) end
 end
 
--- This is super sketchy, but works for my laptop...
-function newbright(mod)
-	return function()
-		local f = io.open("/sys/class/backlight/nv_backlight/brightness", "r")
-		local d = f:read("*number")
-		f.close()
-		d = math.max(0, math.min(d+mod, 100))
-
-		local f = io.open("/sys/class/backlight/nv_backlight/brightness", "w")
-		f:write(string.format("%d", d))
-		f.close()
+brightcalib = { value = 100.0 }
+function brightcalib.update(mod)
+	return function ()
+		nv = brightcalib.value
+		nv = math.max(20, math.min(100,nv + mod))
+		cmd = string.format('xrandr --output LVDS-1 --brightness %1.2f', nv/100.0)
+		awful.util.spawn(cmd)
+		brightcalib.value = nv
 	end
 end
 
@@ -321,10 +322,10 @@ globalkeys = awful.util.table.join(
     awful.key({ "Control" }, "XF86Launch1", extern("mplayer Documents/Aiya.mp3")),
     -- Displays
     awful.key({ modkey }, "XF86Display", extern("~/bin/dock")),
-	awful.key({ modkey }, "F8", newbright(-7)),
-	awful.key({ modkey, "Shift" }, "F8", newbright(-15)),
-	awful.key({ modkey }, "F9", newbright(7)),
-	awful.key({ modkey, "Shift" }, "F9", newbright(15))
+	awful.key({ modkey }, "F8", brightcalib.update(-7)),
+	awful.key({ modkey, "Shift" }, "F8", brightcalib.update(-15)),
+	awful.key({ modkey }, "F9", brightcalib.update(7)),
+	awful.key({ modkey, "Shift" }, "F9", brightcalib.update(15))
 )
 
 clientkeys = awful.util.table.join(
@@ -404,24 +405,18 @@ awful.rules.rules = {
                      focus = awful.client.focus.filter,
                      keys = clientkeys,
                      buttons = clientbuttons } },
-    { rule = { class = "MPlayer" },
-      properties = { floating = true } },
-    { rule = { class = "pinentry" },
-      properties = { floating = true } },
-    { rule = { class = "gimp" },
+    { rule_any = { class = {"MPlayer", "pinentry", "gimp"} },
       properties = { floating = true } },
     { rule = { class = "Google-chrome-stable", role = "pop-up" },
       properties = { floating = true } },
     { rule = { role = "bubble" },
       properties = { floating = true } },
-    { rule = { class = "URxvt" },
+    { rule_any = { class = {"URxvt", "st-256color", "terminology"} },
       properties = { size_hints_honor = false } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
-    { rule = { instance = "plugin-container" },
-      properties = { floating = true } },
-    { rule = { instance = "exe" },
+    { rule_any = { instance = {"plugin-container", "exe"} },
       properties = { floating = true } },
 }
 -- }}}

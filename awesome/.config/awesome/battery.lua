@@ -2,18 +2,18 @@ local wibox = require("wibox")
 local awful = require("awful")
 local naughty = require("naughty")
 
-battery_widget = wibox.widget.textbox()
-battery_widget:set_align("right")
+battery_widget = awful.widget.progressbar({ width = 8 })
+battery_widget:set_vertical(true)
+battery_widget:set_ticks(true)
 
 local wraparound = 0
 
 -- Create a battery monitor widget
 function update_battery(widget)
-    local fd = io.popen("acpi -b")
-	local status = fd:read("*all")
-	fd:close()
+    local status = awful.util.pread("acpi -b")
 
-	local widstring = "<span background='red'> - </span>"
+	widget:set_color('FF0000')
+	widget:set_value(0)
 	if status:len() ~= 0 then
 		local battery = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
 
@@ -31,7 +31,7 @@ function update_battery(widget)
 		local interpol_colour = string.format("%.2x%.2x%.2x", ir, ig, ib)
 		local fg_color = "green"
 		if string.find(status, "Discharging", 1, true) then
-			fg_color = "red"
+			fg_color = "FF0000"
 			if battery <= .05 then
 				if wraparound == 0 then
 					naughty.notify({ preset = naughty.config.presets.critical,
@@ -40,10 +40,13 @@ function update_battery(widget)
 				end
 				wraparound = (wraparound + 1) % 3
 			end
+		else
+			fg_color = "00FF00"
 		end
-		widstring = string.format("<span color='%s' background='#%s'> %d%% </span>", fg_color, interpol_colour, battery*100);
+		widget:set_value(battery * 100)
+		widget:set_color(fg_color)
+		widget.level = battery * 100
 	end
-	widget:set_markup(widstring)
 end
 
 update_battery(battery_widget)
@@ -51,4 +54,10 @@ update_battery(battery_widget)
 mytimer = timer({ timeout = 10 })
 mytimer:connect_signal("timeout", function () update_battery(battery_widget) end)
 mytimer:start()
+
+battery_widget:buttons(awful.util.table.join(
+	awful.button({}, 1, function() naughty.notify({
+		text = "Battery level: " .. battery_widget.level .. "%"
+	}) end)
+))
 

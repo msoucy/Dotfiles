@@ -21,7 +21,7 @@ set cc=80,120
 syntax on
 
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
-let g:clang_format#auto_format = 1
+let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
 let g:clang_format#style_options = {
 			\ 'IndentWidth': 4,
@@ -60,10 +60,12 @@ Plugin 'idanarye/vim-dutyl'
 Plugin 'eagletmt/ghcmod-vim'
 Plugin 'vim-jp/cpp-vim'
 Plugin 'SWIG-syntax'
+Plugin 'syntaxhaskell.vim'
+"Plugin 'Twinside/vim-haskellConceal'
+Plugin 'enomsg/vim-haskellConcealPlus'
 " Show more info
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
-"Plugin 'edkolev/tmuxline.vim'
 Plugin 'kshenoy/vim-signature'
 Plugin 'majutsushi/tagbar'
 " Misc plugins
@@ -135,8 +137,6 @@ au BufNewFile,BufReadPost *.hs set expandtab
 
 " Highlight line and column
 set cursorline cursorcolumn
-hi CursorLine     cterm=NONE ctermbg=black
-hi CursorColumn   cterm=NONE ctermbg=black
 nnoremap H :set cursorline! cursorcolumn!<CR>
 
 " Use <leader>p to paste-and-preserve (instead of shift-insert)

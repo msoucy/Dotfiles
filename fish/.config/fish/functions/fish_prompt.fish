@@ -1,7 +1,7 @@
 function fish_prompt --description 'Print out the main prompt'
-	
+
 	set last_status $status
-	
+
 	# Colors
 	set -l normal (set_color normal)
 	set -l pbase $normal(set_color cyan)

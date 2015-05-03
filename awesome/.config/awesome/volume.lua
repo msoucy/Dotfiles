@@ -1,13 +1,14 @@
 local wibox = require("wibox")
 local awful = require("awful")
+local naughty = require("naughty")
 
-volume_widget = wibox.widget.textbox()
-volume_widget:set_align("right")
+volume_widget = awful.widget.progressbar({ width = 8 })
+volume_widget:set_vertical(true)
+volume_widget:set_ticks(true)
+volume_widget:set_max_value(1.0)
 
 function update_volume(widget)
-   local fd = io.popen("amixer sget Master")
-   local status = fd:read("*all")
-   fd:close()
+   local status = awful.util.pread("amixer sget Master")
 
    local volume = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
    if volume > 1.0 then
@@ -24,13 +25,11 @@ function update_volume(widget)
    local ir = volume * (er - sr) + sr
    local ig = volume * (eg - sg) + sg
    local ib = volume * (eb - sb) + sb
-   interpol_colour = string.format("%.2x%.2x%.2x", ir, ig, ib)
-   if string.find(status, "on", 1, true) then
-       volume = " <span background='#" .. interpol_colour .. "'>   </span>"
-   else
-       volume = " <span color='red' background='#" .. interpol_colour .. "'> M </span>"
-   end
-   widget:set_markup(volume)
+   local interpol_colour = string.format("%.2x%.2x%.2x", ir, ig, ib)
+   local couldfind = string.find(status, "on", 1, true)
+   widget:set_color(couldfind and interpol_colour or "FF0000")
+   widget:set_value(volume)
+   widget.volume = volume
 end
 
 update_volume(volume_widget)
@@ -38,3 +37,10 @@ update_volume(volume_widget)
 mytimer = timer({ timeout = 1 })
 mytimer:connect_signal("timeout", function () update_volume(volume_widget) end)
 mytimer:start()
+
+volume_widget:buttons(awful.util.table.join(
+	awful.button({}, 1, function()
+		naughty.notify({text = "Volume: " .. volume_widget.volume * 100 .. "%"})
+	end)
+))
+
