@@ -5,6 +5,7 @@ local naughty = require("naughty")
 battery_widget = awful.widget.progressbar({ width = 8 })
 battery_widget:set_vertical(true)
 battery_widget:set_ticks(true)
+battery_widget:set_max_value(100)
 
 local wraparound = 0
 
@@ -41,12 +42,14 @@ battery_widget.update = function()
 				end
 				wraparound = (wraparound + 1) % 3
 			end
+			widget.charging = false
 		else
 			fg_color = "00FF00"
+			widget.charging = true
 		end
-		battery_widget.level = battery * 100
-		battery_widget:set_value(battery_widget.level)
-		battery_widget:set_color(fg_color)
+		widget.level = battery * 100
+		widget:set_value(battery_widget.level)
+		widget:set_color(fg_color)
 	end
 end
 
@@ -57,8 +60,11 @@ mytimer:connect_signal("timeout", battery_widget.update)
 mytimer:start()
 
 battery_widget:buttons(awful.util.table.join(
-	awful.button({}, 1, function() naughty.notify({
-		text = "Battery level: " .. battery_widget.level .. "%"
+	awful.button({}, 1, function()
+		local text = "Charging"
+		if not battery_widget.charging then text = "Discharging" end
+		naughty.notify({
+		text = "Battery level: " .. battery_widget.level .. "% (" .. text .. ")"
 	}) end)
 ))
 
