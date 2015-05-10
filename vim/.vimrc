@@ -129,11 +129,12 @@ nnoremap gj j
 nnoremap gk k
 
 let g:vim_markdown_folding_disabled=1
-au BufNewFile,BufReadPost *.md set filetype=markdown
+au BufNewFile,BufReadPost *.md set ft=markdown
 au BufNewFile,BufReadPost *.md :TableModeEnable
 au BufNewFile,BufReadPost *.html,*.htm,*.shtml,*.stm set ft=jinja
 au BufNewFile,BufReadPost *.yaml,*.yml set ts=2 sw=2
 au BufNewFile,BufReadPost *.hs set expandtab
+au BufNewFile,BufReadPost *.fish set ft=fish
 
 " Highlight line and column
 set cursorline cursorcolumn
