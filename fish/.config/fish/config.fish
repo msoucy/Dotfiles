@@ -30,23 +30,13 @@ set -g __fish_git_prompt_color_untrackedfiles $fish_color_normal
 set -g __fish_git_prompt_color_cleanstate green bold
 
 set VIRTUALFISH_HOME "$HOME/.virtualenv"
-function __cdsetup --on-variable PWD --description 'Do per-cwd init'
-	status --is-command-substitution; and return
-	if test -f ".envrc.fish"
-		source ".envrc.fish"
-	else if test -f ".envrc"
-		source ".envrc"
-	end
+if python -c 'exit("virtualfish" not in (name for l, name, p in __import__("pkgutil").iter_modules()))'
+	eval (python -m virtualfish compat_aliases auto_activation)
+	complete -f -c workon -a "(vf ls)"
+else
+	echo "Virtualfish not found, will not be in prompt"
+	echo "Install using 'pip install --user virtualfish'"
 end
 
-set VIRTUALFISH_COMPAT_ALIASES 'yes'
-source ~/.config/fish/virtualfish/virtual.fish
-source ~/.config/fish/virtualfish/auto_activation.fish
-source ~/.config/fish/virtualfish/global_requirements.fish
-complete -f -c workon -a "(vf ls)"
-
-set -g LESS "-FR"
-
-set -Ux fish_user_paths ~/bin ~/.cabal/bin
-set -Ux EDITOR vim
-set -Ux LD_LIBRARY_PATH /usr/local/lib
+set -gx PAGER "less"
+set -gx LESS "-FR"
