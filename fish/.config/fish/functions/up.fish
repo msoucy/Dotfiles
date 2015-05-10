@@ -1,4 +1,4 @@
-function up --description 'Move up N directories'
+function up -d 'Move up N directories'
 	if test (count $argv) -ne 1
 				cd ..
 		else

@@ -1,4 +1,4 @@
-function code-pull
+function code-pull -d "Pull code from any repository type"
 	if test -d ".git"
 		git pull
 	else if test -d ".svn"

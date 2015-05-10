@@ -1,3 +1,3 @@
-function :e
+function :e -d "Edit file"
 	eval $EDITOR $argv
 end

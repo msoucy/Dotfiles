@@ -1,3 +1,3 @@
-function please
-	sudo $argv; 
+function please -d "Be polite"
+	sudo $argv
 end

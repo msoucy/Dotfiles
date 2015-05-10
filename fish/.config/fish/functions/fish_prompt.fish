@@ -1,4 +1,4 @@
-function fish_prompt --description 'Print out the main prompt'
+function fish_prompt -d 'Print out the main prompt'
 
 	set last_status $status
 

@@ -1,3 +1,3 @@
-function make
-	command make -s $argv; 
+function make -d "Silent make"
+	command make -s $argv
 end

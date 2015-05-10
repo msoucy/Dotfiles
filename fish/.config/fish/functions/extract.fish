@@ -1,4 +1,4 @@
-function extract --description 'Automatically determine the command to extract a file'
+function extract -d 'Automatically determine the command to extract a file'
 	if test (count $argv) -ne 1
 		echo "usage: extract < filename >"
 		echo "	   Extract the file specified based on the extension"

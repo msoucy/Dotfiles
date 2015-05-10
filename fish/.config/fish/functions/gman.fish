@@ -1,3 +1,3 @@
-function gman
-	man -k  $argv; 
+function gman -d "Look up word in manpages"
+	man -k $argv
 end
