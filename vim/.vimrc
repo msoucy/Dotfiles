@@ -40,9 +40,9 @@ let g:syntastic_aggregate_errors = 1
 let g:table_mode_corner = '|'
 
 if has("nvim")
-	call plug#begin('~/.vim/bundle')
-else
 	call plug#begin('~/.nvim/bundle')
+else
+	call plug#begin('~/.vim/bundle')
 endif
 Plug 'tpope/vim-sensible' " Reasonable defaults
 Plug 'sjl/badwolf' " Theme
@@ -50,33 +50,30 @@ Plug 'sjl/badwolf' " Theme
 Plug 'scrooloose/syntastic'
 Plug 'Chiel92/vim-autoformat'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'rhysd/vim-clang-format'
-"Plug 'Shougo/vimproc.vim'
+Plug 'rhysd/vim-clang-format', { 'for': 'cpp' }
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 " Language syntaxes
 Plug 'lepture/vim-jinja'
 Plug 'dag/vim-fish'
 Plug 'dpwright/vim-tup'
 Plug 'othree/html5.vim'
 Plug 'idanarye/vim-dutyl'
-Plug 'eagletmt/ghcmod-vim'
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell', 'do': 'cabal install ghc-mod' }
 Plug 'vim-jp/cpp-vim'
-Plug 'SWIG-syntax'
-Plug 'syntaxhaskell.vim'
-"Plug 'Twinside/vim-haskellConceal'
-Plug 'enomsg/vim-haskellConcealPlus'
+Plug 'SWIG-syntax', { 'for': 'swig' }
+Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
 " Show more info
 Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
 Plug 'kshenoy/vim-signature'
 Plug 'majutsushi/tagbar'
 " Misc Plugs
-"Plug 'Raimondi/delimitMate'
 Plug 'kien/ctrlp.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'scrooloose/nerdcommenter'
-"Plug 'edkolev/tmuxline.vim'
 Plug 'jmcantrell/vim-virtualenv'
-Plug 'dhruvasagar/vim-table-mode'
+Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
 call plug#end()
 
 "Set a nice Omnifunc - <CTRL>X <CTRL>O
