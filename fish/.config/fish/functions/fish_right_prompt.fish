@@ -11,7 +11,7 @@ function fish_right_prompt -d 'Print out useful information on the side'
 
 	set PR_venv ""
 	if set -q VIRTUAL_ENV
-		set PR_venv $pbase"[v|$green"(basename "$VIRTUAL_ENV")"$pbase]─"
+		set PR_venv $pbase"["$green"v|"(basename "$VIRTUAL_ENV")"$pbase]─"
 	end
 
 	set -l __git_cb_hash ""
