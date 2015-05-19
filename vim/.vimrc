@@ -39,45 +39,45 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 let g:table_mode_corner = '|'
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'gmarik/Vundle.vim' " Vundle manages itself
-Plugin 'tpope/vim-sensible' " Reasonable defaults
-Plugin 'sjl/badwolf' " Theme
+if has("nvim")
+	call plug#begin('~/.vim/bundle')
+else
+	call plug#begin('~/.nvim/bundle')
+endif
+Plug 'tpope/vim-sensible' " Reasonable defaults
+Plug 'sjl/badwolf' " Theme
 " Syntax formatting and verification
-Plugin 'scrooloose/syntastic'
-Plugin 'Chiel92/vim-autoformat'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'rhysd/vim-clang-format'
-"Plugin 'Shougo/vimproc.vim'
+Plug 'scrooloose/syntastic'
+Plug 'Chiel92/vim-autoformat'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'rhysd/vim-clang-format'
+"Plug 'Shougo/vimproc.vim'
 " Language syntaxes
-Plugin 'lepture/vim-jinja'
-Plugin 'dag/vim-fish'
-Plugin 'dpwright/vim-tup'
-Plugin 'othree/html5.vim'
-Plugin 'idanarye/vim-dutyl'
-Plugin 'eagletmt/ghcmod-vim'
-Plugin 'vim-jp/cpp-vim'
-Plugin 'SWIG-syntax'
-Plugin 'syntaxhaskell.vim'
-"Plugin 'Twinside/vim-haskellConceal'
-Plugin 'enomsg/vim-haskellConcealPlus'
+Plug 'lepture/vim-jinja'
+Plug 'dag/vim-fish'
+Plug 'dpwright/vim-tup'
+Plug 'othree/html5.vim'
+Plug 'idanarye/vim-dutyl'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'vim-jp/cpp-vim'
+Plug 'SWIG-syntax'
+Plug 'syntaxhaskell.vim'
+"Plug 'Twinside/vim-haskellConceal'
+Plug 'enomsg/vim-haskellConcealPlus'
 " Show more info
-Plugin 'airblade/vim-gitgutter'
-Plugin 'bling/vim-airline'
-Plugin 'kshenoy/vim-signature'
-Plugin 'majutsushi/tagbar'
-" Misc plugins
-"Plugin 'Raimondi/delimitMate'
-Plugin 'kien/ctrlp.vim'
-Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'scrooloose/nerdcommenter'
-"Plugin 'edkolev/tmuxline.vim'
-Plugin 'jmcantrell/vim-virtualenv'
-Plugin 'dhruvasagar/vim-table-mode'
-call vundle#end()
-filetype plugin indent on
+Plug 'airblade/vim-gitgutter'
+Plug 'bling/vim-airline'
+Plug 'kshenoy/vim-signature'
+Plug 'majutsushi/tagbar'
+" Misc Plugs
+"Plug 'Raimondi/delimitMate'
+Plug 'kien/ctrlp.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'scrooloose/nerdcommenter'
+"Plug 'edkolev/tmuxline.vim'
+Plug 'jmcantrell/vim-virtualenv'
+Plug 'dhruvasagar/vim-table-mode'
+call plug#end()
 
 "Set a nice Omnifunc - <CTRL>X <CTRL>O
 set ofu=syntaxcomplete#Complete

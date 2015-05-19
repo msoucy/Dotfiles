@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Build stow if it doesn't exist
+if command -v stow 2> /dev/null; then
+	STOW="stow"
+else
+	if [ ! -f stow-latest.tar.gz ]; then
+		wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
+	fi
+	tar -xzf stow-latest.tar.gz
+	STOWDIR="$(find . -maxdepth 1 -name 'stow-*' -type d -print -quit)"
+	pushd $STOWDIR
+	./configure && make
+	STOW="$STOWDIR/bin/stow"
+	popd
+fi
+
+echo "Stow is at: $STOW"
+
+curl -fLo vim/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
