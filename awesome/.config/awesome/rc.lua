@@ -403,7 +403,7 @@ awful.rules.rules = {
                      focus = awful.client.focus.filter,
                      keys = clientkeys,
                      buttons = clientbuttons } },
-    { rule_any = { class = {"MPlayer", "pinentry", "gimp"} },
+    { rule_any = { class = {"MPlayer", "pinentry", "gimp", "Nautical Game!"} },
       properties = { floating = true } },
     { rule = { class = "Google-chrome-stable", role = "pop-up" },
       properties = { floating = true } },

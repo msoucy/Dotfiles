@@ -88,7 +88,7 @@ map <F11> :cnext<Return>
 map <F7> :set paste<CR>
 map <F8> :set nopaste<CR>
 imap <F7> <C-O>:set paste<CR>
-imap <F8> <nop>
+imap <F8> <C-O>:set nopaste<CR>
 set pastetoggle=<F12>
 
 "This is a nice buffer switcher
@@ -119,6 +119,9 @@ nmap <silent> <Leader>r :so $MYVIMRC<CR>
 " Don't show the intro message
 set shortmess+=I
 
+" Don't extend comments
+set formatoptions-=r
+
 " Move by row, not line
 nnoremap j gj
 nnoremap k gk
@@ -138,7 +141,7 @@ set cursorline cursorcolumn
 nnoremap H :set cursorline! cursorcolumn!<CR>
 
 " Use <leader>p to paste-and-preserve (instead of shift-insert)
-noremap <leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
+noremap <leader>p :set paste<CR>:put *<CR>:set nopaste<CR>
 
 " Language-specific custom commands
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)

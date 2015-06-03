@@ -19,26 +19,19 @@ battery_widget.update = function()
 	if status:len() ~= 0 then
 		local battery = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
 
-
 		status = string.match(status, ": (%w+)")
 
-		-- starting colour
-		local sr, sg, sb = 0x3F, 0x3F, 0x3F
-		-- ending colour
-		local er, eg, eb = 0xDC, 0xDC, 0xCC
-
-		local ir = battery * (er - sr) + sr
-		local ig = battery * (eg - sg) + sg
-		local ib = battery * (eb - sb) + sb
-		local interpol_colour = string.format("%.2x%.2x%.2x", ir, ig, ib)
 		local fg_color = "green"
 		if string.find(status, "Discharging", 1, true) then
 			fg_color = "FF0000"
 			if battery <= .05 then
 				if wraparound == 0 then
-					naughty.notify({ preset = naughty.config.presets.critical,
-									 title = "Battery critical!",
-									 text = string.format("Save your work now, battery at %d%%", battery*100) })
+					naughty.notify({
+						preset = naughty.config.presets.critical,
+						title = "Battery critical!",
+						text = string.format("Save your work now, battery at %d%%",
+						                     math.floor(battery*100))
+					})
 				end
 				wraparound = (wraparound + 1) % 3
 			end
