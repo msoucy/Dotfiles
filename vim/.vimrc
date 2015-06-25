@@ -1,8 +1,6 @@
-"The basic settings
-if &shell =~# 'fish$'
-	set shell=/bin/bash
-endif
+" Author: Matt Soucy
 
+" vim settings {{{
 set nocompatible
 set laststatus=2
 set tabstop=4
@@ -16,10 +14,54 @@ set wrap
 set hidden
 set hlsearch
 set cc=80,120
+set cursorline cursorcolumn
+set shortmess+=I " Don't show the intro message
+syntax on "Syntax highlighting
+" }}}
 
-"Syntax highlighting
-syntax on
+" Plugins {{{
+" Load plugins {{{
+if !empty(globpath(&rtp, "autoload/plug.vim"))
+	call plug#begin()
+	" Plugins {{{
+	Plug 'tpope/vim-sensible' " Reasonable defaults
+	Plug 'sjl/badwolf' " Theme
+	" Syntax formatting and verification
+	Plug 'scrooloose/syntastic'
+	Plug 'Chiel92/vim-autoformat'
+	Plug 'editorconfig/editorconfig-vim'
+	Plug 'rhysd/vim-clang-format', { 'for': 'cpp' }
+	Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+	" Language syntaxes
+	Plug 'lepture/vim-jinja'
+	Plug 'dag/vim-fish'
+	Plug 'dpwright/vim-tup'
+	Plug 'othree/html5.vim'
+	Plug 'idanarye/vim-dutyl'
+	Plug 'vim-jp/cpp-vim'
+	Plug 'SWIG-syntax', { 'for': 'swig' }
+	Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell', 'do': 'cabal install ghc-mod' }
+	Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
+	Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
+	" Show more info
+	Plug 'airblade/vim-gitgutter'
+	Plug 'itchyny/lightline.vim'
+	Plug 'kshenoy/vim-signature'
+	Plug 'majutsushi/tagbar'
+	" Misc Plugs
+	Plug 'kien/ctrlp.vim'
+	Plug 'ntpeters/vim-better-whitespace'
+	Plug 'scrooloose/nerdcommenter'
+	Plug 'jmcantrell/vim-virtualenv'
+	Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
+	Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
+	Plug 'tpope/vim-fugitive'
+	" }}}
+	call plug#end()
+endif
+" }}}
 
+" Plugin settings {{{
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
@@ -37,48 +79,20 @@ let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
+let g:syntastic_d_checkers = ['dub']
 let g:table_mode_corner = '|'
+let g:vim_markdown_folding_disabled=1
+" }}}
 
-if has("nvim")
-	call plug#begin('~/.nvim/bundle')
-else
-	call plug#begin('~/.vim/bundle')
-endif
-Plug 'tpope/vim-sensible' " Reasonable defaults
-Plug 'sjl/badwolf' " Theme
-" Syntax formatting and verification
-Plug 'scrooloose/syntastic'
-Plug 'Chiel92/vim-autoformat'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'rhysd/vim-clang-format', { 'for': 'cpp' }
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-" Language syntaxes
-Plug 'lepture/vim-jinja'
-Plug 'dag/vim-fish'
-Plug 'dpwright/vim-tup'
-Plug 'othree/html5.vim'
-Plug 'idanarye/vim-dutyl'
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell', 'do': 'cabal install ghc-mod' }
-Plug 'vim-jp/cpp-vim'
-Plug 'SWIG-syntax', { 'for': 'swig' }
-Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
-Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
-" Show more info
-Plug 'airblade/vim-gitgutter'
-Plug 'bling/vim-airline'
-Plug 'kshenoy/vim-signature'
-Plug 'majutsushi/tagbar'
-" Misc Plugs
-Plug 'kien/ctrlp.vim'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'scrooloose/nerdcommenter'
-Plug 'jmcantrell/vim-virtualenv'
-Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
-call plug#end()
+" }}} Plugins
 
-"Set a nice Omnifunc - <CTRL>X <CTRL>O
-set ofu=syntaxcomplete#Complete
+" Color {{{
+set background=dark
+colorscheme desert " Use desert if badwolf isn't installed yet
+silent! colorscheme badwolf
+" }}}
 
+" Keybindings {{{
 "Mapped some FUNCTION keys to be more useful
 map <F9> :make<Return>:copen<Return><Return>
 map <F10> :cprevious<Return>
@@ -94,30 +108,10 @@ set pastetoggle=<F12>
 "This is a nice buffer switcher
 nnoremap <F5> :buffers<CR>:buffer<Space>
 
-set background=dark
-colorscheme desert " Use desert if badwolf isn't installed yet
-silent! colorscheme badwolf
-
-"Set the color for the popup menu
-highlight Pmenu ctermbg=blue ctermfg=white
-highlight PmenuSel ctermbg=blue ctermfg=red
-highlight PmenuSbar ctermbg=cyan ctermfg=green
-highlight PmenuThumb ctermbg=white ctermfg=red
-
-" Make vim popup behave more like an IDE POPUP
-set completeopt=longest,menuone
-
-" Make enter finish the completion popup menu
-inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
-
 imap jj <ESC>
 nmap <silent> <Leader>/ :nohlsearch<CR>
-nmap <silent> <Leader>t :TagbarToggle<CR>
 nmap <silent> <Leader>l :lclose<CR>
 nmap <silent> <Leader>r :so $MYVIMRC<CR>
-
-" Don't show the intro message
-set shortmess+=I
 
 " Move by row, not line
 nnoremap j gj
@@ -125,44 +119,100 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-let g:vim_markdown_folding_disabled=1
-au BufNewFile,BufReadPost *.md set ft=markdown
-au BufNewFile,BufReadPost *.md :TableModeEnable
-au BufNewFile,BufReadPost *.html,*.htm,*.shtml,*.stm set ft=jinja
-au BufNewFile,BufReadPost *.yaml,*.yml set ts=2 sw=2
-au BufNewFile,BufReadPost *.hs set expandtab
-au BufNewFile,BufReadPost *.fish set ft=fish
-
 " Highlight line and column
-set cursorline cursorcolumn
 nnoremap H :set cursorline! cursorcolumn!<CR>
 
-" Use <leader>p to paste-and-preserve (instead of shift-insert)
-noremap <leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
+if exists(":TagbarToggle")
+	nmap <silent> <Leader>t :TagbarToggle<CR>
+endif
+" }}}
 
-" Language-specific custom commands
-command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
-function! s:RunShellCommand(cmdline)
-  echo a:cmdline
-  let expanded_cmdline = a:cmdline
-  for part in split(a:cmdline, ' ')
-     if part[0] =~ '\v[%#<]'
-        let expanded_part = fnameescape(expand(part))
-        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
-     endif
-  endfor
-  botright new
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call setline(1, 'You entered:    ' . a:cmdline)
-  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
-  call setline(3,substitute(getline(2),'.','=','g'))
-  execute '$read !'. expanded_cmdline
-  setlocal nomodifiable
-  1
+" Completion {{{
+"Set a nice Omnifunc - <CTRL>X <CTRL>O
+set ofu=syntaxcomplete#Complete
+
+" Make vim popup behave more like an IDE POPUP
+set completeopt=longest,menuone
+
+" Make enter finish the completion popup menu
+inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
+" }}}
+
+" Lightline controls {{{
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
+      \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component_function': {
+      \   'fugitive': 'fugitive#head',
+      \   'ctrlpmark': 'CtrlPMark',
+      \ },
+      \ 'component_expand': {
+      \   'syntastic': 'SyntasticStatuslineFlag',
+      \ },
+      \ 'component_type': {
+      \   'syntastic': 'error',
+      \ },
+      \ }
+
+function! MyFugitive()
+  try
+    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && exists('*fugitive#head')
+      let mark = ''  " edit here for cool mark
+      let _ = fugitive#head()
+      return strlen(_) ? mark._ : ''
+    endif
+  catch
+  endtry
+  return ''
 endfunction
-command! -complete=shellcmd -nargs=+ Hoogle call s:RunShellCommand('hoogle "'.<q-args>.'"')
-command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
 
+function! CtrlPMark()
+  if expand('%:t') =~ 'ControlP'
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
+    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+          \ , g:lightline.ctrlp_next], 0)
+  else
+    return ''
+  endif
+endfunction
+
+let g:ctrlp_status_func = {
+  \ 'main': 'CtrlPStatusFunc_1',
+  \ 'prog': 'CtrlPStatusFunc_2',
+  \ }
+
+function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+  let g:lightline.ctrlp_regex = a:regex
+  let g:lightline.ctrlp_prev = a:prev
+  let g:lightline.ctrlp_item = a:item
+  let g:lightline.ctrlp_next = a:next
+  return lightline#statusline(0)
+endfunction
+
+function! CtrlPStatusFunc_2(str)
+  return lightline#statusline(0)
+endfunction
+
+let g:tagbar_status_func = 'TagbarStatusFunc'
+
+function! TagbarStatusFunc(current, sort, fname, ...) abort
+    let g:lightline.fname = a:fname
+  return lightline#statusline(0)
+endfunction
+
+augroup AutoSyntastic
+  autocmd!
+  autocmd BufWritePost *.c,*.cpp call s:syntastic()
+augroup END
+function! s:syntastic()
+  SyntasticCheck
+  call lightline#update()
+endfunction
+" }}}
+
+" Custom term behavior {{{
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
     execute "set <xUp>=\e[1;*A"
@@ -170,8 +220,10 @@ if &term =~ '^screen'
     execute "set <xRight>=\e[1;*C"
     execute "set <xLeft>=\e[1;*D"
 endif
+" }}}
 
 if filereadable(glob("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
 
+" vim: foldmethod=marker
