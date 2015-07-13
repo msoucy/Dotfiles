@@ -64,6 +64,9 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
 	Plug 'tpope/vim-vinegar'
 	" }}}
 	call plug#end()
+else
+	filetype plugin indent on
+	syntax on
 endif
 " }}}
 
@@ -158,12 +161,24 @@ inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
 " Lightline controls {{{
 let g:lightline = {
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
+      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'modified', 'fugitive', 'filename' ], ['ctrlpmark'] ],
       \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component': {
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}'
       \ },
       \ 'component_function': {
       \   'fugitive': 'fugitive#head',
       \   'ctrlpmark': 'CtrlPMark',
+	  \   'modified': 'MyModified',
+	  \   'readonly': 'MyReadonly',
+	  \   'fileformat': 'MyFileformat',
+      \   'filetype': 'MyFiletype',
+      \   'fileencoding': 'MyFileencoding',
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))'
       \ },
       \ 'component_expand': {
       \   'syntastic': 'SyntasticStatuslineFlag',
@@ -172,6 +187,27 @@ let g:lightline = {
       \   'syntastic': 'error',
       \ },
       \ }
+
+
+function! MyModified()
+  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
 
 function! MyFugitive()
   try
@@ -219,14 +255,16 @@ function! TagbarStatusFunc(current, sort, fname, ...) abort
   return lightline#statusline(0)
 endfunction
 
-augroup AutoSyntastic
-  autocmd!
-  autocmd BufWritePost *.c,*.cpp call s:syntastic()
-augroup END
-function! s:syntastic()
-  SyntasticCheck
-  call lightline#update()
-endfunction
+if exists(":SyntasticCheck")
+  augroup AutoSyntastic
+    autocmd!
+    autocmd BufWritePost *.c,*.cpp call s:syntastic()
+  augroup END
+  function! s:syntastic()
+    SyntasticCheck
+    call lightline#update()
+  endfunction
+endif
 " }}}
 
 " Custom term behavior {{{
@@ -242,7 +280,9 @@ endif
 " NeoVim specific settings {{{
 if has("nvim")
 	tnoremap <Esc> <C-\><C-n>
-	nnoremap <C-p> :Unite file_rec/neovim<CR>
+	if exists(':Unite')
+		nnorema <C-p> :Unite file_rec/neovim<CR>
+	endif
 endif
 " }}}
 
