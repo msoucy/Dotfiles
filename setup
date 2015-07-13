@@ -16,6 +16,7 @@ else
 fi
 
 echo "Stow is at: $STOW"
+ln -s "$STOW" stow
 
 wget https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS -O ~/.dircolors
 
