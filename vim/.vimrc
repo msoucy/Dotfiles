@@ -13,7 +13,7 @@ set noswapfile
 set wrap
 set hidden
 set hlsearch
-if has('cc')
+if exists('&cc')
 	set cc=80,120
 endif
 set cursorline cursorcolumn
