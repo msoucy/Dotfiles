@@ -13,7 +13,9 @@ set noswapfile
 set wrap
 set hidden
 set hlsearch
-set cc=80,120
+if has('cc')
+	set cc=80,120
+endif
 set cursorline cursorcolumn
 set shortmess+=I " Don't show the intro message
 syntax on "Syntax highlighting
@@ -43,26 +45,29 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
 	Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell', 'do': 'cabal install ghc-mod' }
 	Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
 	Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
+	Plug 'trapd00r/vim-syntax-vidir-ls'
+	Plug 'powerman/vim-plugin-viewdoc'
 	" Show more info
 	Plug 'airblade/vim-gitgutter'
 	Plug 'itchyny/lightline.vim'
 	Plug 'kshenoy/vim-signature'
 	Plug 'majutsushi/tagbar'
 	" Misc Plugs
-	Plug 'kien/ctrlp.vim'
+	Plug 'Shougo/unite.vim'
 	Plug 'ntpeters/vim-better-whitespace'
 	Plug 'scrooloose/nerdcommenter'
 	Plug 'jmcantrell/vim-virtualenv'
 	Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
 	Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 	Plug 'tpope/vim-fugitive'
+	Plug 'rstacruz/vim-closer'
+	Plug 'tpope/vim-vinegar'
 	" }}}
 	call plug#end()
 endif
 " }}}
 
 " Plugin settings {{{
-let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
 let g:clang_format#style_options = {
@@ -75,13 +80,12 @@ let g:clang_format#style_options = {
 let g:clang_format#auto_formatexpr = 1
 let g:syntastic_cpp_config_file = ".syntastic"
 let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_d_checkers = ['dub']
 let g:table_mode_corner = '|'
 let g:vim_markdown_folding_disabled=1
+let g:netrw_liststyle=3
 " }}}
 
 " }}} Plugins
@@ -124,6 +128,19 @@ nnoremap H :set cursorline! cursorcolumn!<CR>
 
 if exists(":TagbarToggle")
 	nmap <silent> <Leader>t :TagbarToggle<CR>
+endif
+if exists(":Unite")
+	nnoremap <C-p> :Unite file_rec/async<CR>
+	nnoremap <space>/ :Unite grep:.<cr>
+	if executable('ag')
+        let g:unite_source_grep_command='ag'
+        let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
+        let g:unite_source_grep_recursive_opt=''
+	elseif executable('ack')
+        let g:unite_source_grep_command='ack'
+        let g:unite_source_grep_default_opts='--no-heading --no-color -C4'
+        let g:unite_source_grep_recursive_opt=''
+	endif
 endif
 " }}}
 
@@ -219,6 +236,13 @@ if &term =~ '^screen'
     execute "set <xDown>=\e[1;*B"
     execute "set <xRight>=\e[1;*C"
     execute "set <xLeft>=\e[1;*D"
+endif
+" }}}
+
+" NeoVim specific settings {{{
+if has("nvim")
+	tnoremap <Esc> <C-\><C-n>
+	nnoremap <C-p> :Unite file_rec/neovim<CR>
 endif
 " }}}
 
