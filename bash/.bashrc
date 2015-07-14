@@ -11,9 +11,9 @@ fi
 
 # User specific aliases and functions {{{
 export PATH="~/bin:$PATH"
-function trysource() {
-	for i in "$@"; do
-		test -f "$i" && source "$i"
+trysource() {
+	for i; do
+		eval "[[ -f $i ]] && source $i || echo \"$i not found\""
 	done
 }
 
@@ -63,9 +63,9 @@ PR_BODY_COLOR="${PR_NO_COLOR}${PR_LIGHT_CYAN}"
 typeset -a _prc_modules
 _prc_modules=( userhost time smiley pwd git )
 
-setprompt() {
+function setprompt() {
     local ret=$?
-    #eval $(resize)
+    eval $(resize)
     _prc_userhost="${PR_RED}$(whoami)${PR_YELLOW}@$(hostname)"
     _prc_time="${PR_WHITE}$(date +"%H:%m:%S")"
     _prc_smiley="$([[ $ret == 0 ]] && echo "${PR_LIGHT_GREEN}^_^" || echo "${PR_LIGHT_RED}O_O [$ret]")"
@@ -90,10 +90,12 @@ setprompt() {
             echo -ne "${PR_BODY_COLOR}]${PR_NO_COLOR}"
         fi
     done
+    echo
 }
-export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}>\[${PR_NO_COLOR}\] '
+export PROMPT_COMMAND=
+export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}\]>\[${PR_NO_COLOR}\] '
 # }}}
 
-trysource "~/.bashrc.local"
+trysource ~/.bashrc.local
 
 # vim: et fdm=marker
