@@ -10,6 +10,7 @@ if which fish > /dev/null 2>&1 && test '!' -z $PS1 ; then
 fi
 
 # User specific aliases and functions {{{
+export PATH="~/bin:$PATH"
 function trysource() {
 	for i in "$@"; do
 		test -f "$i" && source "$i"
@@ -38,8 +39,8 @@ vim() {
 alias ls='command ls --color=auto'
 # }}}
 
-#####################################################################
 # Prompt {{{
+# Setup {{{
 shiftput() {
     tput enacs && printf "$(tput smacs)$1$(tput rmacs)" || printf "$2"
 }
@@ -56,10 +57,11 @@ for index in ${!COLORNAMES[@]}; do
 done
 PR_NO_COLOR="$(tput sgr0)"
 PR_BODY_COLOR="${PR_NO_COLOR}${PR_LIGHT_CYAN}"
+# }}}
 
 # Prompt configuration
 typeset -a _prc_modules
-_prc_modules=( userhost time smiley pwd )
+_prc_modules=( userhost time smiley pwd git )
 
 setprompt() {
     local ret=$?
@@ -68,28 +70,29 @@ setprompt() {
     _prc_time="${PR_WHITE}$(date +"%H:%m:%S")"
     _prc_smiley="$([[ $ret == 0 ]] && echo "${PR_LIGHT_GREEN}^_^" || echo "${PR_LIGHT_RED}O_O [$ret]")"
     _prc_pwd="${PR_YELLOW}$(pwdshort)"
+    # Git prompt {{{
+    if source git-prompt.sh 2>/dev/null; then
+        GIT_PS1_SHOWDIRTYSTATE=0
+        GIT_PS1_SHOWSTASHSTATE=1
+        GIT_PS1_SHOWUNTRACKEDFILES=0
+        #GIT_PS1_DESCRIBE_STYLE="branch"
+        GIT_PS1_SHOWUPSTREAM="auto git"
+        GIT_PS1_HIDE_IF_PWD_IGNORED=1
+        _prc_git="$(__git_ps1 "${PR_LIGHT_MAGENTA}%s")"
+    fi
+    # }}}
     # Now actually print
     echo -ne "${PR_BODY_COLOR}${PR_ULCORNER}"
     for mod in ${_prc_modules[@]}; do
-        echo -ne "${PR_BODY_COLOR}${PR_HBAR}[${PR_NO_COLOR}"
-        eval echo -ne "\${_prc_$mod}"
-        echo -ne "${PR_BODY_COLOR}]${PR_NO_COLOR}"
+        if eval "test -n \"\${_prc_$mod}\""; then
+            echo -ne "${PR_BODY_COLOR}${PR_HBAR}[${PR_NO_COLOR}"
+            eval echo -ne "\${_prc_$mod}"
+            echo -ne "${PR_BODY_COLOR}]${PR_NO_COLOR}"
+        fi
     done
 }
 export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}>\[${PR_NO_COLOR}\] '
 # }}}
-
-if source git-prompt.sh 2>/dev/null; then
-    GIT_PS1_SHOWDIRTYSTATE=0
-    GIT_PS1_SHOWSTASHSTATE=1
-    GIT_PS1_SHOWUNTRACKEDFILES=0
-    #GIT_PS1_DESCRIBE_STYLE="branch"
-    GIT_PS1_SHOWUPSTREAM="auto git"
-    GIT_PS1_HIDE_IF_PWD_IGNORED=1
-
-    _prc_git="$(__git_ps1 "${PR_LIGHT_MAGENTA}%s")"
-    _prc_modules+=('git')
-fi
 
 trysource "~/.bashrc.local"
 
