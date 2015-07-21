@@ -37,6 +37,18 @@ vim() {
 }
 
 alias ls='command ls --color=auto'
+
+prompt_pwd() {
+    case "$PWD" in
+        "$HOME")
+            echo "~"
+            ;;
+        *)
+            printf "%s" $(echo $PWD|sed -e "s|^$HOME|~|" -e 's-/\(\.\{0,1\}[^/]\)\([^/]*\)-/\1-g')
+            echo "$PWD" | sed -n -e 's-.*/\.\{0,1\}.\([^/]*\)-\1-p'
+            ;;
+    esac
+}
 # }}}
 
 # Prompt {{{
@@ -69,7 +81,7 @@ function setprompt() {
     _prc_userhost="${PR_RED}$(whoami)${PR_YELLOW}@$(hostname)"
     _prc_time="${PR_WHITE}$(date +"%H:%m:%S")"
     _prc_smiley="$([[ $ret == 0 ]] && echo "${PR_LIGHT_GREEN}^_^" || echo "${PR_LIGHT_RED}O_O [$ret]")"
-    _prc_pwd="${PR_YELLOW}$(pwdshort)"
+    _prc_pwd="${PR_YELLOW}$(prompt_pwd)"
     # Git prompt {{{
     if source git-prompt.sh 2>/dev/null; then
         GIT_PS1_SHOWDIRTYSTATE=0
