@@ -41,7 +41,7 @@ end
 set -gx PAGER "less"
 set -gx LESS "-FR"
 set -gx EDITOR "vim"
-export VIDIR_EDITOR_ARGS='-c :set nolist | :set ft=vidir-ls'
+set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
 if test -f ~/.dircolors
 	eval (dircolors -c ~/.dircolors)
 end
