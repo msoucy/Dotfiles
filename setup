@@ -2,20 +2,27 @@
 
 # Build stow if it doesn't exist
 if command -v stow 2> /dev/null; then
-	STOW="stow"
+	STOW="$(command -v stow)"
+	ln -s "$STOW" stow
 else
 	if [ ! -f stow-latest.tar.gz ]; then
 		wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
 	fi
 	tar -xzf stow-latest.tar.gz
 	STOWDIR="$(find . -maxdepth 1 -name 'stow-*' -type d -print -quit)"
-	pushd $STOWDIR
-	./configure && make
-	STOW="$STOWDIR/bin/stow"
-	popd
+	(cd $STOWDIR && ./configure && make)
+	cat > stow <<__HERE__
+#!/bin/sh
+stowdir="\$(dirname \$(readlink -f \$0))"
+perl -I\${stowdir}/$STOWDIR/lib \${stowdir}/$STOWDIR/bin/stow \$@
+__HERE__
+	chmod +x stow
+	STOW="./stow"
 fi
 
 echo "Stow is at: $STOW"
 
-curl -fLo vim/.vim/autoload/plug.vim --create-dirs \
+wget https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS -O ~/.dircolors --no-check-certificate
+
+curl -kfLo vim/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
