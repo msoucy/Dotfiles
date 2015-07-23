@@ -62,6 +62,7 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
 	Plug 'tpope/vim-fugitive'
 	Plug 'rstacruz/vim-closer'
 	Plug 'tpope/vim-vinegar'
+	Plug 'edkolev/tmuxline.vim'
 	" }}}
 	call plug#end()
 else
@@ -71,6 +72,10 @@ endif
 " }}}
 
 " Plugin settings {{{
+let g:table_mode_corner = '|'
+let g:vim_markdown_folding_disabled=1
+let g:netrw_liststyle=3
+" Clang-format {{{
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
 let g:clang_format#style_options = {
@@ -81,14 +86,28 @@ let g:clang_format#style_options = {
 			\ 'ColumnLimit': 80
 			\}
 let g:clang_format#auto_formatexpr = 1
+" }}}
+" Syntastic {{{
 let g:syntastic_cpp_config_file = ".syntastic"
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_d_checkers = ['dub']
-let g:table_mode_corner = '|'
-let g:vim_markdown_folding_disabled=1
-let g:netrw_liststyle=3
+" }}}
+" tmuxline {{{
+let g:tmuxline_powerline_separators = 0
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'b'    : '#W',
+      \'c'    : '#H',
+      \'win'  : '#I #W',
+      \'cwin' : '#I #W',
+      \'x'    : '%a',
+      \'y'    : '#W %R',
+      \'z'    : '#H'}
+
+" }}}
+
 " }}}
 
 " }}} Plugins
@@ -290,4 +309,4 @@ if filereadable(glob("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
 
-" vim: foldmethod=marker
+" vim: foldmethod=marker foldlevel=2
