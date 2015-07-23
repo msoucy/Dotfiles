@@ -9,7 +9,7 @@ else
 		wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
 	fi
 	tar -xzf stow-latest.tar.gz
-	STOWDIR="$(find . -maxdepth 1 -name 'stow-*' -type d -print -quit)"
+	STOWDIR="$(find -maxdepth 1 -name 'stow-*' -type d -printf '%P\n' -quit)"
 	(cd $STOWDIR && ./configure && make)
 	cat > stow <<__HERE__
 #!/bin/sh
