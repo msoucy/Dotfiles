@@ -28,6 +28,7 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
 	" Plugins {{{
 	Plug 'tpope/vim-sensible' " Reasonable defaults
 	Plug 'sjl/badwolf' " Theme
+	Plug '844196/lightline-badwolf.vim'
 	" Syntax formatting and verification
 	Plug 'scrooloose/syntastic'
 	Plug 'Chiel92/vim-autoformat'
@@ -100,8 +101,8 @@ let g:tmuxline_preset = {
       \'a'    : '#S',
       \'b'    : '#W',
       \'c'    : '#H',
-      \'win'  : '#I #W',
-      \'cwin' : '#I #W',
+      \'win'  : '#I | #W',
+      \'cwin' : '#I | #W',
       \'x'    : '%a',
       \'y'    : '#W %R',
       \'z'    : '#H'}
@@ -179,6 +180,7 @@ inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
 
 " Lightline controls {{{
 let g:lightline = {
+      \ 'colorscheme': 'badwolf',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'modified', 'fugitive', 'filename' ], ['ctrlpmark'] ],
       \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
@@ -206,7 +208,6 @@ let g:lightline = {
       \   'syntastic': 'error',
       \ },
       \ }
-
 
 function! MyModified()
   return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
