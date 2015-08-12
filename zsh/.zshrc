@@ -371,9 +371,6 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
 
 setprompt
 
-# Always check the current working directory for executables
-export PATH=.:$PATH
-
 export EDITOR=vim
 
 # SSH with X forwarding
@@ -417,17 +414,11 @@ code-pull(){
 }
 
 up() {
-        if (( $# != 1 ))
-        then
-                cd ..
-        else
-                upstr="."
-                for i in {1..$1}
-                do
-                        upstr="$upstr/.."
-                done
-                cd $upstr
-        fi
+	upstr="."
+	for i in $(seq 1 $1); do
+		upstr="$upstr/.."
+	done
+	cd $upstr
 }
 
 man() {
@@ -518,8 +509,6 @@ bindkey " " magic-space ## do history expansion on space
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 [[ -f $ZDOTDIR/.zshlocal ]] && source $ZDOTDIR/.zshlocal
-
-[[ -f $HOME/.pystartup.py ]] && export PYTHONSTARTUP=$HOME/.pystartup.py
 
 if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
