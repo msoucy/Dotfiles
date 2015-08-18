@@ -94,6 +94,10 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_d_checkers = ['dub']
+let g:syntastic_mode_map = {
+        \ "mode": "active",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": ["d"] }
 " }}}
 " tmuxline {{{
 let g:tmuxline_powerline_separators = 0
