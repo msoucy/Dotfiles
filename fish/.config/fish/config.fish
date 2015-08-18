@@ -42,6 +42,12 @@ set -gx PAGER "less"
 set -gx LESS "-FR"
 set -gx EDITOR "vim"
 set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
+set -gx LD_LIBRARY_PATH /usr/local/lib
+set -Ux fish_user_paths ~/bin ~/.cabal/bin ~/.local/bin
 if test -f ~/.dircolors
 	eval (dircolors -c ~/.dircolors)
 end
+abbr ll 'ls -lh'
+abbr la 'ls -lah'
+abbr gman 'man -k'
+abbr :e $EDITOR
