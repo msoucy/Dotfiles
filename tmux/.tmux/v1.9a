@@ -1,5 +1,0 @@
-# Make new windows and panes start in the same directory as the current pane
-unbind c; bind c new-window -c "#{pane_current_path}"
-unbind "\""; bind "\"" split-window -c "#{pane_current_path}"
-unbind "\%"; bind "\%" split-window -h -c "#{pane_current_path}"
-display-message "Ran v1.9"

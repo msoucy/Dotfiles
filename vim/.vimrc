@@ -48,6 +48,7 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
 	Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
 	Plug 'trapd00r/vim-syntax-vidir-ls'
 	Plug 'powerman/vim-plugin-viewdoc'
+	Plug 'tmux-plugins/vim-tmux'
 	" Show more info
 	Plug 'airblade/vim-gitgutter'
 	Plug 'itchyny/lightline.vim'
@@ -179,7 +180,9 @@ set ofu=syntaxcomplete#Complete
 set completeopt=longest,menuone
 
 " Make enter finish the completion popup menu
-inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
+if !has('nvim')
+	inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<C-g>r\<CR>"
+endif
 " }}}
 
 " Lightline controls {{{
