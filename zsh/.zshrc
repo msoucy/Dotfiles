@@ -141,6 +141,7 @@ zstyle -e ':completion::*:hosts' hosts 'reply=($(sed -e "/^#/d" -e "s/ .*\$//" -
 # All the plugins we want
 ################################################################################
 
+# Plugins {{{
 # Load all the plugins we want to use
 autoload -Uz compinit
 compinit
@@ -163,6 +164,7 @@ promptinit
 autoload -U zrecompile
 
 zmodload zsh/regex
+# }}}
 
 ################################################################################
 # All of the functions
@@ -516,3 +518,5 @@ if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
 fi
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+# vim: fdm=marker

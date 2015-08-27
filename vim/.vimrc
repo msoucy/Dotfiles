@@ -65,6 +65,9 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
 	Plug 'rstacruz/vim-closer'
 	Plug 'tpope/vim-vinegar'
 	Plug 'edkolev/tmuxline.vim'
+	if has('nvim')
+		Plug 'benekastah/neomake'
+	endif
 	" }}}
 	call plug#end()
 else
