@@ -1,30 +1,25 @@
-local wibox = require("wibox")
 local awful = require("awful")
 local naughty = require("naughty")
 
 volume_widget = awful.widget.progressbar({ width = 16 })
 volume_widget:set_vertical(true)
 volume_widget:set_ticks(true)
-volume_widget:set_max_value(1.0)
+volume_widget:set_max_value(100)
+
+local normcolor = function(v, end_color, start_color)
+	return math.floor(v * (end_color - start_color) + start_color)
+end
 
 volume_widget.update = function()
    local status = awful.util.pread("amixer sget Master")
 
-   local volume = tonumber(string.match(status, "(%d?%d?%d)%%")) / 100
-   if volume > 1.0 then
-      volume = 1.0
-   end
+   local volume = math.min(tonumber(string.match(status, "(%d?%d?%d)%%")), 100)
 
    status = string.match(status, "%[(o[^%]]*)%]")
 
-   -- starting colour
-   local sr, sg, sb = 0x3F, 0x3F, 0x3F
-   -- ending colour
-   local er, eg, eb = 0xDC, 0xDC, 0xCC
-
-   local ir = math.floor(volume * (er - sr) + sr)
-   local ig = math.floor(volume * (eg - sg) + sg)
-   local ib = math.floor(volume * (eb - sb) + sb)
+   local ir = normcolor(volume/100, 0xDC, 0x3F)
+   local ig = normcolor(volume/100, 0xDC, 0x3F)
+   local ib = normcolor(volume/100, 0xCC, 0x3F)
    local interpol_colour = string.format("%.2x%.2x%.2x", ir, ig, ib)
    local couldfind = string.find(status, "on", 1, true)
    volume_widget:set_color(couldfind and interpol_colour or "FF0000")
@@ -32,17 +27,13 @@ volume_widget.update = function()
    volume_widget.volume = volume
 end
 
-volume_widget.up = function()
-	awful.util.pread("amixer set Master 5%+")
+local extern = function(cmd)
+	return function() awful.util.pread(cmd) end
 end
 
-volume_widget.down = function()
-	awful.util.pread("amixer set Master 5%-")
-end
-
-volume_widget.toggle = function()
-	awful.util.pread("amixer set Master toggle")
-end
+volume_widget.up = extern("amixer set Master 5%+")
+volume_widget.down = extern("amixer set Master 5%-")
+volume_widget.toggle = extern("amixer set Master toggle")
 
 volume_widget.update()
 
@@ -52,10 +43,11 @@ mytimer:start()
 
 volume_widget:buttons(awful.util.table.join(
 	awful.button({}, 1, function()
-		naughty.notify({text = "Volume: " .. volume_widget.volume*100 .. "%"})
+		naughty.notify({text = "Volume: " .. volume_widget.volume .. "%"})
 	end),
 	awful.button({}, 3, volume_widget.toggle),
 	awful.button({}, 4, volume_widget.up),
 	awful.button({}, 5, volume_widget.down)
 ))
 
+return volume_widget

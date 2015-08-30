@@ -40,23 +40,19 @@ battery_widget.update = function()
 	-- Check for plugged-in status
 	widget.charging = catfile("/sys/class/power_supply/AC/online") ~= 0
 
-	-- Get the new colors and positions
+	-- Get the battery percentage
 	local battery = energy_now / energy_full
-	local fg_color = "FF0000"
-	if widget.charging then
-		fg_color = "00FF00"
-	else
-		-- Show an alert when low every 30s
-		if battery <= .05 then
-			if wraparound == 0 then
-				alert(battery)
-			end
-			wraparound = (wraparound + 1) % 3
-		end
+
+	-- Show an alert when low every 30s
+	if (not widget.charging) and (battery <= .05) then
+		if wraparound == 0 then alert(battery) end
+		wraparound = (wraparound + 1) % 3
 	end
+
+	-- Store widget values
 	widget.level = battery * 100
 	widget:set_value(battery_widget.level)
-	widget:set_color(fg_color)
+	widget:set_color(widget.charging and "00FF00" or "FF0000")
 end
 
 battery_widget.update()
@@ -67,11 +63,11 @@ mytimer:start()
 
 battery_widget:buttons(awful.util.table.join(
 	awful.button({}, 1, function()
-		local text = "Charging"
-		if not battery_widget.charging then text = "Discharging" end
+		local text = battery_widget.charging and "Charging" or "Discharging"
 		naughty.notify({
 		text = string.format("Battery level: %d%% (%s)",
 		                     math.floor(battery_widget.level), text)
 	}) end)
 ))
 
+return battery_widget

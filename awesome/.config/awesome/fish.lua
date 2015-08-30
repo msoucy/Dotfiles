@@ -43,3 +43,4 @@ mytimer = timer({ timeout = (1/3.0) })
 mytimer:connect_signal("timeout", fish.update)
 mytimer:start()
 
+return fish.widget
