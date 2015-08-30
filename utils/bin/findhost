@@ -1,0 +1,64 @@
+#!/usr/bin/python
+
+import argparse
+import getpass
+import os
+import paramiko
+import sys
+
+
+def matchHosts(hostlist, username, threshold, filt):
+    ''' Perform an action on hosts
+
+    SSHs into each host and performs a given filter based on its current load
+    '''
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    password = None
+
+    for host in (line for line in (line.split("#")[0].strip() for line in open(hostlist)) if line):
+        try:
+            ssh.connect(host, username=username, password=password)
+        except paramiko.PasswordRequiredException:
+            password = getpass.getpass(prompt="Error: password required: ")
+            ssh.connect(host, username=username, password=password)
+        stdin, stdout, stderr = ssh.exec_command("cat /proc/loadavg")
+        load = float(stdout.read().split()[2])
+        stdin, stdout, stderr = ssh.exec_command("cat /proc/cpuinfo")
+        load /= stdout.read().count("model name")
+        ssh.close()
+        if(filt(username, host, load, threshold)):
+            return
+
+
+def printSSH(username, host, load, threshold):
+    ''' Print out the host if it's below the threshold '''
+    if(load < threshold):
+        sys.stdout.write("{}@{}\n".format(username, host))
+        return True
+    else:
+        return False
+
+
+def printAll(username, host, load, threshold):
+    ''' Print out every host with its load '''
+    sys.stdout.write("{}\t{}".format(host, load))
+    return False
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Choose a host from a list with a low ')
+    parser.add_argument('-u', '--user', type=str, default=os.environ["USER"],
+                        help='The username to use to SSH')
+    parser.add_argument('-t', '--threshold', type=float, default=0.7,
+                        help='The machine load threshold')
+    parser.add_argument('-q', '--query', action="store_true",
+                        help='Query all machines')
+    parser.add_argument('hostlist', type=str, help='The host list to examine')
+    args = parser.parse_args()
+    matchHosts(args.hostlist, args.user, args.threshold,
+               printAll if args.query else printSSH)
+
+if __name__ == "__main__":
+    main()
