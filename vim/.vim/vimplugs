@@ -1,2 +1,41 @@
+Plug 'tpope/vim-sensible' " Reasonable defaults
+Plug 'sjl/badwolf' " Theme
+Plug '844196/lightline-badwolf.vim'
+" Syntax formatting and verification
+Plug 'scrooloose/syntastic'
+Plug 'Chiel92/vim-autoformat'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'rhysd/vim-clang-format', { 'for': 'cpp' }
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+" Language syntaxes
+Plug 'lepture/vim-jinja'
+Plug 'dag/vim-fish'
+Plug 'dpwright/vim-tup'
+Plug 'othree/html5.vim'
+Plug 'idanarye/vim-dutyl'
+Plug 'vim-jp/cpp-vim'
+Plug 'SWIG-syntax', { 'for': 'swig' }
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell', 'do': 'cabal install ghc-mod' }
+Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
+Plug 'trapd00r/vim-syntax-vidir-ls'
+Plug 'powerman/vim-plugin-viewdoc'
+Plug 'tmux-plugins/vim-tmux'
+" Show more info
+Plug 'airblade/vim-gitgutter'
+Plug 'itchyny/lightline.vim'
+Plug 'kshenoy/vim-signature'
+Plug 'majutsushi/tagbar'
+" Misc Plugs
+Plug 'Shougo/unite.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'scrooloose/nerdcommenter'
+Plug 'jmcantrell/vim-virtualenv'
+Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
+Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
+Plug 'tpope/vim-fugitive'
+Plug 'rstacruz/vim-closer'
+Plug 'tpope/vim-vinegar'
+Plug 'edkolev/tmuxline.vim'
 
 " vim: ft=vim
