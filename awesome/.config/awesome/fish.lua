@@ -7,14 +7,16 @@ fish.fg = wibox.widget.textbox()
 fish.fg:set_align("right")
 fish.widget = wibox.widget.background()
 fish.widget:set_widget(fish.fg)
-fish.widget:set_fg("#000000")
+fish.widget:set_fg("#DD4400")
 fish.widget:set_bg("#33CCFF")
 
 function fish.fortune()
-    naughty.notify({ text = awful.util.pread("fortune -n 100 -s"), timeout = 7 })
+    naughty.notify({
+		text = awful.util.pread("fortune -s"):match("(.-)%s*$"),
+		timeout = 7
+	})
 end
 
---fish.states = { "<°}))o»«", "<°)})o>«", "<°))}o»<" }
 fish.fg:buttons(awful.util.table.join(
 	awful.button({}, 1, fish.fortune)
 ))
