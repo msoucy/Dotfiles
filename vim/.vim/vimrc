@@ -40,6 +40,7 @@ syntax on
 let g:table_mode_corner = '|'
 let g:vim_markdown_folding_disabled=1
 let g:netrw_liststyle=3
+let g:haskell_conceal_wide=1
 " Clang-format {{{
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'

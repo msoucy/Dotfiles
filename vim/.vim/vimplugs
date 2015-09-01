@@ -15,9 +15,9 @@ Plug 'othree/html5.vim'
 Plug 'idanarye/vim-dutyl'
 Plug 'vim-jp/cpp-vim'
 Plug 'SWIG-syntax', { 'for': 'swig' }
+Plug 'dag/vim2hs', { 'for': 'haskell' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell', 'do': 'cabal install ghc-mod' }
 Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
-Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
 Plug 'trapd00r/vim-syntax-vidir-ls'
 Plug 'powerman/vim-plugin-viewdoc'
 Plug 'tmux-plugins/vim-tmux'
