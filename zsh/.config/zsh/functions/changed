@@ -1,3 +1,4 @@
+#!/bin/zsh
 # List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 emulate -L zsh
 print -l -- *(c-${1:-1})

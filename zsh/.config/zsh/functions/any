@@ -1,3 +1,4 @@
+#!/bin/zsh
 # Grep for running processes, like: 'any vim'
 emulate -L zsh
 if [[ -z "$1" ]] ; then

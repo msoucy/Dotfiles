@@ -14,9 +14,7 @@ HISTFILE=~/.zhist
 HISTSIZE=1000
 SAVEHIST=1000
 
-################################################################################
-# ZSH options
-################################################################################
+# {{{ ZSH options
 
 setopt \
         NO_append_history\
@@ -38,6 +36,7 @@ setopt \
         share_history\
         zle
 bindkey -e
+# }}}
 
 ################################################################################
 # Autocomplete
@@ -186,6 +185,7 @@ autoload -Uz makereadable
 
 # Checks whether a regex matches or not.\\&\quad Example: \kbd{regcheck '.\{3\} EUR' '500 EUR'}
 autoload -Uz regcheck
+
 # List files which have been accessed within the last {\it n} days, {\it n} defaults to 1
 autoload -Uz accessed
 
@@ -204,8 +204,6 @@ declare -A abk
 abk=(
 #   key   # value                  (#d additional doc string)
 #A# start
-    '...'  '../..'
-    '....' '../../..'
     'BG'   '& exit'
     'C'    '| wc -l'
     'G'    '|& grep --color=auto '
@@ -221,7 +219,6 @@ abk=(
     'T'    '| tail'
     'V'    '|& vim -'
 #A# end
-    'co'   './configure && make && sudo make install'
 )
 
 globalias() {
@@ -270,34 +267,12 @@ fi # end of check whether we have the 'hg'-executable
 # Color some things and tweak settings
 alias please='sudo'
 alias ls='ls --color=auto'
-alias landslide="landslide -cr -x tables,abbr"
 alias grep='egrep'
 alias make="make -s"
 alias cp="scp"
 export LESS="-F -R"
-# Reverse manpage lookup
-alias gman="man -k "
-
-# Convert all png files in a directory into svg
-mksvg() {
-  for a in $(find $(pwd) -type f -name "*.png"); do
-    inkscape -z -f "$a" -l "${a%.png}.svg";
-  done
-}
-
-function remake() {
-  make clean && make
-}
-function warnmake() {
-  make clean && make | grep "warning|error"
-}
-
-function rot13 () {
-  if (( $# == 0 ))
-  then tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]"
-  else echo $* | tr "[a-m][n-z][A-M][N-Z]" "[n-z][a-m][N-Z][A-M]"
-  fi
-}
+# Alias to play Bingehack as Nethack
+alias nethack='telnet nethack.csh.rit.edu'
 
 ################################################################################
 # PROMPT
@@ -325,7 +300,7 @@ precmd () {
     fi
 
     # Deal with virtualenv stuff
-    local venv_name="`basename \"$VIRTUAL_ENV\"`"
+    local venv_name="$(basename "$VIRTUAL_ENV")"
     if [[ "x$venv_name" != "x" ]] ; then
       PR_venv_name="${PR_BODY_COLOR}[${PR_LIGHT_GREEN}$venv_name${PR_BODY_COLOR}]${PR_HBAR}${PR_NO_COLOR}"
     else
@@ -350,7 +325,8 @@ setprompt() {
   PR_URCORNER="${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}"
   PR_FORKRIGHT="${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}"
 
-  for color in BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+  for color in BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
+  do
     eval PR_$color='%{$fg_bold[${(L)color}]%}'
     eval PR_LIGHT_$color='%{$fg_no_bold[${(L)color}]%}'
   done
@@ -375,52 +351,12 @@ setprompt
 
 export EDITOR=vim
 
-# SSH with X forwarding
-alias ssh-x='ssh -c arcfour,blowfish-cbc -YC'
-
-# A handy Extract tool for most common archive types
-extract() {
-   if [[ -z "$1" ]]; then
-      print -P "usage: \e[1;36mextract\e[1;0m < filename >"
-      print -P "       Extract the file specified based on the extension"
-   elif [[ -f $1 ]]; then
-      case ${(L)1} in
-          *.tar.bz2)  tar -jxvf $1;;
-          *.tar.gz)   tar -zxvf $1;;
-          *.bz2)      bunzip2 $1   ;;
-          *.gz)       gunzip $1   ;;
-          *.jar)      unzip $1       ;;
-          *.rar)      unrar x $1   ;;
-          *.tar)      tar -xvf $1   ;;
-          *.tbz2)     tar -jxvf $1;;
-          *.tgz)      tar -zxvf $1;;
-          *.zip)      unzip $1      ;;
-          *.Z)        uncompress $1;;
-          *)          echo "Unable to extract '$1' :: Unknown extension"
-      esac
-   else
-      echo "File ('$1') does not exist!"
-   fi
-}
-
-code-pull(){
-  if [[ -d ".git" ]]; then
-    git pull
-  elif [[ -d ".svn" ]]; then
-    svn update
-  elif [[ -d ".hg" ]]; then
-    hg pull -u
-  else
-    print -P "No known repository"
-  fi
-}
-
 up() {
-	upstr="."
-	for i in $(seq 1 $1); do
-		upstr="$upstr/.."
-	done
-	cd $upstr
+  upstr="."
+  for i in $(seq 1 $1); do
+    upstr="$upstr/.."
+  done
+  cd $upstr
 }
 
 man() {
@@ -435,30 +371,15 @@ man() {
       man "$@"
 }
 
-man2() {
-  env \
-    LESS_TERMCAP_mb=$'\e[01;31m' \
-    LESS_TERMCAP_md=$'\e[01;31m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[1;44;33m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[01;32m' \
-      man "$@"
-}
-
-# Alias to play Bingehack as Nethack
-alias nethack='telnet nethack.csh.rit.edu'
-
 # Allow C-xC-e to edit the current command line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
 
 # Meta-S prepends "sudo " to the command
 function insert_sudo {
-	if [[ $BUFFER != "sudo "* ]]; then
-		BUFFER="sudo $BUFFER"; CURSOR+=5
-	fi
+  if [[ $BUFFER != "sudo "* ]]; then
+    BUFFER="sudo $BUFFER"; CURSOR+=5
+  fi
 }
 zle -N insert-sudo insert_sudo
 bindkey "^[s" insert-sudo
@@ -519,4 +440,4 @@ fi
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-# vim: fdm=marker
+# vim: fdm=marker et ts=2 sw=2

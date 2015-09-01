@@ -1,3 +1,4 @@
+#!/bin/zsh
 #  this function checks if a command exists and returns either true
 # or false. This avoids using 'which' and 'whence', which will
 # avoid problems with aliases for which on certain weird systems. :-)

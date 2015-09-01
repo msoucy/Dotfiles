@@ -1,3 +1,4 @@
+#!/bin/zsh
 # Create PDF file from source code
 emulate -L zsh
 output = $1
