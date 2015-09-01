@@ -480,6 +480,7 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+-- Applets {{{
 function run_once(prg, arg_string, pname, screen)
     if not prg then do return nil end end
     if not pname then pname = prg end
@@ -493,5 +494,6 @@ run_once("xscreensaver","-no-splash")
 run_once("amixer", "-c 0 set Headphone 100%")
 run_once("nm-applet")
 run_once("gnome-keyring-daemon")
+--- }}}
 
 -- vim: fdm=marker et ts=4 sw=4
