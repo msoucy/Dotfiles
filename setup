@@ -12,7 +12,7 @@ if [[ ! -f ./stow ]]; then
 		STOWDIR="$(find -maxdepth 1 -name 'stow-*' -type d -printf '%P\n' -quit)"
 		(cd $STOWDIR && ./configure && make)
 		STOW="./stow"
-		cat stow.in | sed -e "s/@STOWDIR@/${STOWDIR}/g" > ${STOW}
+		cat stow.in | sed -e "s/\@STOWDIR\@/${STOWDIR}/g" > ${STOW}
 		chmod +x ${STOW}
 	fi
 fi
