@@ -1,26 +1,21 @@
 #!/bin/bash
 
 # Build stow if it doesn't exist
-if command -v stow 2> /dev/null; then
-	STOW="$(command -v stow)"
-	ln -s "$STOW" stow
-else
-	if [ ! -f stow-latest.tar.gz ]; then
-		wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
+if [[ ! -f ./stow ]]; then
+	if command -v stow 2> /dev/null; then
+		ln -s "$(command -v stow)" stow
+	else
+		if [ ! -f stow-latest.tar.gz ]; then
+			wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
+		fi
+		tar -xzf stow-latest.tar.gz
+		STOWDIR="$(find -maxdepth 1 -name 'stow-*' -type d -printf '%P\n' -quit)"
+		(cd $STOWDIR && ./configure && make)
+		STOW="./stow"
+		cat stow.in | sed -e "s/@STOWDIR@/${STOWDIR}/g" > ${STOW}
+		chmod +x ${STOW}
 	fi
-	tar -xzf stow-latest.tar.gz
-	STOWDIR="$(find -maxdepth 1 -name 'stow-*' -type d -printf '%P\n' -quit)"
-	(cd $STOWDIR && ./configure && make)
-	cat > stow <<__HERE__
-#!/bin/sh
-stowdir="\$(dirname \$(readlink -f \$0))"
-perl -I\${stowdir}/$STOWDIR/lib \${stowdir}/$STOWDIR/bin/stow \$@
-__HERE__
-	chmod +x stow
-	STOW="./stow"
 fi
-
-echo "Stow is at: $STOW"
 
 wget https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS -O ~/.dircolors --no-check-certificate
 
