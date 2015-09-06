@@ -2,7 +2,7 @@ Plug 'tpope/vim-sensible' " Reasonable defaults
 Plug 'sjl/badwolf' " Theme
 Plug '844196/lightline-badwolf.vim'
 " Syntax formatting and verification
-Plug 'scrooloose/syntastic'
+Plug 'benekastah/neomake'
 Plug 'Chiel92/vim-autoformat'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'rhysd/vim-clang-format', { 'for': 'cpp' }

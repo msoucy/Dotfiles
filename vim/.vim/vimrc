@@ -18,6 +18,7 @@ if exists('&cc')
 endif
 set cursorline cursorcolumn
 set shortmess+=I " Don't show the intro message
+set scrolloff=999
 syntax on "Syntax highlighting
 " }}}
 
@@ -72,9 +73,8 @@ let g:tmuxline_preset = {
       \'c'    : '#H',
       \'win'  : '#I | #W',
       \'cwin' : '#I | #W',
-      \'x'    : '%a',
-      \'y'    : '#W %R',
-      \'z'    : '#H'}
+      \'y'    : '%a',
+      \'z'    : '%R'}
 
 " }}}
 
@@ -85,7 +85,9 @@ let g:tmuxline_preset = {
 " Color {{{
 set background=dark
 colorscheme desert " Use desert if badwolf isn't installed yet
-silent! colorscheme badwolf
+if !has("gui_running") || &t_Co == 88 || &t_Co == 256
+	silent! colorscheme badwolf
+endif
 " }}}
 
 " Keybindings {{{
@@ -267,4 +269,4 @@ if filereadable(glob("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
 
-" vim: foldmethod=marker foldlevel=1
+" vim: foldmethod=marker
