@@ -3,7 +3,7 @@ Dotfiles
 
 This is a collection of my configuration files for a variety of tools.
 
-It is meant to be used with stow
+It is meant to be used with [GNU Stow][], and provides scripts to set it up.
 
 Usage
 -----
@@ -21,5 +21,16 @@ After that, use the executable `./use` instead of `./stow`:
 ```sh
 ./use
 ```
+
+Requirements
+------------
+
+- [GNU Stow][]
+
+**OR**
+
+- Perl 5
+- `wget`
+- `make`
 
 [GNU Stow]: https://www.gnu.org/software/stow/
