@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/zsh
 
 ################################################################################
 # Make it so that we can use $ZDOTDIR
@@ -6,41 +6,38 @@
 
 [ -n "${ZDOTDIR+x}" ] || export ZDOTDIR=$HOME
 
-################################################################################
-# History settings
-################################################################################
+# History settings {{{
 
 HISTFILE=~/.zhist
 HISTSIZE=1000
 SAVEHIST=1000
 
+# }}}
+
 # {{{ ZSH options
 
-setopt \
-        NO_append_history\
-        auto_cd\
-        auto_list\
-        NO_beep\
-        NO_bsd_echo\
-        NO_chase_links\
-        complete_aliases\
-        extended_glob\
-        hist_ignore_all_dups\
-        interactive_comments\
-        multios\
-        notify\
-        numeric_glob_sort\
-        NO_nomatch\
-        path_dirs\
-        prompt_subst\
-        share_history\
-        zle
+setopt NO_append_history
+setopt auto_cd
+setopt auto_list
+setopt NO_beep
+setopt NO_bsd_echo
+setopt NO_chase_links
+setopt complete_aliases
+setopt extended_glob
+setopt hist_ignore_all_dups
+setopt interactive_comments
+setopt multios
+setopt notify
+setopt numeric_glob_sort
+setopt NO_nomatch
+setopt path_dirs
+setopt prompt_subst
+setopt share_history
+setopt zle
 bindkey -e
 # }}}
 
-################################################################################
-# Autocomplete
-################################################################################
+# Autocomplete {{{
 
 # {{{ General completion technique
 
@@ -136,38 +133,23 @@ zstyle ':completion:*:*:*:*:processes' force-list always
 zstyle -e ':completion::*:hosts' hosts 'reply=($(sed -e "/^#/d" -e "s/ .*\$//" -e "s/,/ /g" /etc/ssh_known_hosts(N) ~/.ssh/known_hosts(N) 2>/dev/null | xargs) $(grep \^Host ~/.ssh/config(N) | cut -f2 -d\  2>/dev/null | xargs))'
 #zstyle -e ':completion::*:hosts' hosts 'reply=($(grep \^Host ~/.ssh/config(N) | cut -f2 -d\  2>/dev/null | xargs))'
 
-################################################################################
-# All the plugins we want
-################################################################################
+# }}}
 
 # Plugins {{{
-# Load all the plugins we want to use
-autoload -Uz compinit
-compinit
-
+# ZSH plugins
+autoload -Uz compinit && compinit
 autoload -U colors && colors
-
 autoload zsh/terminfo
 autoload -Uz vcs_info
-
 autoload -U zmv
-
-#autoload -U zsh-mime-setup
-#zsh-mime-setup
-
+#autoload -U zsh-mime-setup && zsh-mime-setup
 autoload -U edit-command-line
-
-autoload -U promptinit
-promptinit
-
+autoload -U promptinit && promptinit
 autoload -U zrecompile
-
 zmodload zsh/regex
 # }}}
 
-################################################################################
-# All of the functions
-################################################################################
+# Custom Functions {{{
 
 fpath=(${ZDOTDIR}/.config/zsh/functions $fpath)
 
@@ -177,6 +159,7 @@ autoload -Uz xsource
 alias source=xsource
 # }}}
 
+# Autoload functions {{{
 # grep for running process, like: 'any vim'
 autoload -Uz any
 
@@ -195,6 +178,8 @@ autoload -Uz changed
 # List files which have been modified within the last {\it n} days, {\it n} defaults to 1
 autoload -Uz modified
 
+# }}}
+
 # power completion - abbreviation expansion {{{
 # power completion / abbreviation expansion / buffer expansion
 # see http://zshwiki.org/home/examples/zleiab for details
@@ -206,17 +191,10 @@ abk=(
 #A# start
     'BG'   '& exit'
     'C'    '| wc -l'
-    'G'    '|& grep --color=auto '
-    'H'    '| head'
     'Hl'   ' --help |& less -r'    #d (Display help in pager)
-    'L'    '| less'
-    'LL'   '|& less -r'
-    'M'    '| most'
-    'N'    '&>/dev/null'           #d (No Output)
     'R'    '| tr A-z N-za-m'       #d (ROT13)
     'SL'   '| sort | less'
     'S'    '| sort -u'
-    'T'    '| tail'
     'V'    '|& vim -'
 #A# end
 )
@@ -240,53 +218,37 @@ zle -N globalias
 bindkey ",." globalias
 # }}}
 
-# mercurial related stuff {{{
-if check_com -c hg ; then
-    # gnu like diff for mercurial
-    # http://www.selenic.com/mercurial/wiki/index.cgi/TipsAndTricks
-    #f5# GNU like diff for mercurial
-    hgdi() {
-        emulate -L zsh
-        for i in $(hg status -marn "$@") ; diff -ubwd <(hg cat "$i") "$i"
-    }
-
-    # diffstat for specific version of a mercurial repository
-    #   hgstat      => display diffstat between last revision and tip
-    #   hgstat 1234 => display diffstat between revision 1234 and tip
-    #f5# Diffstat for specific version of a mercurial repos
-    hgstat() {
-        emulate -L zsh
-        [[ -n "$1" ]] && hg diff -r $1 -r tip | diffstat || hg export tip | diffstat
-    }
-
-fi # end of check whether we have the 'hg'-executable
-
-# }}}
-
-
-# Color some things and tweak settings
-alias please='sudo'
-alias ls='ls --color=auto'
-alias grep='egrep'
+# Tweak some default settings
+alias -g please='sudo'
+alias ls="ls --color=auto"
 alias make="make -s"
 alias cp="scp"
 export LESS="-F -R"
-# Alias to play Bingehack as Nethack
-alias nethack='telnet nethack.csh.rit.edu'
 
-################################################################################
-# PROMPT
-################################################################################
+# LS color highlighting
+[[ -f ~/.dircolors ]] && eval $(dircolors -b ~/.dircolors)
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Move up N directories
+up() {
+  upstr="."
+  for i in $(seq 1 $1); do
+    upstr="$upstr/.."
+  done
+  cd $upstr
+}
+
+# }}}
+
+# Prompt {{{
 
 # git/hg info
 zstyle ':vcs_info:*' enable git svn hg
 zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:*' formats '%s%m|%b%u%c|%0.6i'
 zstyle ':vcs_info:*' get-revision true
-#zstyle ':vcs_info:*' stagedstr '²'
-#zstyle ':vcs_info:*' unstagedstr '¹'
-zstyle ':vcs_info:*' stagedstr '%{[38;5;208m%}✔%{[22;32m%}'
-zstyle ':vcs_info:*' unstagedstr '%{[38;5;231m%}✗%{[22;32m%}'
+zstyle ':vcs_info:*' stagedstr '%{→%}'
+zstyle ':vcs_info:*' unstagedstr '%{⚡%}'
 zstyle ':vcs_info:*' check-for-changes true
 
 precmd () {
@@ -341,7 +303,8 @@ setprompt() {
 
   PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_pwd}]${PR_NO_COLOR}
 ${PR_BODY_COLOR}${PR_LLCORNER}[${PR_smiley}]>${PR_NO_COLOR} '
-  RPS1='${PR_venv_name}${PR_vcs_info}${PR_time}${PR_NO_COLOR}'
+  #RPS1='${PR_venv_name}${PR_vcs_info}${PR_time}${PR_NO_COLOR}'
+  RPS1='${PR_venv_name}${PR_time}${PR_NO_COLOR}'
   PS2='${PR_BODY_COLOR}${PR_LLCORNER}>(\
 ${PR_LIGHT_GREEN}%_${PR_BODY_COLOR})\
 ${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
@@ -349,40 +312,13 @@ ${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
 
 setprompt
 
-export EDITOR=vim
+# }}}
 
-up() {
-  upstr="."
-  for i in $(seq 1 $1); do
-    upstr="$upstr/.."
-  done
-  cd $upstr
-}
-
-man() {
-  env \
-    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-    LESS_TERMCAP_md=$(printf "\e[1;31m") \
-    LESS_TERMCAP_me=$(printf "\e[0m") \
-    LESS_TERMCAP_se=$(printf "\e[0m") \
-    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-    LESS_TERMCAP_ue=$(printf "\e[0m") \
-    LESS_TERMCAP_us=$(printf "\e[1;32m") \
-      man "$@"
-}
+# Keybindings {{{
 
 # Allow C-xC-e to edit the current command line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
-
-# Meta-S prepends "sudo " to the command
-function insert_sudo {
-  if [[ $BUFFER != "sudo "* ]]; then
-    BUFFER="sudo $BUFFER"; CURSOR+=5
-  fi
-}
-zle -N insert-sudo insert_sudo
-bindkey "^[s" insert-sudo
 
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
@@ -413,7 +349,9 @@ key[PageDown]=${terminfo[knp]}
 export WORDCHARS='*?_[]~=&;!#$%^(){}'
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+# }}}
 
+# ZLE {{{
 # Finally, make sure the terminal is in application mode, when zle is
 # active. Only then are the values from $terminfo valid.
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
@@ -428,16 +366,37 @@ if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
 fi
 
 bindkey " " magic-space ## do history expansion on space
+# }}}
 
-[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+export EDITOR=vim
+source $ZDOTDIR/.zshlocal
 
-[[ -f $ZDOTDIR/.zshlocal ]] && source $ZDOTDIR/.zshlocal
+# Antigen (Packages) {{{
+export ADOTDIR=${ZDOTDIR}/.config/zsh/antigen.conf
+source ${ZDOTDIR}/.config/zsh/antigen/antigen.zsh
 
-if [[ -d $ZDOTDIR/zsh-syntax-highlighting/ ]]; then
-  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
-  source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
+# Syntax highlighting
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line root)
+antigen bundle zsh-users/zsh-syntax-highlighting
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# Oh-my-zsh plugins {{{
+antigen bundle common-aliases # Normal aliases
+antigen bundle colored-man    # Colored Manpages
+antigen bundle profiles       # Look for custom user profiles
+antigen bundle screen         # GNU Screen configuration
+#antigen bundle ssh-agent      # SSH agent
+antigen bundle sudo           # <Esc><Esc> prepends sudo
+antigen bundle tmux           # TMUXinator
+antigen bundle tmuxinator     # TMUXinator
+# }}}
+
+# Languages {{{
+antigen bundle rvm               # Ruby Version Manager
+antigen bundle virtualenv        # Virtualenv management
+#antigen bundle virtualenvwrapper # And virtualenvwrapper management
+# }}}
+
+antigen apply
+# }}}
 
 # vim: fdm=marker et ts=2 sw=2

@@ -1,4 +1,5 @@
 #!/bin/zsh
+
 # Check if we can read the given files, and source those that we can
 if (( ${#argv} < 1 )) ; then
 	printf 'usage: source FILE(s)...\n' >&2
