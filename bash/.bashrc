@@ -5,7 +5,7 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-if which fish > /dev/null 2>&1 && test '!' -z $PS1 ; then
+if which fish > /dev/null 2>&1 && [[ ! -z "$PS1" ]]; then
 	fish; exit
 fi
 
