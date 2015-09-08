@@ -4,3 +4,6 @@
 [submodule "zsh/.config/zsh/antigen"]
 	path = zsh/.config/zsh/antigen
 	url = https://github.com/zsh-users/antigen.git
+[submodule "zsh/.config/zsh/zgen"]
+	path = zsh/.config/zsh/zgen
+	url = https://github.com/tarjoilija/zgen

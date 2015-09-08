@@ -5,6 +5,7 @@
 ################################################################################
 
 [ -n "${ZDOTDIR+x}" ] || export ZDOTDIR=$HOME
+fpath=(${ZDOTDIR}/.config/zsh/functions $fpath)
 
 # History settings {{{
 
@@ -151,8 +152,6 @@ zmodload zsh/regex
 
 # Custom Functions {{{
 
-fpath=(${ZDOTDIR}/.config/zsh/functions $fpath)
-
 # utility functions {{{
 autoload -Uz check_com
 autoload -Uz xsource
@@ -240,79 +239,8 @@ up() {
 
 # }}}
 
-# Prompt {{{
-
-# git/hg info
-zstyle ':vcs_info:*' enable git svn hg
-zstyle ':vcs_info:*' branchformat '%b'
-zstyle ':vcs_info:*' formats '%s%m|%b%u%c|%0.6i'
-zstyle ':vcs_info:*' get-revision true
-zstyle ':vcs_info:*' stagedstr '%{→%}'
-zstyle ':vcs_info:*' unstagedstr '%{⚡%}'
-zstyle ':vcs_info:*' check-for-changes true
-
-precmd () {
-    vcs_info prompt
-
-    # version control info
-    if [[ "x$vcs_info_msg_0_" != "x" ]]; then
-      PR_vcs_info="${PR_BODY_COLOR}[${PR_LIGHT_GREEN}$vcs_info_msg_0_${PR_BODY_COLOR}]${PR_HBAR}${PR_NO_COLOR}"
-    else
-      PR_vcs_info=""
-    fi
-
-    # Deal with virtualenv stuff
-    local venv_name="$(basename "$VIRTUAL_ENV")"
-    if [[ "x$venv_name" != "x" ]] ; then
-      PR_venv_name="${PR_BODY_COLOR}[${PR_LIGHT_GREEN}$venv_name${PR_BODY_COLOR}]${PR_HBAR}${PR_NO_COLOR}"
-    else
-      PR_venv_name=""
-    fi
-}
-
-setprompt() {
-  vcs_info prompt
-  ###
-  # See if we can use extended characters to look nicer.
-
-  typeset -A altchar
-  set -A altchar ${(s..)terminfo[acsc]}
-  PR_SET_CHARSET="%{$terminfo[enacs]%}"
-  PR_SHIFT_IN="%{$terminfo[smacs]%}"
-  PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-  PR_HBAR="${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}"
-  PR_ULCORNER="${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}"
-  PR_LLCORNER="${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}"
-  PR_LRCORNER="${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}"
-  PR_URCORNER="${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}"
-  PR_FORKRIGHT="${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}"
-
-  for color in BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE
-  do
-    eval PR_$color='%{$fg_bold[${(L)color}]%}'
-    eval PR_LIGHT_$color='%{$fg_no_bold[${(L)color}]%}'
-  done
-  PR_NO_COLOR="%{$reset_color%}"
-
-  PR_BODY_COLOR=$PR_LIGHT_CYAN
-
-  PR_user_host="${PR_RED}%n${PR_YELLOW}@%M${PR_BODY_COLOR}"
-  PR_time="${PR_BODY_COLOR}[$PR_WHITE%D{%H:%m:%S}${PR_BODY_COLOR}]"
-  PR_smiley="${PR_NO_COLOR}%(?.${PR_LIGHT_GREEN}^_^${PR_NO_COLOR}.${PR_LIGHT_RED}O_O [%?]${PR_NO_COLOR})${PR_BODY_COLOR}"
-  PR_pwd="${PR_NO_COLOR}${PR_YELLOW}%~${PR_BODY_COLOR}"
-
-  PS1='${PR_BODY_COLOR}${PR_ULCORNER}[${PR_user_host}]${PR_HBAR}[${PR_pwd}]${PR_NO_COLOR}
-${PR_BODY_COLOR}${PR_LLCORNER}[${PR_smiley}]>${PR_NO_COLOR} '
-  #RPS1='${PR_venv_name}${PR_vcs_info}${PR_time}${PR_NO_COLOR}'
-  RPS1='${PR_venv_name}${PR_time}${PR_NO_COLOR}'
-  PS2='${PR_BODY_COLOR}${PR_LLCORNER}>(\
-${PR_LIGHT_GREEN}%_${PR_BODY_COLOR})\
-${PR_SHIFT_IN}${PR_HBAR}${PR_SHIFT_OUT}>${PR_NO_COLOR} '
-}
-
-setprompt
-
-# }}}
+autoload -Uz prompt_msoucy_setup
+prompt msoucy
 
 # Keybindings {{{
 
@@ -371,32 +299,33 @@ bindkey " " magic-space ## do history expansion on space
 export EDITOR=vim
 source $ZDOTDIR/.zshlocal
 
-# Antigen (Packages) {{{
-export ADOTDIR=${ZDOTDIR}/.config/zsh/antigen.conf
-source ${ZDOTDIR}/.config/zsh/antigen/antigen.zsh
+# zgen (Packages) {{{
+source ${ZDOTDIR}/.config/zsh/zgen/zgen.zsh
 
-# Syntax highlighting
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line root)
-antigen bundle zsh-users/zsh-syntax-highlighting
+if ! zgen saved; then
+  # Syntax highlighting
+  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line root)
+  zgen load zsh-users/zsh-syntax-highlighting
 
-# Oh-my-zsh plugins {{{
-antigen bundle common-aliases # Normal aliases
-antigen bundle colored-man    # Colored Manpages
-antigen bundle profiles       # Look for custom user profiles
-antigen bundle screen         # GNU Screen configuration
-#antigen bundle ssh-agent      # SSH agent
-antigen bundle sudo           # <Esc><Esc> prepends sudo
-antigen bundle tmux           # TMUXinator
-antigen bundle tmuxinator     # TMUXinator
-# }}}
+  # oh-my-zsh plugins/plugins {{{
+  zgen oh-my-zsh plugins/common-aliases # Normal aliases
+  zgen oh-my-zsh plugins/colored-man    # Colored Manpages
+  zgen oh-my-zsh plugins/profiles       # Look for custom user profiles
+  zgen oh-my-zsh plugins/screen         # GNU Screen configuration
+  #zgen oh-my-zsh plugins/ssh-agent      # SSH agent
+  zgen oh-my-zsh plugins/sudo           # <Esc><Esc> prepends sudo
+  zgen oh-my-zsh plugins/tmux           # TMUXinator
+  zgen oh-my-zsh plugins/tmuxinator     # TMUXinator
+  # }}}
 
-# Languages {{{
-antigen bundle rvm               # Ruby Version Manager
-antigen bundle virtualenv        # Virtualenv management
-#antigen bundle virtualenvwrapper # And virtualenvwrapper management
-# }}}
+  # Languages {{{
+  zgen oh-my-zsh plugins/rvm               # Ruby Version Manager
+  zgen oh-my-zsh plugins/virtualenv        # Virtualenv management
+  #zgen oh-my-zsh plugins/virtualenvwrapper # And virtualenvwrapper management
+  # }}}
 
-antigen apply
+  zgen save
+fi
 # }}}
 
 # vim: fdm=marker et ts=2 sw=2
