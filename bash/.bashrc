@@ -1,27 +1,32 @@
 # .bashrc
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
+if [[ -f /etc/bashrc ]]; then
 	. /etc/bashrc
 fi
 
-if which fish > /dev/null 2>&1 && [[ ! -z "$PS1" ]]; then
-	fish; exit
+case $- in
+    *l*) FISHFLAGS=-l;;
+    *i*) FISHFLAGS=-i;;
+    *)   FISHFLAGS=  ;;
+esac
+
+if which fish > /dev/null 2>&1 && [[ -t 0 || -p /dev/stdin ]]; then
+    exec fish ${FISHFLAGS}
 fi
 
 # User specific aliases and functions {{{
 export PATH="~/bin:$PATH"
 trysource() {
 	for i; do
-		eval "[[ -f $i ]] && source $i || echo \"$i not found\""
+		[[ -f $i ]] && source $i # || echo "$i not found"
 	done
 }
 
 function up {
-    local ups
-	ups=""
-	for i in $(seq 1 $1); do
-		ups=$ups"../"
+    local ups="."
+    for((i=0;i<${1:-1};i++)); do
+		ups="${ups}/.."
 	done
 	cd "$ups"
 }
@@ -64,8 +69,8 @@ PR_URCORNER="$(shiftput k "+")"
 COLORNAMES=(BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE)
 for index in ${!COLORNAMES[@]}; do
     eval color="${COLORNAMES[$index]}"
-    eval PR_$color="$(tput setaf $index)"
-    eval PR_LIGHT_$color="$(tput setaf $(expr $index + 8))"
+    eval "PR_$color='$(tput setaf $index)'"
+    eval "PR_LIGHT_$color='$(tput setaf $(expr $index + 8))'"
 done
 PR_NO_COLOR="$(tput sgr0)"
 PR_BODY_COLOR="${PR_NO_COLOR}${PR_LIGHT_CYAN}"
