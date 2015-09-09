@@ -18,7 +18,6 @@ if exists('&cc')
 endif
 set cursorline cursorcolumn
 set shortmess+=I " Don't show the intro message
-set scrolloff=999
 syntax on "Syntax highlighting
 " }}}
 
