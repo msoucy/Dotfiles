@@ -3,10 +3,10 @@
 # git/hg info {{{
 zstyle ':vcs_info:*' enable git svn hg
 zstyle ':vcs_info:*' branchformat '%b'
-zstyle ':vcs_info:*' formats '%s%m|%b%u%c|%0.6i'
+zstyle ':vcs_info:*' formats '%s%m|%b%c|%u%F{green}|%0.6i'
 zstyle ':vcs_info:*' get-revision true
-zstyle ':vcs_info:*' stagedstr '%{%G→%}'
-zstyle ':vcs_info:*' unstagedstr '%{%G⚡%}'
+zstyle ':vcs_info:*' stagedstr '%{%F{yellow}%G→%}'
+zstyle ':vcs_info:*' unstagedstr '%{%F{blue}%G⚡%}'
 zstyle ':vcs_info:*' check-for-changes true
 # }}}
 
@@ -26,19 +26,21 @@ PR_FORKRIGHT="${PR_SHIFT_IN}${altchar[t]:--}${PR_SHIFT_OUT}"
 
 # Colors {{{
 for color in BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-  eval PR_$color='%{$fg_bold[${(L)color}]%}'
-  eval PR_LIGHT_$color='%{$fg_no_bold[${(L)color}]%}'
+  eval PR_$color='%{%B%F{${(L)color}}%}'
+  eval PR_LIGHT_$color='%{%b%F{${(L)color}}%}'
 done
-PR_NO_COLOR="%{$reset_color%}"
+PR_NO_COLOR="%{%b%f%}"
 PR_BODY_COLOR="${PR_LIGHT_CYAN}"
 # }}}
 
 # Modules {{{
-typeset -A _pr_modlist=()
-_pr_modlist[time]="${PR_WHITE}%D{%H:%m:%S}"
-#_pr_modlist[userhost]="${PR_RED}%n${PR_YELLOW}@%M"
-#_pr_modlist[pwd]="${PR_NO_COLOR}${PR_YELLOW}%~"
-#_pr_modlist[smiley]="%(?.${PR_LIGHT_GREEN}^_^${PR_NO_COLOR}.${PR_LIGHT_RED}O_O [%?])"
+typeset -gA _pr_modlist
+_pr_modlist=(
+  time     "${PR_WHITE}%D{%H:%m:%S}"
+  userhost "${PR_RED}%n${PR_YELLOW}@%M"
+  pwd      "${PR_NO_COLOR}${PR_YELLOW}%~"
+  smiley   "%(?.${PR_LIGHT_GREEN}^_^${PR_NO_COLOR}.${PR_LIGHT_RED}O_O [%?])"
+)
 # }}}
 
 # User settings {{{
@@ -56,7 +58,6 @@ fi
 # }}}
 
 prompt_msoucy_setup() {
-  setopt prompt_subst
   vcs_info prompt
 
   prompt_msoucy_loop () {
@@ -64,38 +65,43 @@ prompt_msoucy_setup() {
     local suff="${2}"
     builtin shift 2
     for mod; do
-      eval echo -n "${_pr_modlist[$mod]}"
-      if eval test -n "${_pr_modlist[$mod]}"; then
-        echo -ne "${pref}"
-        eval echo -ne "${_pr_modlist[$mod]}"
-        echo -ne "${suff}"
+      if [[ -n "${_pr_modlist[$mod]}" ]]; then
+        echo -ne "${pref}${_pr_modlist[$mod]}${suff}"
       fi
     done
   }
 
   prompt_msoucy_module () {
-    prompt_msoucy_loop "${PR_BODY_COLOR}${PR_HBAR}[${PR_LIGHT_GREEN}" "${PR_BODY_COLOR}]" "$@"
+    prompt_msoucy_loop "${PR_BODY_COLOR}${PR_HBAR}[" "${PR_BODY_COLOR}]" "$@"
   }
 
   prompt_msoucy_rmodule () {
-    prompt_msoucy_loop "${PR_BODY_COLOR}[${PR_LIGHT_GREEN}" "${PR_BODY_COLOR}]${PR_HBAR}" "$@"
+    prompt_msoucy_loop "${PR_BODY_COLOR}[" "${PR_BODY_COLOR}]${PR_HBAR}" "$@"
   }
 
   PROMPT='${PR_BODY_COLOR}${PR_ULCORNER}$(prompt_msoucy_module ${_pr_modules})
-${PR_BODY_COLOR}$(prompt_msoucy_module smiley)>${PR_NO_COLOR} '
+${PR_BODY_COLOR}${PR_LLCORNER}${PR_BODY_COLOR}$(prompt_msoucy_module smiley)>${PR_NO_COLOR} '
   RPROMPT='$(prompt_msoucy_rmodule ${_pr_rmodules})${PR_NO_COLOR}'
   PS2='${PR_BODY_COLOR}${PR_LLCORNER}>(${PR_LIGHT_GREEN}%_${PR_BODY_COLOR})${PR_HBAR}>${PR_NO_COLOR} '
 }
 
 # precmd {{{
 prompt_msoucy_precmd () {
-    vcs_info prompt
+  vcs_info prompt
 
-    # version control info
-    _pr_modlist[vcs]="${vcs_info_msg_0_}"
+  # version control info
+  if [[ -n "${vcs_info_msg_0_}" ]]; then
+    _pr_modlist+=(vcs  "${PR_LIGHT_GREEN}${vcs_info_msg_0_}")
+  else
+    _pr_modlist+=(vcs "")
+  fi
+  if [[ -n "$(basename "${VIRTUAL_ENV}")" ]]; then
+    _pr_modlist+=(venv "${PR_LIGHT_GREEN}$(basename "${VIRTUAL_ENV}")")
+  else
+    _pr_modlist+=(venv "")
+  fi
 
-    # Deal with virtualenv stuff
-    _pr_modlist[venv]="$(basename "${VIRTUAL_ENV}")"
+  # Deal with virtualenv stuff
 }
 add-zsh-hook precmd prompt_msoucy_precmd
 # }}}
