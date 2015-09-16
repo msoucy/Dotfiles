@@ -490,7 +490,19 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- Applets {{{
 
-local run_once = require("run_once")
+function run_once(prg, arg_string) -- {{{
+    if (not prg) or prg == "" then do return nil end end
+    local cmd = prg
+    if arg_string and arg_string ~= "" then
+        cmd = cmd .. " " .. (arg_string or "")
+    end
+    -- Look for process, if it doesn't exist then spawn it
+    -- Don't use awful.util.shell, in case the shell isn't bash-compatible
+    return awful.util.spawn({
+        shell or "/bin/sh", "-c",
+        "pgrep -f -u $USER -x '" .. cmd .. "' || (" .. cmd .. ")"
+    })
+end -- }}}
 
 run_once("xscreensaver", "-no-splash")
 run_once("amixer", "-c 0 set Headphone 100%")
