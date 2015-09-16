@@ -489,16 +489,10 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 -- Applets {{{
-function run_once(prg, arg_string, pname, screen)
-    if not prg then do return nil end end
-    if not pname then pname = prg end
-    local spn = function(cmd) awful.util.spawn_with_shell(cmd, screen) end
-    local arg = function(x) return x end
-    if arg_string then arg = function(x) return (x .. " " .. arg_string) end end
-    spn("sh -c 'pgrep -f -u $USER -x \\'" .. arg(pname) .. "\\' " .. "|| (" .. arg(prg) .. ")'")
-end
 
-run_once("xscreensaver","-no-splash")
+local run_once = require("run_once")
+
+run_once("xscreensaver", "-no-splash")
 run_once("amixer", "-c 0 set Headphone 100%")
 run_once("nm-applet")
 run_once("gnome-keyring-daemon")
