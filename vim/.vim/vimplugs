@@ -21,6 +21,8 @@ Plug 'syntaxhaskell.vim', { 'for': 'haskell' }
 Plug 'trapd00r/vim-syntax-vidir-ls'
 Plug 'powerman/vim-plugin-viewdoc'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'sophacles/vim-bundle-mako'
+Plug 'LokiChaos/vim-tintin'
 " Show more info
 Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
