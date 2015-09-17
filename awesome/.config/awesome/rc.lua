@@ -36,10 +36,14 @@ do
 end
 -- }}}
 
--- {{{ Variable definitions
+-- {{{ Themes
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(awful.util.getdir("config") .. "/themes/zenburn/theme.lua")
+beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
+-- Override the theme wallpaper with my own choice
+beautiful.get().wallpaper = os.getenv("HOME") .. "/.wallpaper/void.png"
+-- }}}
 
+-- {{{ Defaults
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt256c"
 editor = os.getenv("EDITOR") or "vi"
