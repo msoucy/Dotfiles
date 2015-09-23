@@ -39,5 +39,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'rstacruz/vim-closer'
 Plug 'tpope/vim-vinegar'
 Plug 'edkolev/tmuxline.vim'
+Plug 'nathanaelkane/vim-indent-guides'
 
 " vim: ft=vim
