@@ -1,36 +1,36 @@
+# Prompt configuration {{{
+set -g fish_prompt_git_status_added '→'
+set -g fish_prompt_git_status_modified '⚡'
+set -g fish_prompt_git_status_renamed '➜'
+set -g fish_prompt_git_status_copied '⇒'
+set -g fish_prompt_git_status_deleted '✖'
+set -g fish_prompt_git_status_untracked '…'
+set -g fish_prompt_git_status_unmerged '!'
+
+for vcs in hg git
+	eval set -g "fish_color_"$vcs"_dirty" blue
+	eval set -g "fish_color_"$vcs"_staged" yellow
+	eval set -g "fish_color_"$vcs"_invalid" red
+	eval set -g "fish_color_"$vcs"_stash" -o red
+	eval set -g "fish_color_"$vcs"_untrackedfiles" $fish_color_normal
+	eval set -g "fish_color_"$vcs"_clean" -o green
+end
+# }}}
+
 function fish_right_prompt -d 'Print out useful information on the side'
 
 	# Colors
-	set -l normal (set_color normal)
-	set -l pbase $normal(set_color cyan)
-	set -l red (set_color -o red)
-	set -l yellow (set_color -o yellow)
-	set -l green $normal(set_color green)
-	set -l white (set_color -o white)
-	set -l brown $normal(set_color brown)
+	set -l green (set_color normal)(set_color green)
 
 	set PR_venv ""
 	if set -q VIRTUAL_ENV
-		set PR_venv $pbase"["$green"v|"(basename "$VIRTUAL_ENV")"$pbase]─"
+		set PR_venv "$green""env|"(basename "$VIRTUAL_ENV")
 	end
-
-	set -l __git_cb_hash ""
-	if git rev-parse --is-inside-work-tree > /dev/null 2>&1
-		set __git_cb_hash (git rev-parse --short=6 HEAD 2> /dev/null)
-	end
-	set PR_git (__fish_git_prompt $pbase"["$green"git|%s$green|$__git_cb_hash")$pbase"]─"
-
-	set -l PR_hg ""
-	if command -v hg > /dev/null 2>&1
-		if hg root > /dev/null 2>&1
-			set -l hgid (hg id)
-			set -l __hg_diffs (hg summary | grep 'commit:' | sed -r -e 's!commit: !!g' | grep -Eo '[0-9]+\s*\w' | grep -v 'u$' | sed -e 's! !!g')
-			set PR_hg $pbase"["$green"hg|"(echo $hgid | sed -r -e 's!(^.{7}).*!\1!')"|$__hg_diffs$green|"(hg branch)$pbase"]─"
-		end
-	end
-
-	set PR_time $white(date "+%H:%M:%S")$pbase
-	echo -n "$PR_venv$PR_git$PR_hg$pbase""[$PR_time$pbase]"
-	set_color normal
+	set PR_git $green"git"(__terlar_git_prompt)
+	set PR_hg $green"hg"(__fish_hg_prompt)
+	set PR_time (set_color -o white)(date "+%H:%M:%S")
+	_msoucy_prompt_box right "$PR_venv" "$PR_git" "$PR_hg" "$PR_time"
 
 end
+
+# vim: ft=fish fdm=marker
