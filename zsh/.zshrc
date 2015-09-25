@@ -4,7 +4,7 @@
 # Make it so that we can use $ZDOTDIR
 ################################################################################
 
-[ -n "${ZDOTDIR+x}" ] || export ZDOTDIR=$HOME
+export ZDOTDIR=${ZDOTDIR:=$HOME}
 fpath=(${ZDOTDIR}/.config/zsh/functions $fpath)
 
 # History settings {{{
