@@ -17,7 +17,7 @@ function fish_prompt -d 'Print out the main prompt'
 		set PR_status $red"O_O [$last_status]"$pbase
 	end
 
-	echo "$pbase$__msoucy_ul"(_msoucy_prompt_box left "$PR_user_host" "$PR_pwd")
-	echo -n "$__msoucy_ll"(_msoucy_prompt_box left "$PR_status")">$normal "
+	echo "$pbase$__msoucy_ul"(_msoucy_prompt_box left "$PR_user_host" "$PR_pwd")"╾"
+	echo -n "$__msoucy_ll"(_msoucy_prompt_box left "$PR_status")"╾$normal "
 
 end
