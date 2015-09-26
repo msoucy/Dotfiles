@@ -30,7 +30,7 @@ function fish_right_prompt -d 'Print out useful information on the side'
 	set PR_git $green"git"(__terlar_git_prompt)
 	set PR_hg $green"hg"(__fish_hg_prompt)
 	set PR_time (set_color -o white)(date "+%H:%M:%S")
-	echo -n "$pbase╼"(_msoucy_prompt_box right "$PR_venv" "$PR_git" "$PR_hg" "$PR_time")
+	echo -n "$pbase$__msoucy_cap_right"(_msoucy_prompt_box right "$PR_venv" "$PR_git" "$PR_hg" "$PR_time")
 
 end
 

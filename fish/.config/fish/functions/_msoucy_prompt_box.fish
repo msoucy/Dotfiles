@@ -1,9 +1,9 @@
 # Prompt configuration {{{
 function _msoucy_prompt_set
 	if test -z "$__msoucy_simple"
-		eval set -g __msoucy_$argv[1] $argv[2]
+		set -g "__msoucy_$argv[1]" $argv[2]
 	else
-		eval set -g __msoucy_$argv[1] $argv[3]
+		set -g "__msoucy_$argv[1]" $argv[3]
 	end
 end
 _msoucy_prompt_set box_left  "╣" "["
@@ -11,6 +11,9 @@ _msoucy_prompt_set box_right "╠" "]"
 _msoucy_prompt_set box_sep   "═" "─"
 _msoucy_prompt_set ul        "╔" "┌"
 _msoucy_prompt_set ll        "╚" "└"
+_msoucy_prompt_set cap_left  "╾" ""
+_msoucy_prompt_set cap_right "╼" ""
+_msoucy_prompt_set prompt    "╾" ">"
 # }}}
 #
 function _msoucy_prompt_box -d 'Print out a box for a prompt'
