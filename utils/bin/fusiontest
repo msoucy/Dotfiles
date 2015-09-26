@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Find all packages installed from an RPMFusion repo
+OUTFILE=pkgs
+
+(
+	for repo in rpmfusion-{non,}free{,-updates,-updates-testing,-rawhide}; do
+		for mngr in dnf yum; do
+			sudo "${mngr}" repo-pkgs "${repo}" list installed 2> /dev/null
+		done
+	done
+) | sed -e '/^Installed/d' -e "/^Last/d" | awk '{print $1;}' | sort -u > ${OUTFILE}
+
