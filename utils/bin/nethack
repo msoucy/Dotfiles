@@ -1,3 +1,0 @@
-#!/bin/sh
-
-telnet nethack.csh.rit.edu
