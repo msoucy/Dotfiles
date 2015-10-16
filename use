@@ -3,12 +3,14 @@
 set -euo pipefail
 
 STOW="./stow"
+FILESDIR="files"
+STOWARGS="-d ${FILESDIR} -t ${HOME}"
 USERC=".userc"
 
 # Build stow if it doesn't exist
 if [[ ! -f ./stow ]]; then
 	if command -v stow 2> /dev/null; then
-		ln -s "$(command -v stow)" .
+		ln -s "$(command -v stow)" "${STOW}"
 	else
 		curl http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz | tar -xzf -
 		STOWDIR="$(find -maxdepth 1 -type d -name 'stow-*' -printf '%P\n' -quit)"
@@ -23,9 +25,9 @@ uniques=($(echo "$@" $(cat ${USERC} 2>/dev/null)| xargs -n1| sort -u| xargs))
 
 for cmd in ${uniques[@]}; do
 	echo "Using ${cmd}"
-	if [[ -d "${cmd}" ]]; then
-		${STOW} --adopt ${cmd}
-		${STOW} -R ${cmd}
+	if [[ -d "${FILESDIR}/${cmd}" ]]; then
+		${STOW} ${STOWARGS} --adopt ${cmd}
+		${STOW} ${STOWARGS} -R ${cmd}
 	fi
 	[[ -f "post/${cmd}" ]] && sh "post/${cmd}"
 done
