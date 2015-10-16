@@ -1,5 +1,6 @@
 Plug 'tpope/vim-sensible' " Reasonable defaults
 Plug 'sjl/badwolf' " Theme
+Plug 'NLKNguyen/papercolor-theme'
 Plug '844196/lightline-badwolf.vim'
 " Syntax formatting and verification
 Plug 'benekastah/neomake'
@@ -23,6 +24,7 @@ Plug 'powerman/vim-plugin-viewdoc'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'sophacles/vim-bundle-mako'
 Plug 'LokiChaos/vim-tintin'
+Plug 'jceb/vim-orgmode'
 " Show more info
 Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
@@ -40,5 +42,6 @@ Plug 'rstacruz/vim-closer'
 Plug 'tpope/vim-vinegar'
 Plug 'edkolev/tmuxline.vim'
 Plug 'nathanaelkane/vim-indent-guides'
+Plug 'tpope/vim-speeddating'
 
 " vim: ft=vim

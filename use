@@ -1,19 +1,17 @@
 #!/bin/bash
 
+set -euo pipefail
+
 STOW="./stow"
 USERC=".userc"
 
 # Build stow if it doesn't exist
 if [[ ! -f ./stow ]]; then
 	if command -v stow 2> /dev/null; then
-		ln -s "$(command -v stow)" stow
+		ln -s "$(command -v stow)" .
 	else
-		LATEST=stow-latest.tar.gz
-		if [[ ! -f ${LATEST} ]]; then
-			wget http://ftp.gnu.org/gnu/stow/${LATEST}
-		fi
-		tar -xzf ${LATEST}
-		STOWDIR="$(find -maxdepth 1 -name 'stow-*' -type d -printf '%P\n' -quit)"
+		curl http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz | tar -xzf -
+		STOWDIR="$(find -maxdepth 1 -type d -name 'stow-*' -printf '%P\n' -quit)"
 		(cd $STOWDIR && ./configure && make)
 		sed stow.in -e "s/@STOWDIR@/${STOWDIR}/g" > ${STOW}
 		chmod +x ${STOW}
