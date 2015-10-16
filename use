@@ -29,7 +29,13 @@ for cmd in ${uniques[@]}; do
 		${STOW} ${STOWARGS} --adopt ${cmd}
 		${STOW} ${STOWARGS} -R ${cmd}
 	fi
-	[[ -f "post/${cmd}" ]] && sh "post/${cmd}"
+	if [[ -f "post/${cmd}" ]]; then
+		(
+			this_pwd="$PWD"
+			cd "files/${cmd}"
+			sh "${this_pwd}/post/${cmd}"
+		)
+	fi
 done
 
 echo ${uniques[@]} > ${USERC}

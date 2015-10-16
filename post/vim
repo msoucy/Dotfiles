@@ -3,9 +3,9 @@
 set -euo pipefail
 
 # Post-stow commands
-PLUGURL=https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-PLUGLOC=vim/.vim/autoload/plug.vim
-if [[ -f "${PLUGLOC}" ]]; then
-	wget --no-check-certificate ${PLUGURL} -O ${PLUGLOC}
+PLUGURL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+PLUGLOC=".vim/autoload/plug.vim"
+if [[ ! -f "${PLUGLOC}" ]]; then
+	wget --no-check-certificate "${PLUGURL}" -O "${PLUGLOC}"
 fi
 vim -c "PlugUpdate | qa"

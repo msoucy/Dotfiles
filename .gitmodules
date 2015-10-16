@@ -1,9 +1,9 @@
-[submodule "zsh/.config/zsh/antigen"]
+[submodule "files/zsh/.config/zsh/antigen"]
 	path = files/zsh/.config/zsh/antigen
 	url = https://github.com/zsh-users/antigen.git
-[submodule "zsh/.config/zsh/zgen"]
+[submodule "files/zsh/.config/zsh/zgen"]
 	path = files/zsh/.config/zsh/zgen
 	url = https://github.com/tarjoilija/zgen
-[submodule "tmux/.tmux/plugins/tpm"]
+[submodule "files/tmux/.tmux/plugins/tpm"]
 	path = files/tmux/.tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
