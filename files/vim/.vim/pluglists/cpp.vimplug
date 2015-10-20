@@ -1,0 +1,7 @@
+Plug 'rhysd/vim-clang-format', { 'for': 'cpp' }
+Plug 'dpwright/vim-tup'
+Plug 'vim-jp/cpp-vim' " Has C++11 support
+Plug 'SWIG-syntax', { 'for': 'swig' }
+Plug 'rstacruz/vim-closer'
+
+" vim: ft=vim

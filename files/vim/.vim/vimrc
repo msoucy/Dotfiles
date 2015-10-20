@@ -1,7 +1,6 @@
 " Author: Matt Soucy
 
 " vim settings {{{
-set nocompatible
 set laststatus=2
 set tabstop=4
 set shiftwidth=4
@@ -25,10 +24,9 @@ syntax on "Syntax highlighting
 " Load plugins {{{
 if !empty(globpath(&rtp, "autoload/plug.vim"))
 	call plug#begin()
-	runtime vimplugs
-	if has('nvim')
-		runtime nvimplugs
-	endif
+	for f in globpath(&rtp, 'pluglists/*.vimplug', 0, 1)
+		exe 'source' f
+	endfor
 	call plug#end()
 endif
 
