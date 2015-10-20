@@ -8,7 +8,7 @@ STOWARGS="-d ${FILESDIR} -t ${HOME}"
 USERC=".userc"
 
 # Build stow if it doesn't exist
-if [[ ! -f ./stow ]]; then
+if [[ ! -f "${STOW}" ]]; then
 	if command -v stow 2> /dev/null; then
 		ln -s "$(command -v stow)" "${STOW}"
 	else
@@ -37,10 +37,10 @@ cmdfunc() {
 	done
 }
 
-cmdfunc pre ${uniques[@]}
+cmdfunc "pre" ${uniques[@]}
 echo "Running 'stow' on: ${uniques[@]}"
 ${STOW} ${STOWARGS} --adopt ${uniques[@]}
 ${STOW} ${STOWARGS} -R ${uniques[@]}
-cmdfunc post ${uniques[@]}
+cmdfunc "post" ${uniques[@]}
 
 echo ${uniques[@]} > ${USERC}
