@@ -7,7 +7,7 @@ FILESDIR="files"
 STOWARGS="-d ${FILESDIR} -t ${HOME}"
 USERC=".userc"
 
-# Build stow if it doesn't exist
+# Build stow if it doesn't exist {{{
 if [[ ! -f "${STOW}" ]]; then
 	if command -v stow 2> /dev/null; then
 		ln -s "$(command -v stow)" "${STOW}"
@@ -19,10 +19,15 @@ if [[ ! -f "${STOW}" ]]; then
 		chmod +x ${STOW}
 	fi
 fi
+# }}}
 
-# Get all modules we want to "use"
-uniques=($(echo "$@" $(cat ${USERC} 2>/dev/null)| xargs -n1| sort -u| xargs))
+# mkunique {{{
+mkunique() {
+	xargs -n1 | sort -u | xargs
+}
+# }}}
 
+# cmdfunc {{{
 cmdfunc() {
 	pth=$1
 	for cmd; do
@@ -36,11 +41,28 @@ cmdfunc() {
 		fi
 	done
 }
+# }}}
 
+# Get all modules we want to "use" {{{
+deps=()
+for cmd in $(echo "$@" $(cat ${USERC} 2>/dev/null)| mkunique); do
+	deps+=("${cmd}")
+	if [[ -f "depends/${cmd}" ]]; then
+		deps+=($(cat "depends/${cmd}"))
+	fi
+done
+uniques=($(echo ${deps[@]}| mkunique))
+# }}}
+
+# Stow and use pre/post functions {{{
 cmdfunc "pre" ${uniques[@]}
 echo "Running 'stow' on: ${uniques[@]}"
 ${STOW} ${STOWARGS} --adopt ${uniques[@]}
 ${STOW} ${STOWARGS} -R ${uniques[@]}
 cmdfunc "post" ${uniques[@]}
+# }}}
 
+# Save modules for later use
 echo ${uniques[@]} > ${USERC}
+
+# vim: fdm=marker
