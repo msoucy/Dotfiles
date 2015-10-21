@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -euo pipefail
+
+STOW="./stow"
+FILESDIR="files"
+STOWARGS="-n -d ${FILESDIR} -t ${HOME}"
+USERC=".userc"
+
+# Build stow if it doesn't exist {{{
+if [[ ! -f "${STOW}" ]]; then
+	scripts/get_stow "${STOW}"
+fi
+# }}}
+
+# mkunique {{{
+mkunique() {
+	xargs -n1 | sort -u | xargs
+}
+# }}}
+
+# getunique {{{
+getunique() {
+	xargs -n1 | sort | uniq -u | xargs
+}
+# }}}
+
+# Unstow {{{
+tounuse=($(echo "$@"| mkunique))
+echo "Running 'stow' on: ${tounuse[@]}"
+${STOW} ${STOWARGS} -D ${tounuse[@]}
+# }}}
+
+# Save modules for later use
+echo $( (echo ${tounuse[@]} ${tounuse[@]}; cat "${USERC}") | getunique) > "${USERC}"
+
+# vim: fdm=marker
