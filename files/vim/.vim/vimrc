@@ -23,7 +23,7 @@ syntax on "Syntax highlighting
 " Plugins {{{
 " Load plugins {{{
 if !empty(globpath(&rtp, "autoload/plug.vim"))
-	call plug#begin()
+	call plug#begin("~/.vim/plugged")
 	for f in globpath(&rtp, 'pluglists/*.vimplug', 0, 1)
 		exe 'source' f
 	endfor

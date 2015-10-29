@@ -1,4 +1,7 @@
-" First, load the basic vimrc
+" Add ~/.vim to the runtime path
+set rtp+=~/.vim
+
+" Load the basic vimrc
 runtime vimrc
 
 " NeoVim specific settings
