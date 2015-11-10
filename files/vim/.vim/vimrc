@@ -81,9 +81,9 @@ let g:tmuxline_preset = {
 
 " Color {{{
 set background=dark
-colorscheme desert " Use desert if badwolf isn't installed yet
+colorscheme desert " Use desert if custom themes aren't installed yet
 if has("gui_running") || &t_Co == 88 || &t_Co == 256
-	silent! colorscheme badwolf
+	silent! colorscheme PaperColor
 endif
 " }}}
 
