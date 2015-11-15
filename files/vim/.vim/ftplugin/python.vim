@@ -1,5 +1,7 @@
-setlocal expandtab
-setlocal smarttab
-setlocal tabstop=4
-setlocal softtabstop=4
-setlocal shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set textwidth=79
+set expandtab
+set autoindent
+set fileformat=unix

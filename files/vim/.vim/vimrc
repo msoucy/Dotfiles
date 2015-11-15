@@ -3,7 +3,7 @@
 " vim settings {{{
 set laststatus=2
 set tabstop=4
-set shiftwidth=4
+set shiftwidth=0 " Set it to the tabstop value
 set number
 set ignorecase
 set modeline
@@ -18,6 +18,9 @@ endif
 set cursorline cursorcolumn
 set shortmess+=I " Don't show the intro message
 syntax on "Syntax highlighting
+" Make splits go southeast
+set splitbelow
+set splitright
 " }}}
 
 " Plugins {{{
