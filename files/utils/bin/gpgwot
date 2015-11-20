@@ -1,5 +1,10 @@
 #!/bin/bash
-gpg --list-sigs --keyring ~/.gnupg/pubring.gpg | sig2dot > ~/.gnupg/pubring.dot
-neato -Tps ~/.gnupg/pubring.dot > ~/.gnupg/pubring.ps
-convert ~/.gnupg/pubring.ps ~/.gnupg/pubring.gif
-eog ~/.gnupg/pubring.gif
+
+FMT=svg
+LAYOUT=dot
+
+KEYRING=${1:-~/.gnupg/pubring.gpg}
+
+gpg --list-sigs --keyring ${KEYRING} | sig2dot -q | \
+	dot -T${FMT} -K${LAYOUT} -Gconcentrate=true > ~/.gnupg/pubring.${FMT}
+eog ~/.gnupg/pubring.${FMT}
