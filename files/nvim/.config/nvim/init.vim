@@ -5,7 +5,7 @@ set rtp+=~/.vim
 runtime vimrc
 
 " NeoVim specific settings
-tnoremap <Esc> <C-\><C-n>
+"tnoremap <Esc> <C-\><C-n>
 if exists(':Unite')
 	nnorema <C-p> :Unite file_rec/neovim<CR>
 endif
