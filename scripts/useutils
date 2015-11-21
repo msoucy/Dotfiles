@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Build stow if it doesn't exist {{{
+STOW="$("$(dirname $0)/get_stow")"
+# }}}
+
+# mkunique {{{
+mkunique() {
+	xargs -n1 | sort -u | xargs
+}
+# }}}
+
+# getunique {{{
+getunique() {
+	xargs -n1 | sort | uniq -u | xargs
+}
+# }}}
+
+# cmdfunc {{{
+cmdfunc() {
+	pth=$1
+	for cmd; do
+		if [[ -f "${pth}/${cmd}" ]]; then
+			echo "Running ${pth}-${cmd} commands"
+			(
+				this_pwd="$PWD"
+				cd "files/${cmd}"
+				sh "${this_pwd}/${pth}/${cmd}"
+			)
+		fi
+	done
+}
+# }}}
+
+# vim: fdm=marker
