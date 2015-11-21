@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+FILESDIR="files"
+STOWARGS="-n -d ${FILESDIR} -t ${HOME}"
+USERC=".userc"
+
+# Load use helper functions {{{
+source "$(dirname $(readlink -f "${BASH_SOURCE[0]}"))/useutils"
+# }}}
+
+# Unstow {{{
+tounuse=($(echo "$@"| mkunique))
+echo "Running 'stow' on: ${tounuse[@]}"
+${STOW} ${STOWARGS} -D ${tounuse[@]}
+# }}}
+
+# Save modules for later use {{{
+echo $( (echo ${tounuse[@]} ${tounuse[@]}; cat "${USERC}") | getunique) > "${USERC}"
+# }}}
+
+# vim: fdm=marker

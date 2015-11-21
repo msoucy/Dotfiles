@@ -1,0 +1,3 @@
+#!/bin/sh
+basedir="$(dirname $(readlink -f "${BASH_SOURCE[0]}"))"
+perl -I${basedir}/@STOWDIR@/lib ${basedir}/@STOWDIR@/bin/stow "$@"

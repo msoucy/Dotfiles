@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -euo pipefail
+
+THISDIR="$(dirname "$(readlink -f "$0")")"
+STOW="${1:-"${THISDIR}/stow"}"
+
+# Build stow if it doesn't exist {{{
+if [[ ! -f "${STOW}" ]]; then
+	if command -v stow > /dev/null 2>&1; then
+		ln -s "$(command -v stow)" "${STOW}"
+	else
+		(
+			cd "${THISDIR}"
+			curl http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz | tar -xzf -
+			STOWDIR="$(find -maxdepth 1 -type d -name 'stow-*' -printf '%P\n' -quit)"
+			(cd $STOWDIR && ./configure && make)
+			sed stow.in -e "s/@STOWDIR@/${STOWDIR}/g" > "${STOW}"
+			chmod +x "${STOW}"
+		)
+	fi
+fi
+# }}}
+echo "${STOW}"
+
+# vim: fdm=marker
