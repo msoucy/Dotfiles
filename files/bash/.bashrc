@@ -11,7 +11,7 @@ case $- in
     *)   FISHFLAGS=  ;;
 esac
 
-if which fish > /dev/null 2>&1 && [[ -t 0 || -p /dev/stdin ]]; then
+if [[ $- == *i* ]] && which fish > /dev/null 2>&1 && [[ -t 0 || -p /dev/stdin ]]; then
     exec fish ${FISHFLAGS}
 fi
 
