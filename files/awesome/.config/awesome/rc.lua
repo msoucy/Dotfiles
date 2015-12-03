@@ -121,8 +121,9 @@ mytextclock = awful.widget.textclock()
 mytextclock:buttons(awful.util.table.join(
     awful.button({}, 1, function()
         naughty.notify({
-            text = awful.util.pread("cal"):match("(.-)%s*$"),
-            timeout = 7
+            text = awful.util.pread("cal -3"):match("(.-)%s*$"),
+            timeout = 7,
+            font = "Monospace 8"
         })
     end)
 ))
@@ -240,7 +241,7 @@ function brightness.update(mod)
     return function ()
         nv = brightness.value
         nv = math.max(20, math.min(100, nv + mod))
-        cmd = string.format('xrandr --output LVDS-1 --brightness %1.2f', nv/100.0)
+        cmd = string.format('xrandr --output LVDS2 --brightness %1.2f', nv/100.0)
         awful.util.spawn(cmd)
         brightness.value = nv
     end
