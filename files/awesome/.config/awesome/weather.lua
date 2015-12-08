@@ -26,7 +26,7 @@ function weather(zip, config)
 			-- Lightning
 			["11"] = {icon="☈", fg="#FCC01E"},
 			-- Snow
-			["13"] = {icon="❅", fg="#BBBBBB"},
+			["13"] = {icon="❅", fg="Snow"},
 			-- Mist
 			["50"] = {icon="≡", fg="#BCBBA9"}
 		}
