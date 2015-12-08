@@ -11,8 +11,7 @@ function weather(zip, config)
 		timeout = 600,
 		fg = wibox.widget.textbox(),
 		widget = wibox.widget.background(),
-		units = "imperial",
-		zip = zip,
+		units = "imperial", -- Yes, I'm a terrible person
 		data = "",
 		formats = {
 			-- Sunny
@@ -36,43 +35,48 @@ function weather(zip, config)
 	wid.fg:set_align("right")
 	wid.widget:set_widget(wid.fg)
 
-	function wid.display(data, fg)
-		wid.widget:set_fg(fg)
-		wid.fg:set_text(" " .. awful.util.unescape(wid.data))
+	function mkspan(text, attrs)
+		local ret = ""
+		for k,v in pairs(attrs or {}) do
+			ret = ret .. " " .. k .. "='" .. v .. "'"
+		end
+		return "<span" .. ret .. ">" .. text .. "</span>"
 	end
 
 	function wid.update()
 		local baseurl = "http://api.openweathermap.org/data/2.5/weather"
 		local url = "?zip=%s&units=%s&appid=%s"
 		local appid = "68cbb05e407c673c308de30908beb20f"
-		local prep_url = string.format(baseurl .. url, wid.zip, wid.units, appid)
+		local prep_url = string.format(baseurl .. url, zip, wid.units, appid)
 		local text = awful.util.pread(string.format("curl '%s'", prep_url)):match("(.-)%s*$")
-		local jdata = json.decode(text)
 
-		local degree = jdata["main"]["temp"]
-		local iconame = string.sub(jdata["weather"][1]["icon"], 1, -2)
-		local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
-		wid.data = degree .. "° " .. wdata.icon
-		wid.desc = jdata["weather"][1]["description"]:gsub("^%l", string.upper)
-		wid.display(wid.data, wdata.fg)
+		local jdata = json.decode(text)
+		wid.data = jdata.main.temp .. "°"
+		wid.desc = ""
+		for _, wtab in pairs(jdata.weather) do
+			local iconame = string.sub(wtab.icon, 1, -2)
+			local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
+			wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg})
+			wid.desc = wid.desc .. wtab.description:gsub("^%l", string.upper) .. "\n"
+		end
+		wid.desc = wid.desc:gsub("^%s*(.-)%s*$", "%1")
+
+		wid.fg:set_markup(" " .. awful.util.unescape(wid.data) .. " ")
 	end
 
-	function wid.show(text)
+	function alert(text)
 		naughty.notify({ text = text, timeout = 3 })
 	end
 
-	function wid.show_desc()
-		wid.show(wid.desc)
-	end
-
-	function wid.manual_update()
-		wid.show("Updating weather")
-		wid.update()
-	end
 
 	wid.fg:buttons(awful.util.table.join(
-		awful.button({}, 1, wid.show_desc),
-		awful.button({}, 3, wid.manual_update)
+		awful.button({}, 1, function()
+			alert(wid.desc)
+		end),
+		awful.button({}, 3, function()
+			alert("Updating weather")
+			wid.update()
+		end)
 	))
 
 	wid.update()
