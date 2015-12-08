@@ -12,7 +12,6 @@ function weather(zip, config)
 		fg = wibox.widget.textbox(),
 		widget = wibox.widget.background(),
 		units = "imperial", -- Yes, I'm a terrible person
-		data = "",
 		formats = {
 			-- Sunny
 			["01"] = {icon="☀", fg="#fff92e"},
@@ -50,14 +49,19 @@ function weather(zip, config)
 		local prep_url = string.format(baseurl .. url, zip, wid.units, appid)
 		local text = awful.util.pread(string.format("curl '%s'", prep_url)):match("(.-)%s*$")
 
+		-- Sometimes we don't have network, so set default values
+		wid.desc = "Could not get weather - make sure internet connection is enabled and right-click applet"
+		wid.data = "???°"
 		local jdata = json.decode(text)
-		wid.data = jdata.main.temp .. "°"
-		wid.desc = ""
-		for _, wtab in pairs(jdata.weather) do
-			local iconame = string.sub(wtab.icon, 1, -2)
-			local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
-			wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg})
-			wid.desc = wid.desc .. wtab.description:gsub("^%l", string.upper) .. "\n"
+		if jdata then
+			wid.data = jdata.main.temp .. "°"
+			wid.desc = ""
+			for _, wtab in pairs(jdata.weather) do
+				local iconame = string.sub(wtab.icon, 1, -2)
+				local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
+				wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg})
+				wid.desc = wid.desc .. wtab.description:gsub("^%l", string.upper) .. "\n"
+			end
 		end
 		wid.desc = wid.desc:gsub("^%s*(.-)%s*$", "%1")
 
