@@ -14,25 +14,30 @@ function weather(zip, config)
 		units = "imperial",
 		zip = zip,
 		data = "",
-		icons = {
-			["01"] = "☀",
-			["02"] = "☁",
-			["03"] = "☁",
-			["04"] = "☁",
-			["09"] = "☂",
-			["10"] = "☂",
-			["11"] = "☈",
-			["13"] = "❅",
-			["50"] = "≡"
+		formats = {
+			-- Sunny
+			["01"] = {icon="☀", fg="#fff92e"},
+			-- Cloudy
+			["02"] = {icon="☁", fg="#33CCFF"},
+			["03"] = {icon="☁", fg="#33CCFF"},
+			["04"] = {icon="☁", fg="#33CCFF"},
+			-- Rain
+			["09"] = {icon="☂", fg="#008080"},
+			["10"] = {icon="☂", fg="#008080"},
+			-- Lightning
+			["11"] = {icon="☈", fg="#FCC01E"},
+			-- Snow
+			["13"] = {icon="❅", fg="#BBBBBB"},
+			-- Mist
+			["50"] = {icon="≡", fg="#BCBBA9"}
 		}
 	}
 	for k,v in pairs(config or {}) do wid[k] = v end
 	wid.fg:set_align("right")
 	wid.widget:set_widget(wid.fg)
-	wid.widget:set_fg("#33CCFF")
-	wid.widget:set_bg("#404040")
 
-	function wid.display(data)
+	function wid.display(data, fg)
+		wid.widget:set_fg(fg)
 		wid.fg:set_text(" " .. awful.util.unescape(wid.data))
 	end
 
@@ -45,10 +50,11 @@ function weather(zip, config)
 		local jdata = json.decode(text)
 
 		local degree = jdata["main"]["temp"]
-		local icon = wid.icons[string.sub(jdata["weather"][1]["icon"],1,-2)] or "?"
-		wid.data = degree .. "° " .. icon
+		local iconame = string.sub(jdata["weather"][1]["icon"], 1, -2)
+		local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
+		wid.data = degree .. "° " .. wdata.icon
 		wid.desc = jdata["weather"][1]["description"]:gsub("^%l", string.upper)
-		wid.display(wid.data)
+		wid.display(wid.data, wdata.fg)
 	end
 
 	function wid.show(text)
