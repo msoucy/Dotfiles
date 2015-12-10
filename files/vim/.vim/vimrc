@@ -65,6 +65,9 @@ let g:syntastic_mode_map = {
         \ "active_filetypes": [],
         \ "passive_filetypes": ["d"] }
 " }}}
+" Neomake {{{
+let g:neomake_open_list=2
+" }}}
 " tmuxline {{{
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = {
@@ -119,6 +122,8 @@ nnoremap gk k
 
 " Highlight line and column
 nnoremap H :set cursorline! cursorcolumn!<CR>
+
+cabbr <expr> %% expand('%:p:h')
 
 if exists(":TagbarToggle")
 	nmap <silent> <Leader>t :TagbarToggle<CR>
