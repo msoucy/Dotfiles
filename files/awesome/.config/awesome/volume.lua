@@ -27,13 +27,17 @@ volume_widget.update = function()
    volume_widget.volume = volume
 end
 
-local extern = function(cmd)
-	return function() awful.util.pread(cmd) end
+local volcommand = function(cmd)
+	return function()
+		awful.util.pread(cmd)
+		volume_widget.update()
+	end
 end
 
-volume_widget.up = extern("amixer set Master 5%+")
-volume_widget.down = extern("amixer set Master 5%-")
-volume_widget.toggle = extern("amixer set Master toggle")
+volume_widget.up = volcommand("amixer set Master 5%+")
+volume_widget.down = volcommand("amixer set Master 5%-")
+volume_widget.toggle = volcommand("amixer set Master toggle")
+volume_widget.read_raw = function() awful.util.pread("amixer sget Master") end
 
 volume_widget.update()
 

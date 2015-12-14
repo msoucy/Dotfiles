@@ -320,7 +320,8 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86AudioLowerVolume", volume_widget.down),
     awful.key({ }, "XF86AudioMute", volume_widget.toggle),
     -- Print Screen
-    awful.key({ }, "Print", extern("scrot 'screenshots/%Y-%m-%d_%H%M%S.png'")),
+    awful.key({ }, "Print",
+              extern("scrot 'Pictures/screenshots/%Y-%m-%d_%H%M%S.png'")),
     -- Lock
     awful.key({ modkey, "Control" }, "l", extern("xscreensaver-command -lock")),
     awful.key({ modkey }, "XF86ScreenSaver", extern("xscreensaver-command -lock")),
