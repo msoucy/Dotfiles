@@ -92,8 +92,18 @@ endif
 " }}}
 
 " Keybindings {{{
+
+function! RunMaker(...)
+	if exists(':Neomake')
+		:Neomake
+	else
+		:make
+		:copen
+	endif
+endfunction
+
 "Mapped some FUNCTION keys to be more useful
-map <F9> :make<Return>:copen<Return><Return>
+map <F9> :call RunMaker()<Return>
 map <F10> :cprevious<Return>
 map <F11> :cnext<Return>
 
