@@ -100,11 +100,27 @@ myawesomemenu = {
    { "quit", awesome.quit }
 }
 
+function xprop(...)
+    local activestr = "xprop -root 32x '$0' _NET_ACTIVE_WINDOW"
+    local suffix = table.concat({...}, " ")
+    return function()
+        local id = awful.util.pread(activestr):match("(0x.-)$")
+        local cmdstr = "xprop -id " .. id .. " " .. suffix
+        naughty.notify({
+            text = awful.util.pread(cmdstr):match("(.-)%s*$"),
+            timeout = 20,
+            font = "Monospace 8"
+        })
+    end
+end
+
 mymainmenu = awful.menu({ items = {
     { "awesome", myawesomemenu, beautiful.awesome_icon },
+    { "Properties", {
+        { "xprop", xprop("WM_CLASS", "WM_NAME") },
+        { "xprop-all", xprop() },
+    }},
     { "(un)dock", "~/bin/dock" },
-    --{ "xprop", "sh -c 'notify-send XProp \"$(xprop | grep --color=none \"^WM_CLASS\\|^WM_NAME\")\"'" },
-    --{ "xprop-all", "sh -c 'notify-send XProp \"$(xprop)\"'" },
     { "open terminal", terminal }
 }})
 
