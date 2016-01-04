@@ -329,3 +329,5 @@ fi
 # }}}
 
 # vim: fdm=marker et ts=2 sw=2
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

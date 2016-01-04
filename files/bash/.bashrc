@@ -116,3 +116,5 @@ export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}\]>\[${PR_NO_COLOR}\
 trysource ~/.bashrc.local
 
 # vim: et fdm=marker
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

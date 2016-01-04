@@ -6,6 +6,8 @@ runtime vimrc
 
 " NeoVim specific settings
 "tnoremap <Esc> <C-\><C-n>
-if exists(':Unite')
+if exists(":FZF")
+	nnorema <C-p> :FZF<CR>
+elseif exists(':Unite')
 	nnorema <C-p> :Unite file_rec/neovim<CR>
 endif
