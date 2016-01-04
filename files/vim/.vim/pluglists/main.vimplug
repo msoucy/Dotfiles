@@ -5,7 +5,6 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'editorconfig/editorconfig-vim'
 " Language syntaxes
 Plug 'dag/vim-fish'
-Plug 'idanarye/vim-dutyl'
 Plug 'trapd00r/vim-syntax-vidir-ls'
 Plug 'powerman/vim-plugin-viewdoc'
 Plug 'tmux-plugins/vim-tmux'

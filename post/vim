@@ -8,4 +8,4 @@ PLUGLOC=".vim/autoload/plug.vim"
 if [[ ! -f "${PLUGLOC}" ]]; then
 	wget --no-check-certificate "${PLUGURL}" -O "${PLUGLOC}"
 fi
-vim -c "PlugUpdate | qa"
+vim -c "PlugUpdate"
