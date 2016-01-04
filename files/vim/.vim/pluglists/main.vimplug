@@ -1,6 +1,7 @@
 Plug 'tpope/vim-sensible' " Reasonable defaults
 " Syntax formatting and verification
 Plug 'benekastah/neomake'
+Plug 'kassio/neoterm'
 Plug 'Chiel92/vim-autoformat'
 Plug 'editorconfig/editorconfig-vim'
 " Language syntaxes
@@ -18,5 +19,7 @@ Plug 'jmcantrell/vim-virtualenv'
 Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 
 " vim: ft=vim
