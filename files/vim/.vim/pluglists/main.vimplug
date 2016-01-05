@@ -1,7 +1,6 @@
 Plug 'tpope/vim-sensible' " Reasonable defaults
 " Syntax formatting and verification
 Plug 'benekastah/neomake'
-Plug 'kassio/neoterm'
 Plug 'Chiel92/vim-autoformat'
 Plug 'editorconfig/editorconfig-vim'
 " Language syntaxes
