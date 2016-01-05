@@ -13,7 +13,6 @@ Plug 'LokiChaos/vim-tintin'
 Plug 'jceb/vim-orgmode'
 Plug 'sheerun/vim-polyglot'
 " Misc Plugs
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
