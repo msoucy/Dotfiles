@@ -161,10 +161,13 @@ set completeopt=longest,menuone
 
 " Lightline controls {{{
 let g:lightline = {
-      \ 'colorscheme': 'badwolf',
+      \ 'colorscheme': g:colors_name,
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'modified', 'fugitive', 'filename' ], ['ctrlpmark'] ],
-      \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'modified', 'fugitive', 'filename' ]],
+      \   'right': [ [ 'neomake', 'lineinfo' ],
+      \              ['percent'],
+      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component': {
       \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}'
@@ -255,17 +258,6 @@ function! TagbarStatusFunc(current, sort, fname, ...) abort
     let g:lightline.fname = a:fname
   return lightline#statusline(0)
 endfunction
-
-if exists(":SyntasticCheck")
-  augroup AutoSyntastic
-    autocmd!
-    autocmd BufWritePost *.c,*.cpp call s:syntastic()
-  augroup END
-  function! s:syntastic()
-    SyntasticCheck
-    call lightline#update()
-  endfunction
-endif
 " }}}
 
 " Custom term behavior {{{
