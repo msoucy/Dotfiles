@@ -10,17 +10,18 @@
 	br = branch
 	serve = daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
 	ls = log --color --graph --pretty=format:'%C(yellow)%h%Creset -%Cred%d%Creset %s %Cgreen(%cr) %C(blue)[%an]%Creset' --abbrev-commit --all
-	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]%Creset" --decorate --numstat
-	l1 = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]%Creset" --decorate --numstat -1
+	ll = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]%C(reset)' --decorate --numstat
+	l1 = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]%C(reset)' --decorate --numstat -1
 	ld = log --pretty=format:'%C(yellow)%h%Creset %Cgreen%ad%Cred%d %Creset%s%Cblue [%cn]%Creset' --decorate --date=relative
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	lg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' --abbrev-commit --date=relative
 	fl = log -u
 	purr = pull --rebase
-	ignored = ls-files -–others --i -–exclude-standard
+	ignored = ls-files --others --i --exclude-standard
 	wipe = reset --hard HEAD
 	standup = "!git log --since yesterday --author `git config user.email` --pretty=short"
 	unstage = reset --
 	forget = rm --cached
+	graph = log --graph --oneline --decorate=short
 [color]
 	ui = true
 	[color "branch"]
