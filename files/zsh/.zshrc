@@ -239,6 +239,7 @@ up() {
 
 # }}}
 
+autoload -U is-at-least
 autoload -Uz prompt_msoucy_setup
 prompt msoucy
 
@@ -307,7 +308,8 @@ if ! zgen saved; then
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line root)
   zgen load zsh-users/zsh-syntax-highlighting
 
-  # oh-my-zsh plugins/plugins {{{
+  # oh-my-zsh plugins{{{
+  zgen oh-my-zsh plugins/misc           # Misc basic aliases
   zgen oh-my-zsh plugins/common-aliases # Normal aliases
   zgen oh-my-zsh plugins/colored-man    # Colored Manpages
   # zgen oh-my-zsh plugins/profiles       # Look for custom user profiles
