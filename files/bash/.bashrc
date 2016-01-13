@@ -37,7 +37,7 @@ vim() {
 	elif which vim > /dev/null 2>&1; then
 		command vim "$@"
 	else
-		vi "$@"
+		command vi "$@"
 	fi
 }
 
@@ -82,7 +82,6 @@ _prc_modules=( userhost time smiley pwd git )
 
 function setprompt() {
     local ret=$?
-    eval $(resize)
     _prc_userhost="${PR_RED}$(whoami)${PR_YELLOW}@$(hostname)"
     _prc_time="${PR_WHITE}$(date +"%H:%m:%S")"
     _prc_smiley="$([[ $ret == 0 ]] && echo "${PR_LIGHT_GREEN}^_^" || echo "${PR_LIGHT_RED}O_O [$ret]")"
@@ -115,6 +114,8 @@ export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}\]>\[${PR_NO_COLOR}\
 
 trysource ~/.bashrc.local
 
-# vim: et fdm=marker
-
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+: # Just so that the shell starts with a non-error code
+
+# vim: et fdm=marker
