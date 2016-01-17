@@ -25,3 +25,4 @@ abbr ll 'ls -lh'
 abbr la 'ls -lah'
 abbr gman 'man -k'
 abbr :e $EDITOR
+abbr :q exit
