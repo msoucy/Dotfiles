@@ -80,7 +80,7 @@ PR_BODY_COLOR="${PR_NO_COLOR}${PR_LIGHT_CYAN}"
 typeset -a _prc_modules
 _prc_modules=( userhost time smiley pwd git )
 
-function setprompt() {
+setprompt () {
     local ret=$?
     _prc_userhost="${PR_RED}$(whoami)${PR_YELLOW}@$(hostname)"
     _prc_time="${PR_WHITE}$(date +"%H:%m:%S")"
@@ -114,6 +114,7 @@ export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}\]>\[${PR_NO_COLOR}\
 
 trysource ~/.bashrc.local
 
+[ -f "${HOME}/.dircolors" ] && eval $(dircolors -b ${HOME}/.dircolors)
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 : # Just so that the shell starts with a non-error code
