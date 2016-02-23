@@ -14,11 +14,11 @@ function weather(zip, config)
 		units = "imperial", -- Yes, I'm a terrible person
 		formats = {
 			-- Sunny
-			["01"] = {icon="☀", fg="#fff92e"},
+			["01"] = {icon="☀", fg="#FFF92E"},
 			-- Cloudy
-			["02"] = {icon="☁", fg="#33CCFF"},
-			["03"] = {icon="☁", fg="#33CCFF"},
-			["04"] = {icon="☁", fg="#33CCFF"},
+			["02"] = {icon="☁", fg="#F3F2E7"},
+			["03"] = {icon="☁", fg="#F3F2E7"},
+			["04"] = {icon="☁", fg="#F3F2E7"},
 			-- Rain
 			["09"] = {icon="☂", fg="#008080"},
 			["10"] = {icon="☂", fg="#008080"},

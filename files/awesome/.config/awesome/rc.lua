@@ -340,6 +340,7 @@ globalkeys = awful.util.table.join(
               extern("scrot 'Pictures/screenshots/%Y-%m-%d_%H%M%S.png'")),
     -- Lock
     awful.key({ modkey, "Control" }, "l", extern("xscreensaver-command -lock")),
+    awful.key({ modkey, "Shift", "Control" }, "l", extern("pyxtrlock")),
     awful.key({ modkey }, "XF86ScreenSaver", extern("xscreensaver-command -lock")),
     -- Buzzer
     awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
