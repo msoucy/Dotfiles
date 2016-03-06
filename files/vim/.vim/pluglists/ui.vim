@@ -11,5 +11,3 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'jreybert/vimagit'
 Plug 'edkolev/tmuxline.vim'
 Plug 'nathanaelkane/vim-indent-guides'
-
-" vim: ft=vim

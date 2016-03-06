@@ -26,7 +26,7 @@ set splitbelow splitright
 " Load plugins {{{
 if !empty(globpath(&rtp, "autoload/plug.vim"))
   call plug#begin("~/.vim/plugged")
-  runtime! pluglists/*.vimplug
+  runtime! pluglists/*.vim
   call plug#end()
 endif
 

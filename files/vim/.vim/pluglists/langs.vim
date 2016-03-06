@@ -15,5 +15,3 @@ Plug 'lepture/vim-jinja'
 Plug 'othree/html5.vim'
 Plug 'othree/xml.vim'
 Plug 'sophacles/vim-bundle-mako'
-
-" vim: ft=vim

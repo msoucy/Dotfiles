@@ -14,5 +14,3 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-
-" vim: ft=vim
