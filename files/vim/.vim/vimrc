@@ -25,7 +25,12 @@ set splitbelow splitright
 " Plugins {{{
 " Load plugins {{{
 if !empty(globpath(&rtp, "autoload/plug.vim"))
-  call plug#begin("~/.vim/plugged")
+  if has('nvim')
+    " NeoVim wants to store them in $XDG_CONFIG_HOME, but we want to
+    " share them between nvim and vim
+    let g:plug_home = expand('~/.vim/plugged')
+  endif
+  call plug#begin()
   runtime! pluglists/*.vim
   call plug#end()
 endif
