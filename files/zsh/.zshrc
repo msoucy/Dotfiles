@@ -310,9 +310,9 @@ if ! zgen saved; then
   # oh-my-zsh plugins/plugins {{{
   zgen oh-my-zsh plugins/common-aliases # Normal aliases
   zgen oh-my-zsh plugins/colored-man    # Colored Manpages
-  zgen oh-my-zsh plugins/profiles       # Look for custom user profiles
+  # zgen oh-my-zsh plugins/profiles       # Look for custom user profiles
   zgen oh-my-zsh plugins/screen         # GNU Screen configuration
-  #zgen oh-my-zsh plugins/ssh-agent      # SSH agent
+  # zgen oh-my-zsh plugins/ssh-agent      # SSH agent
   zgen oh-my-zsh plugins/sudo           # <Esc><Esc> prepends sudo
   zgen oh-my-zsh plugins/tmux           # TMUXinator
   zgen oh-my-zsh plugins/tmuxinator     # TMUXinator
