@@ -1,4 +1,0 @@
-if !has('nvim')
-	finish
-endif
-" vim: ft=vim
