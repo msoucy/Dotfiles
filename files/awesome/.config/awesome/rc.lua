@@ -532,15 +532,17 @@ function run_once(prg, arg_string) -- {{{
     -- Look for process, if it doesn't exist then spawn it
     -- Don't use awful.util.shell, in case the shell isn't bash-compatible
     return awful.util.spawn({
-        shell or "/bin/sh", "-c",
+        "/bin/sh", "-c",
         "pgrep -f -u $USER -x '" .. cmd .. "' || (" .. cmd .. ")"
     })
 end -- }}}
 
+-- If the programs don't exist, bash will just silently fail
 run_once("xscreensaver", "-no-splash")
 run_once("amixer", "-c 0 set Headphone 100%")
 run_once("nm-applet")
 run_once("gnome-keyring-daemon")
+run_once("keepass")
 --- }}}
 
 -- vim: fdm=marker et ts=4 sw=4
