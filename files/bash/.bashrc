@@ -15,6 +15,10 @@ if [[ $- == *i* ]] && which fish > /dev/null 2>&1 && [[ -t 0 || -p /dev/stdin ]]
     exec fish ${FISHFLAGS}
 fi
 
+if [[ -z "$PS1" ]]; then
+    return
+fi
+
 # User specific aliases and functions {{{
 export PATH="~/bin:$PATH"
 trysource() {
@@ -112,7 +116,7 @@ export PROMPT_COMMAND=
 export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}\]>\[${PR_NO_COLOR}\] '
 # }}}
 
-trysource ~/.bashrc.local
+trysource ~/.bashrc.local ~/.local/bashrc
 
 [ -f "${HOME}/.dircolors" ] && eval $(dircolors -b ${HOME}/.dircolors)
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
