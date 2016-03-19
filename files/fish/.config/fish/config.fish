@@ -1,5 +1,11 @@
 #!/usr/bin/fish
 
+set fisher_home ~/Code/fisherman
+set fisher_config ~/.config/fisherman
+if test -f $fisher_home/config.fish
+	source $fisher_home/config.fish
+end
+
 set fish_greeting ""
 
 set VIRTUALFISH_HOME "$HOME/.virtualenv"
