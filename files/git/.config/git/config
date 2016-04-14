@@ -1,7 +1,7 @@
 [user]
 	name = Matt Soucy
 	email = msoucy@csh.rit.edu
-	signingkey = B2370F0C
+	signingkey = "B2370F0C"
 [alias]
 	tree = log --graph --decorate --pretty=short --abbrev-commit
 	co = checkout
@@ -22,6 +22,8 @@
 	unstage = reset --
 	forget = rm --cached
 	graph = log --graph --oneline --decorate=short
+	root = rev-parse --top-level
+	exec = "! "
 [color]
 	ui = true
 	[color "branch"]
@@ -48,3 +50,10 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[tig]
+	line-graphics = utf-8
+	blame-view = date:default author:full file-name:auto id:yes,color \
+                 line-number:yes,interval=5 text
+	commit-order = topo
+[diff]
+	tool = vimdiff
