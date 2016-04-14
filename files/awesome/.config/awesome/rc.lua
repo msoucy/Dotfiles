@@ -227,7 +227,7 @@ for s = 1, screen.count() do
     right_layout:add(require("battery"))
     right_layout:add(require("fish"))
     local weather = require("weather")
-    right_layout:add(weather("14623"))
+    right_layout:add(weather("03054"))
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
