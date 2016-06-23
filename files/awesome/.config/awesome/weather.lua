@@ -53,7 +53,7 @@ function weather(zip, config)
 		wid.desc = "Could not get weather - make sure internet connection is enabled and right-click applet"
 		wid.data = "???°"
 		local jdata = json.decode(text)
-		if jdata then
+		if jdata and jdata.main then
 			wid.data = jdata.main.temp .. "°"
 			wid.desc = ""
 			for _, wtab in pairs(jdata.weather) do
