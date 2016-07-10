@@ -10,8 +10,12 @@ Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
 Plug 'dpwright/vim-tup'
 Plug 'vim-jp/cpp-vim' " Has C++11 support
 Plug 'SWIG-syntax', { 'for': 'swig' }
+Plug 'rhysd/vim-clang-format'
 " Web-based
 Plug 'lepture/vim-jinja'
 Plug 'othree/html5.vim'
-Plug 'othree/xml.vim'
+Plug 'othree/xml.vim', { 'for': 'xml' }
 Plug 'sophacles/vim-bundle-mako'
+" Pandoc
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'

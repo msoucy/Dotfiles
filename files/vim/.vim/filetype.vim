@@ -1,13 +1,9 @@
 if exists("did_load_filetypes")
-	finish
+    finish
 endif
 
 augroup filetypedetect
-	au! BufRead,BufNewFile *.md		setfiletype markdown
-	if !empty(globpath(&rtp, "syntax/jinja.vim"))
-		au! BufRead,BufNewFile *.html,*.htm,*.shtml,*.stm     setfiletype jinja
-	endif
-	if !empty(globpath(&rtp, "syntax/fish.vim"))
-		au! BufRead,BufNewFile *.fish     setfiletype fish
-	endif
+    au! BufRead,BufNewFile *.md,*.markdown        setfiletype markdown.pandoc
+    au! BufRead,BufNewFile *.html,*.htm,*.shtml   setfiletype jinja.html
+    au! BufRead,BufNewFile *.fish                 setfiletype fish
 augroup END

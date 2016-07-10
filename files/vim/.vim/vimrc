@@ -26,27 +26,12 @@ set splitbelow splitright
 " }}}
 
 " Plugins {{{
-" Load plugins {{{
-if !empty(globpath(&rtp, "autoload/plug.vim"))
-  if has('nvim')
-    " NeoVim wants to store them in $XDG_CONFIG_HOME, but we want to
-    " share them between nvim and vim
-    let g:plug_home = expand('~/.vim/plugged')
-  endif
-  call plug#begin()
-  runtime! pluglists/*.vim
-  call plug#end()
-endif
-
-filetype plugin indent on
-syntax on
-" }}}
-
 " Plugin settings {{{
 let g:table_mode_corner = '|'
 let g:vim_markdown_folding_disabled=1
 let g:netrw_liststyle=3
 let g:haskell_conceal_wide=1
+let g:pandoc#syntax#codeblocks#embeds#langs = ['java', 'python', 'sh', 'dot', 'cpp']
 " Clang-format {{{
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
@@ -88,6 +73,22 @@ let g:tmuxline_preset = {
 
 " }}}
 
+" Load plugins {{{
+if !empty(globpath(&rtp, "autoload/plug.vim"))
+  if has('nvim')
+    " NeoVim wants to store them in $XDG_CONFIG_HOME, but we want to
+    " share them between nvim and vim
+    let g:plug_home = expand('~/.vim/plugged')
+  endif
+  call plug#begin()
+  runtime! pluglists/*.vim
+  call plug#end()
+endif
+
+filetype plugin indent on
+syntax on
+" }}}
+
 " }}} Plugins
 
 " Color {{{
@@ -96,6 +97,7 @@ colorscheme desert " Use desert if custom themes aren't installed yet
 if has("gui_running") || &t_Co == 88 || &t_Co == 256
   silent! colorscheme PaperColor
 endif
+hi clear Conceal " Causes weird color errors otherwise
 " }}}
 
 " Keybindings {{{
@@ -107,6 +109,10 @@ function! RunMaker(...)
     :make | copen
   endif
 endfunction
+
+" Fix weird issues
+noremap <F3> <Esc>:syntax sync fromstart<CR>
+inoremap <F3> <C-o>:syntax sync fromstart<CR>
 
 "Mapped some FUNCTION keys to be more useful
 map <F9> :call RunMaker()<Return>
