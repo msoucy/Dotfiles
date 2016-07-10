@@ -24,6 +24,7 @@
 	graph = log --graph --oneline --decorate=short
 	root = rev-parse --top-level
 	exec = "! "
+	ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
 [color]
 	ui = true
 	[color "branch"]
