@@ -9,30 +9,32 @@ local json = require("json")
 function weather(zip, config)
 	wid = {
 		timeout = 600,
-		fg = wibox.widget.textbox(),
-		widget = wibox.widget.background(),
+		widget = wibox.widget.textbox(),
 		units = "imperial", -- Yes, I'm a terrible person
 		formats = {
 			-- Sunny
-			["01"] = {icon="☀", fg="#FFF92E"},
+			["01"] = {icon="&#9728;", fg="#FFF92E"},
 			-- Cloudy
-			["02"] = {icon="☁", fg="#F3F2E7"},
-			["03"] = {icon="☁", fg="#F3F2E7"},
-			["04"] = {icon="☁", fg="#F3F2E7"},
+			["02"] = {icon="&#9925;", fg="#F3F2E7"}, -- Partly Cloudy
+			["03"] = {icon="&#9729;", fg="#F3F2E7"}, -- Cloudy
+			["04"] = {icon="&#9729;", fg="#F3F2E7"},
 			-- Rain
-			["09"] = {icon="☂", fg="#008080"},
-			["10"] = {icon="☂", fg="#008080"},
+			["09"] = {icon="&#9730;", fg="#008080"}, -- Rain
+			["10"] = {icon="&#9748;", fg="#008080"}, -- Shower Rain
 			-- Lightning
-			["11"] = {icon="☈", fg="#FCC01E"},
+			["11"] = {
+				-- icon="&#9736;", -- The "official" symbol for thunder storm
+				-- icon="&#9928;", -- "thunder cloud and rain"
+				icon="&#9889;", -- The "high voltage" sign
+				fg="#FCC01E"},
 			-- Snow
-			["13"] = {icon="❅", fg="Snow"},
+			["13"] = {icon="&#10052;", fg="Snow"},
 			-- Mist
-			["50"] = {icon="≡", fg="#BCBBA9"}
+			["50"] = {icon="&#127787;", fg="#BCBBA9"}
 		}
 	}
 	for k,v in pairs(config or {}) do wid[k] = v end
-	wid.fg:set_align("right")
-	wid.widget:set_widget(wid.fg)
+	wid.widget:set_align("right")
 
 	function mkspan(text, attrs)
 		local ret = ""
@@ -54,18 +56,18 @@ function weather(zip, config)
 		wid.data = "???°"
 		local jdata = json.decode(text)
 		if jdata and jdata.main then
-			wid.data = jdata.main.temp .. "°"
+			wid.data = mkspan(jdata.main.temp .. "°", {size="large"})
 			wid.desc = ""
 			for _, wtab in pairs(jdata.weather) do
 				local iconame = string.sub(wtab.icon, 1, -2)
 				local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
-				wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg})
+				wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg, size="x-large"})
 				wid.desc = wid.desc .. wtab.description:gsub("^%l", string.upper) .. "\n"
 			end
 		end
 		wid.desc = wid.desc:gsub("^%s*(.-)%s*$", "%1")
 
-		wid.fg:set_markup(" " .. awful.util.unescape(wid.data) .. " ")
+		wid.widget:set_markup(" " .. awful.util.unescape(wid.data) .. " ")
 	end
 
 	function alert(text)
@@ -73,7 +75,7 @@ function weather(zip, config)
 	end
 
 
-	wid.fg:buttons(awful.util.table.join(
+	wid.widget:buttons(awful.util.table.join(
 		awful.button({}, 1, function()
 			alert(wid.desc)
 		end),

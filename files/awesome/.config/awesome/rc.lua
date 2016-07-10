@@ -542,7 +542,7 @@ run_once("xscreensaver", "-no-splash")
 run_once("amixer", "-c 0 set Headphone 100%")
 run_once("nm-applet")
 run_once("gnome-keyring-daemon")
-run_once("keepass")
+-- run_once("keepass")
 --- }}}
 
 -- vim: fdm=marker et ts=4 sw=4
