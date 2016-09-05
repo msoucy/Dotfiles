@@ -43,6 +43,7 @@
 [core]
 	filemode = false
 	pager = less -r
+	askPass = 
 [push]
 	default = simple
 [include]
