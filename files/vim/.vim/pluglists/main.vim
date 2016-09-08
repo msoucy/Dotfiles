@@ -1,7 +1,10 @@
 Plug 'tpope/vim-sensible' " Reasonable defaults
+if !has('nvim')
+  Plug 'noahfrederick/vim-neovim-defaults'
+endif
 " Syntax formatting and verification
-Plug 'benekastah/neomake'
-Plug 'Chiel92/vim-autoformat'
+Plug 'benekastah/neomake', { 'on': 'Neomake' }
+Plug 'Chiel92/vim-autoformat', { 'for': 'cpp' }
 Plug 'editorconfig/editorconfig-vim'
 " Help viewer
 if !(has('win32') || has('win64'))
