@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # ls colors
-wget https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS -O ~/.dircolors --no-check-certificate
+wget https://raw.githubusercontent.com/trapd00r/LS_COLORS/master/LS_COLORS -O ~/.dircolors --no-check-certificate
