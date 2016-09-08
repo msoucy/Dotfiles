@@ -1,5 +1,6 @@
 " Add ~/.vim to the runtime path
 set rtp+=~/.vim
+set rtp+=/usr/share/vim/vim74
 
 " Load the basic vimrc
 runtime vimrc
