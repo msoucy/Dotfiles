@@ -20,7 +20,7 @@ fi
 
 # Find all packages installed from an RPMFusion repo
 (
-	for repo in unitedrpms rpmfusion-{non,}free{,-updates,-updates-testing,-rawhide}; do
+	for repo in rpmfusion-{non,}free{,-updates,-updates-testing,-rawhide}; do
 		"${mngr}" repo-pkgs "${repo}" list installed 2> /dev/null
 	done
 ) | sed -e '/^Installed/d' -e "/^Last/d" | sort -u
