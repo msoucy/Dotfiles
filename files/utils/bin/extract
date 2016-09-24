@@ -16,6 +16,7 @@ elif [[ -f $1 ]]; then
       *.tgz)      tar -zxvf  $1;;
       *.zip)      unzip      $1;;
       *.Z)        uncompress $1;;
+      *.7z)       7z x       $1;;
       *)          echo "Unable to extract '$1' :: Unknown extension"
   esac
 else
