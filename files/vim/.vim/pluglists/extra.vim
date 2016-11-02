@@ -1,3 +1,10 @@
+" Syntax formatting and verification
+Plug 'benekastah/neomake', { 'on': 'Neomake' }
+Plug 'Chiel92/vim-autoformat', { 'for': 'cpp' }
+" UI
+Plug 'majutsushi/tagbar'
+Plug 'edkolev/tmuxline.vim'
+Plug 'nathanaelkane/vim-indent-guides'
 " Language syntaxes
 Plug 'dag/vim-fish', { 'for': 'fish' }
 Plug 'trapd00r/vim-syntax-vidir-ls'
