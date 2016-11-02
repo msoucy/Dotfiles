@@ -23,7 +23,7 @@ set -gx LESS "-FR"
 set -gx EDITOR "vim"
 set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
 set -gx LD_LIBRARY_PATH /usr/local/lib
-set -gx fish_user_paths $HOME/bin $HOME/.cabal/bin $HOME/.local/bin $HOME/.fzf/bin /usr/sbin
+set -gx fish_user_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin
 if test -f ~/.dircolors
 	eval (dircolors -c ~/.dircolors)
 end
