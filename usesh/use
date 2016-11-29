@@ -22,14 +22,14 @@ uniques=($(echo ${deps[@]}| mkunique))
 # }}}
 
 # Stow and use pre/post functions {{{
-cmdfunc "pre" ${uniques[@]}
+cmdfunc "pre" "${uniques[@]}"
 echo "Running 'stow' on: ${uniques[@]}"
-${STOW} ${STOWARGS} --adopt ${uniques[@]}
-${STOW} ${STOWARGS} -R ${uniques[@]}
-cmdfunc "post" ${uniques[@]}
+${STOW} ${STOWARGS} --adopt "${uniques[@]}"
+${STOW} ${STOWARGS} -R "${uniques[@]}"
+cmdfunc "post" "${uniques[@]}"
 # }}}
 
 # Save modules for later use
-echo ${uniques[@]} > ${USERC}
+echo "${uniques[@]}" > ${USERC}
 
 # vim: fdm=marker

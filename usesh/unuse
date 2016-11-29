@@ -13,7 +13,7 @@ source "$(dirname $(readlink -f "${BASH_SOURCE[0]}"))/useutils"
 # Unstow {{{
 tounuse=($(echo "$@"| mkunique))
 echo "Running 'stow' on: ${tounuse[@]}"
-${STOW} ${STOWARGS} -D ${tounuse[@]}
+${STOW} ${STOWARGS} -D "${tounuse[@]}"
 # }}}
 
 # Save modules for later use {{{

@@ -21,6 +21,7 @@ getunique() {
 # cmdfunc {{{
 cmdfunc() {
 	pth=$1
+	shift
 	for cmd; do
 		if [[ -f "${pth}/${cmd}" ]]; then
 			echo "Running ${pth}-${cmd} commands"
