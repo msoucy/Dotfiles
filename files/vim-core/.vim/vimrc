@@ -1,6 +1,6 @@
 " Author: Matt Soucy
 
-" vim settings {{{
+" {{{ vim settings
 set laststatus=2
 set tabstop=4
 set shiftwidth=0 " Set it to the tabstop value
@@ -27,14 +27,14 @@ endif
 syntax on "Syntax highlighting
 " }}}
 
-" Plugins {{{
-" Plugin settings {{{
+" {{{ Plugins
+" {{{ Plugin settings
 let g:table_mode_corner = '|'
 let g:vim_markdown_folding_disabled=1
 let g:netrw_liststyle=3
 let g:haskell_conceal_wide=1
 let g:pandoc#syntax#codeblocks#embeds#langs = ['java', 'python', 'sh', 'dot', 'cpp', 'd']
-" Clang-format {{{
+" {{{ Clang-format
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
 let g:clang_format#style_options = {
@@ -46,7 +46,7 @@ let g:clang_format#style_options = {
     \}
 let g:clang_format#auto_formatexpr = 1
 " }}}
-" Syntastic {{{
+" {{{ Syntastic
 let g:syntastic_cpp_config_file = ".syntastic"
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_wq = 0
@@ -57,10 +57,10 @@ let g:syntastic_mode_map = {
         \ "active_filetypes": [],
         \ "passive_filetypes": ["d"] }
 " }}}
-" Neomake {{{
+" {{{ Neomake
 let g:neomake_open_list=2
 " }}}
-" tmuxline {{{
+" {{{ tmuxline
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = {
       \'a'    : '#S',
@@ -75,7 +75,7 @@ let g:tmuxline_preset = {
 
 " }}}
 
-" Load plugins {{{
+" {{{ Load plugins
 if !empty(globpath(&rtp, "autoload/plug.vim"))
   if has('nvim')
     " NeoVim wants to store them in $XDG_CONFIG_HOME, but we want to
@@ -93,16 +93,22 @@ syntax on
 
 " }}} Plugins
 
-" Color {{{
+" {{{ Color
+function! s:UseColors(...)
+    for scheme in a:000
+        if len(globpath(&rtp, 'colors/'.scheme.'.vim'))
+            exec 'colorscheme '.scheme
+            break
+        endif
+    endfor
+endfunction
+
 set background=dark
-colorscheme desert " Use desert if custom themes aren't installed yet
-if has("gui_running") || &t_Co == 88 || &t_Co == 256
-  silent! colorscheme PaperColor
-endif
+call s:UseColors('PaperColor', 'badwolf', 'desert')
 hi clear Conceal " Causes weird color errors otherwise
 " }}}
 
-" Keybindings {{{
+" {{{ Keybindings
 
 function! RunMaker(...)
   if exists(':Neomake')
@@ -165,7 +171,7 @@ if exists(":Unite")
 endif
 " }}}
 
-" Completion {{{
+" {{{ Completion
 "Set a nice Omnifunc - <CTRL>X <CTRL>O
 set ofu=syntaxcomplete#Complete
 
@@ -173,7 +179,7 @@ set ofu=syntaxcomplete#Complete
 set completeopt=longest,menuone
 " }}}
 
-" Lightline controls {{{
+" {{{ Lightline controls
 let g:lightline = {
       \ 'colorscheme': g:colors_name,
       \ 'active': {
@@ -239,7 +245,7 @@ function! TagbarStatusFunc(current, sort, fname, ...) abort
 endfunction
 " }}}
 
-" Custom term behavior {{{
+" {{{ Custom term behavior
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
     execute "set <xUp>=\e[1;*A"
