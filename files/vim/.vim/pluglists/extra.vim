@@ -19,9 +19,8 @@ Plug 'SWIG-syntax', { 'for': 'swig' }
 Plug 'rhysd/vim-clang-format'
 " Web-based
 Plug 'lepture/vim-jinja'
-Plug 'othree/html5.vim'
-Plug 'othree/xml.vim', { 'for': 'xml' }
-Plug 'sophacles/vim-bundle-mako'
+Plug 'othree/html5.vim', { 'for': ['html'] }
+Plug 'othree/xml.vim', { 'for': ['xml', 'html'] }
 " Pandoc
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
