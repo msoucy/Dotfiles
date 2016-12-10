@@ -9,12 +9,10 @@
 	st = status -sb
 	br = branch
 	serve = daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
-	ls = log --color --graph --pretty=format:'%C(yellow)%h%Creset -%Cred%d%Creset %s %Cgreen(%cr) %C(blue)[%an]%Creset' --abbrev-commit --all
-	ll = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]%C(reset)' --decorate --numstat
-	l1 = log --pretty=format:'%C(yellow)%h%C(red)%d %C(reset)%s%C(blue) [%cn]%C(reset)' --decorate --numstat -1
-	ld = log --pretty=format:'%C(yellow)%h%Creset %Cgreen%ad%Cred%d %Creset%s%Cblue [%cn]%Creset' --decorate --date=relative
-	lg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' --abbrev-commit --date=relative
-	fl = log -u
+	ls = log --graph --pretty=changelog --all
+	lg = log --graph --pretty=changelog
+	ll = log --pretty=ll --numstat
+	ld = log --pretty=ld --decorate
 	purr = pull --rebase
 	ignored = ls-files --others --i --exclude-standard
 	wipe = reset --hard HEAD
@@ -22,8 +20,9 @@
 	unstage = reset --
 	forget = rm --cached
 	graph = log --graph --oneline --decorate=short
-	root = rev-parse --top-level
-	exec = "! "
+	changelog = log --graph --pretty=changelog-nocolor
+	root = rev-parse --show-toplevel
+	exec = "!exec "
 	ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
 [color]
 	ui = true
@@ -43,11 +42,9 @@
 [core]
 	filemode = false
 	pager = less -r
-	askPass = 
+	askPass =
 [push]
 	default = simple
-[include]
-	path = gitlocal
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
@@ -59,3 +56,10 @@
 	commit-order = topo
 [diff]
 	tool = vimdiff
+[pretty]
+	changelog = format:"%C(auto)%h%C(reset) -%C(red)%d%C(reset) %s %C(green)(%cr) %C(blue bold)[%an]%C(reset)"
+	ll = format:"%C(yellow)%h%C(red)%d%C(reset) %s %C(blue)[%cn]%C(reset)"
+	ld = format:"%C(auto)%h %C(green)%ar%C(red)%d%C(reset) %s %C(blue)[%cn]%(reset)"
+	changelog-nocolor = format:"%h -%d %s (%cr) <%an>"
+[include]
+	path = gitlocal
