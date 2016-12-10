@@ -20,7 +20,11 @@ end
 set -gx BROWSER "firefox"
 set -gx PAGER "less"
 set -gx LESS "-FR"
-set -gx EDITOR "vim"
+if command -v nvim >/dev/null ^&1
+	set -gx EDITOR "nvim"
+else
+	set -gx EDITOR "vim"
+end
 set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
 set -gx LD_LIBRARY_PATH /usr/local/lib
 set -gx fish_user_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin
