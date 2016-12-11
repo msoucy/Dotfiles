@@ -18,7 +18,11 @@ for cmd in $(echo "$@" $(cat ${USERC} 2>/dev/null)| mkunique); do
 		deps+=($(cat "depends/${cmd}"))
 	fi
 done
-uniques=($(echo ${deps[@]}| mkunique))
+if [[ "${#deps[@]}" = 0 ]]; then
+	printf >&2 "No modules found or listed\n"
+	exit 1
+fi
+uniques=($(echo "${deps[@]}"| mkunique))
 # }}}
 
 # Stow and use pre/post functions {{{
