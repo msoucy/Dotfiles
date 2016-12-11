@@ -6,7 +6,7 @@ set tabstop=4
 set shiftwidth=0 " Set it to the tabstop value
 set number
 if exists('&relativenumber')
-  set relativenumber
+    set relativenumber
 endif
 set ignorecase
 set modeline
@@ -16,13 +16,16 @@ set wrap
 set hidden
 set hlsearch
 if exists('&cc')
-  set cc=80,120
+    set cc=80,120
 endif
 set cursorline cursorcolumn
 set shortmess+=I " Don't show the intro message
 set splitbelow splitright " Make splits go southeast
 if has('gui_running')
     set guioptions+=M
+endif
+if exists('&inccommand')
+    set inccommand=split
 endif
 syntax on "Syntax highlighting
 " }}}
@@ -38,24 +41,13 @@ let g:pandoc#syntax#codeblocks#embeds#langs = ['java', 'python', 'sh', 'dot', 'c
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
 let g:clang_format#style_options = {
-    \ 'IndentWidth': 4,
-    \ 'TabWidth': 4,
-    \ 'UseTab': "Always",
-    \ 'AlwaysBreakTemplateDeclarations': "true",
-    \ 'ColumnLimit': 80
-    \}
+            \ 'IndentWidth': 4,
+            \ 'TabWidth': 4,
+            \ 'UseTab': "Always",
+            \ 'AlwaysBreakTemplateDeclarations': "true",
+            \ 'ColumnLimit': 80
+            \}
 let g:clang_format#auto_formatexpr = 1
-" }}}
-" {{{ Syntastic
-let g:syntastic_cpp_config_file = ".syntastic"
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_d_checkers = ['dub']
-let g:syntastic_mode_map = {
-        \ "mode": "active",
-        \ "active_filetypes": [],
-        \ "passive_filetypes": ["d"] }
 " }}}
 " {{{ Neomake
 let g:neomake_open_list=2
@@ -63,32 +55,39 @@ let g:neomake_open_list=2
 " {{{ tmuxline
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'b'    : '#W',
-      \'c'    : '#H',
-      \'win'  : '#I | #W',
-      \'cwin' : '#I | #W',
-      \'y'    : '%a',
-      \'z'    : '%R'}
+            \'a'    : '#S',
+            \'b'    : '#W',
+            \'c'    : '#H',
+            \'win'  : '#I | #W',
+            \'cwin' : '#I | #W',
+            \'y'    : '%a',
+            \'z'    : '%R'}
 
 " }}}
 
 " }}}
 
 " {{{ Load plugins
+function! Cond(cond, ...)
+    " Conditionally enable plugins for vim-plug
+    let opts = get(a:000, 0, {})
+    return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
+endfunction
+
 if !empty(globpath(&rtp, "autoload/plug.vim"))
-  if has('nvim')
-    " NeoVim wants to store them in $XDG_CONFIG_HOME, but we want to
-    " share them between nvim and vim
-    let g:plug_home = expand('~/.vim/plugged')
-  endif
-  call plug#begin()
-  runtime! pluglists/*.vim
-  call plug#end()
+    if has('nvim')
+        " NeoVim wants to store them in $XDG_CONFIG_HOME, but we want to
+        " share them between nvim and vim
+        let g:plug_home = expand('~/.vim/plugged')
+    endif
+    call plug#begin()
+    runtime! pluglists/*.vim
+    call plug#end()
+else
+    filetype plugin indent on
+    syntax on
 endif
 
-filetype plugin indent on
-syntax on
 " }}}
 
 " }}} Plugins
@@ -111,11 +110,11 @@ hi clear Conceal " Causes weird color errors otherwise
 " {{{ Keybindings
 
 function! RunMaker(...)
-  if exists(':Neomake')
-    :Neomake
-  else
-    :make | copen
-  endif
+    if exists(':Neomake')
+        :Neomake
+    else
+        :make | copen
+    endif
 endfunction
 
 " Fix weird issues
@@ -123,21 +122,21 @@ noremap <F3> <Esc>:syntax sync fromstart<CR>
 inoremap <F3> <C-o>:syntax sync fromstart<CR>
 
 "Mapped some FUNCTION keys to be more useful
-map <F9> :call RunMaker()<Return>
-map <F10> :cprevious<Return>
-map <F11> :cnext<Return>
+noremap <F8> :call RunMaker()<Return>
+noremap <F10> :cprevious<Return>
+noremap <F11> :cnext<Return>
 
 " paste mode toggle (needed when using autoindent/smartindent)
-map <F7> :set paste<CR>
-map <F8> :set nopaste<CR>
-imap <F7> <C-O>:set paste<CR>
-imap <F8> <C-O>:set nopaste<CR>
+noremap <F7> :set paste<CR>
+noremap <F7> :set nopaste<CR>
+inoremap <F6> <C-O>:set paste<CR>
+inoremap <F8> <C-O>:set nopaste<CR>
 set pastetoggle=<F12>
 
 "This is a nice buffer switcher
 nnoremap <F5> :buffers<CR>:buffer<Space>
 
-imap jj <ESC>
+inoremap jj <ESC>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 nmap <silent> <Leader>l :lclose<CR>
 nmap <silent> <Leader>r :so $MYVIMRC<CR>
@@ -154,20 +153,12 @@ nnoremap H :set cursorline! cursorcolumn!<CR>
 cabbr <expr> %% expand('%:p:h')
 
 if exists(":TagbarToggle")
-  nmap <silent> <Leader>t :TagbarToggle<CR>
+    nmap <silent> <Leader>t :TagbarToggle<CR>
 endif
-if exists(":Unite")
-  nnoremap <C-p> :Unite file_rec/async<CR>
-  nnoremap <space>/ :Unite grep:.<cr>
-  if executable('ag')
-        let g:unite_source_grep_command='ag'
-        let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
-        let g:unite_source_grep_recursive_opt=''
-  elseif executable('ack')
-        let g:unite_source_grep_command='ack'
-        let g:unite_source_grep_default_opts='--no-heading --no-color -C4'
-        let g:unite_source_grep_recursive_opt=''
-  endif
+if executable('ag')
+    set grepprg=ag\ --column\ --nopager\ --nocolor\ --nogroup\ $*\ /dev/null"
+elseif executable('ack')
+    set grepprg=ack\ --column\ --nopager\ --nocolor\ --nogroup\ $*\ /dev/null"
 endif
 " }}}
 
@@ -181,56 +172,56 @@ set completeopt=longest,menuone
 
 " {{{ Lightline controls
 let g:lightline = {
-      \ 'colorscheme': g:colors_name,
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'readonly', 'modified', 'fugitive', 'filename' ]],
-      \   'right': [ [ 'neomake', 'lineinfo' ],
-      \              ['percent'],
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component_function': {
-      \   'fugitive': 'MyFugitive',
-      \   'modified': 'MyModified',
-      \   'readonly': 'MyReadonly',
-      \   'fileformat': 'MyFileformat',
-      \   'filetype': 'MyFiletype',
-      \   'fileencoding': 'MyFileencoding',
-      \ },
-      \ 'component_expand': {
-      \   'syntastic': 'SyntasticStatuslineFlag',
-      \ },
-      \ 'component_type': {
-      \   'syntastic': 'error',
-      \ },
-      \ }
+            \ 'colorscheme': g:colors_name,
+            \ 'active': {
+            \   'left': [ [ 'mode', 'paste' ],
+            \             [ 'readonly', 'modified', 'fugitive', 'filename' ]],
+            \   'right': [ [ 'neomake', 'lineinfo' ],
+            \              ['percent'],
+            \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+            \ },
+            \ 'component_function': {
+            \   'fugitive': 'LightlineFugitive',
+            \   'modified': 'LightlineModified',
+            \   'readonly': 'LightlineReadonly',
+            \   'fileformat': 'LightlineFileformat',
+            \   'filetype': 'LightlineFiletype',
+            \   'fileencoding': 'LightlineFileencoding',
+            \ },
+            \ 'component_expand': {
+            \   'neomake': 'neomake#statusline#LoclistStatus',
+            \ },
+            \ 'component_type': {
+            \   'neomake': 'error',
+            \ },
+            \ }
 
-function! MyModified()
-  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+function! LightlineModified()
+    return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
-function! MyReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
+function! LightlineReadonly()
+    return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
 
-function! MyFileformat()
+function! LightlineFileformat()
   return winwidth(0) > 70 ? &fileformat : ''
 endfunction
 
-function! MyFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
 endfunction
 
-function! MyFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+function! LightlineFileencoding()
+  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
 endfunction
 
-function! MyFugitive()
+function! LightlineFugitive()
   try
-    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && exists('*fugitive#head')
-      let mark = ''  " edit here for cool mark
-      let _ = fugitive#head()
-      return strlen(_) ? mark._ : ''
+    if &ft !~? 'vimfiler\|tagbar' && exists('*fugitive#head')
+      let mark = '⎇'  " edit here for cool mark
+      let branch = fugitive#head()
+      return branch !=# '' ? mark.branch : ''
     endif
   catch
   endtry
@@ -241,7 +232,7 @@ let g:tagbar_status_func = 'TagbarStatusFunc'
 
 function! TagbarStatusFunc(current, sort, fname, ...) abort
     let g:lightline.fname = a:fname
-  return lightline#statusline(0)
+    return lightline#statusline(0)
 endfunction
 " }}}
 
@@ -256,7 +247,7 @@ endif
 " }}}
 
 if filereadable(glob("~/.vimrc.local"))
-  source ~/.vimrc.local
+    source ~/.vimrc.local
 endif
 
 " vim: foldmethod=marker expandtab
