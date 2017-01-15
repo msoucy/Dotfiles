@@ -103,7 +103,7 @@ function! s:UseColors(...)
 endfunction
 
 set background=dark
-call s:UseColors('PaperColor', 'badwolf', 'desert')
+call s:UseColors('gruvbox', 'PaperColor', 'badwolf', 'desert')
 hi clear Conceal " Causes weird color errors otherwise
 " }}}
 
