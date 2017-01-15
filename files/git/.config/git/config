@@ -58,8 +58,8 @@
 	tool = vimdiff
 [pretty]
 	changelog = format:"%C(auto)%h%C(reset) -%C(red)%d%C(reset) %s %C(green)(%cr) %C(blue bold)[%an]%C(reset)"
-	ll = format:"%C(yellow)%h%C(red)%d%C(reset) %s %C(blue)[%cn]%C(reset)"
-	ld = format:"%C(auto)%h %C(green)%ar%C(red)%d%C(reset) %s %C(blue)[%cn]%(reset)"
+	ll = format:"%C(yellow)%h%C(red)%d%C(reset) %s %C(blue bold)[%cn]%C(reset)"
+	ld = format:"%C(auto)%h %C(green)%ar%C(red)%d%C(reset) %s %C(blue bold)[%cn]%C(reset)"
 	changelog-nocolor = format:"%h -%d %s (%cr) <%an>"
 [include]
 	path = gitlocal
