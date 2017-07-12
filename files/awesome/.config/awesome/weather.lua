@@ -2,6 +2,7 @@ local wibox = require("wibox")
 local awful = require("awful")
 local naughty = require("naughty")
 local json = require("json")
+local gears = require("gears")
 
 -- Port of basic logic from:
 -- github.com:Wildog/airline-weather.vim/autoload/weather.vim
@@ -49,25 +50,26 @@ function weather(zip, config)
 		local url = "?zip=%s&units=%s&appid=%s"
 		local appid = "68cbb05e407c673c308de30908beb20f"
 		local prep_url = string.format(baseurl .. url, zip, wid.units, appid)
-		local text = awful.util.pread(string.format("curl '%s'", prep_url)):match("(.-)%s*$")
+		awful.spawn.easy_async(string.format("curl '%s'", prep_url), function(text)
 
-		-- Sometimes we don't have network, so set default values
-		wid.desc = "Could not get weather - make sure internet connection is enabled and right-click applet"
-		wid.data = "???°"
-		local jdata = json.decode(text)
-		if jdata and jdata.main then
-			wid.data = mkspan(jdata.main.temp .. "°", {size="large"})
-			wid.desc = ""
-			for _, wtab in pairs(jdata.weather) do
-				local iconame = string.sub(wtab.icon, 1, -2)
-				local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
-				wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg, size="x-large"})
-				wid.desc = wid.desc .. wtab.description:gsub("^%l", string.upper) .. "\n"
+			-- Sometimes we don't have network, so set default values
+			wid.desc = "Could not get weather - make sure internet connection is enabled and right-click applet"
+			wid.data = "???°"
+			local jdata = json.decode(text)
+			if jdata and jdata.main then
+				wid.data = mkspan(jdata.main.temp .. "°", {size="large"})
+				wid.desc = ""
+				for _, wtab in pairs(jdata.weather) do
+					local iconame = string.sub(wtab.icon, 1, -2)
+					local wdata = wid.formats[iconame] or {icon="?", fg="#33CCFF"}
+					wid.data = wid.data .. " " .. mkspan(wdata.icon, {color=wdata.fg, size="x-large"})
+					wid.desc = wid.desc .. wtab.description:gsub("^%l", string.upper) .. "\n"
+				end
 			end
-		end
-		wid.desc = wid.desc:gsub("^%s*(.-)%s*$", "%1")
+			wid.desc = wid.desc:gsub("^%s*(.-)%s*$", "%1")
 
-		wid.widget:set_markup(" " .. awful.util.unescape(wid.data) .. " ")
+			wid.widget:set_markup(" " .. gears.string.xml_unescape(wid.data) .. " ")
+		end)
 	end
 
 	function alert(text)
@@ -75,7 +77,7 @@ function weather(zip, config)
 	end
 
 
-	wid.widget:buttons(awful.util.table.join(
+	wid.widget:buttons(gears.table.join(
 		awful.button({}, 1, function()
 			alert(wid.desc)
 		end),
