@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function
 
 import argparse
 import getpass
@@ -16,7 +17,8 @@ def matchHosts(hostlist, username, threshold, filt):
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     password = None
 
-    for host in (line for line in (line.split("#")[0].strip() for line in open(hostlist)) if line):
+    hosts = (line.split("#")[0].strip() for line in open(hostlist))
+    for host in filter(bool, hosts):
         try:
             ssh.connect(host, username=username, password=password)
         except paramiko.PasswordRequiredException:
@@ -48,7 +50,7 @@ def printAll(username, host, load, threshold):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Choose a host from a list with a low ')
+        description='Choose a host from a list with a low load')
     parser.add_argument('-u', '--user', type=str, default=os.environ["USER"],
                         help='The username to use to SSH')
     parser.add_argument('-t', '--threshold', type=float, default=0.7,
