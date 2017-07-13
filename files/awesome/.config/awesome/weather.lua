@@ -32,10 +32,10 @@ function weather(zip, config)
 			["13"] = {icon="&#10052;", fg="Snow"},
 			-- Mist
 			["50"] = {icon="&#127787;", fg="#BCBBA9"}
-		}
+		},
+		align = "right",
 	}
-	for k,v in pairs(config or {}) do wid[k] = v end
-	wid.widget:set_align("right")
+	gears.table.crush(wid, config or {})
 
 	function mkspan(text, attrs)
 		local ret = ""
@@ -88,8 +88,10 @@ function weather(zip, config)
 	))
 
 	wid.update()
-	mytimer = timer({ timeout = wid.timeout })
-	mytimer:connect_signal("timeout", wid.update)
+	mytimer = timer {
+		timeout = wid.timeout,
+		callback = wid.update,
+	}
 	mytimer:start()
 
 	return wid.widget

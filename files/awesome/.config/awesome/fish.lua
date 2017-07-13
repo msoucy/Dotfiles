@@ -45,8 +45,10 @@ function fish.update()
 end
 fish.update()
 
-mytimer = timer({ timeout = (1/3.0) })
-mytimer:connect_signal("timeout", fish.update)
-mytimer:start()
+fish.mytimer = timer {
+	timeout = 0.3,
+	callback = fish.update,
+}
+fish.mytimer:start()
 
 return fish.widget

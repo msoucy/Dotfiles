@@ -16,21 +16,22 @@ battery_widget = wibox.widget {
 	level=0,
 }
 
-local wraparound = 0
-
 local catfile = function(name, fmt)
 	local fh = io.open(name)
 	return fh:read(fmt or "*n")
 end
 
-local alert = function(battery)
-	naughty.notify({
-		preset = naughty.config.presets.critical,
-		title = "Battery critical!",
-		text = string.format("Save your work now, battery at %d%%",
-							 math.floor(battery*100))
-	})
-end
+battery_widget.alerttimer = timer {
+	timeout = 30,
+	callback = function()
+		naughty.notify({
+			preset = naughty.config.presets.critical,
+			title = "Battery critical!",
+			text = string.format("Save your work now, battery at %d%%",
+								 math.floor(battery_widget.level))
+		})
+	end
+}
 
 -- Create a battery monitor widget
 battery_widget.update = function()
@@ -56,8 +57,9 @@ battery_widget.update = function()
 
 		-- Show an alert when low every 30s
 		if (not widget.charging) and (battery <= .05) then
-			if wraparound == 0 then alert(battery) end
-			wraparound = (wraparound + 1) % 3
+			battery_widget.alerttimer:start()
+		else
+			battery_widget.alerttimer:stop()
 		end
 
 		-- Store widget values
@@ -69,9 +71,11 @@ end
 
 battery_widget.update()
 
-mytimer = timer({ timeout = 10 })
-mytimer:connect_signal("timeout", battery_widget.update)
-mytimer:start()
+battery_widget.updatetimer = timer {
+	timeout = 10,
+	callback = battery_widget.update
+}
+battery_widget.updatetimer:start()
 
 battery_widget:buttons(gears.table.join(
 	awful.button({}, 1, function()
@@ -79,7 +83,8 @@ battery_widget:buttons(gears.table.join(
 		naughty.notify({
 		text = string.format("Battery level: %d%% (%s)",
 		                     math.floor(battery_widget.level), text)
-	}) end)
+		})
+	end)
 ))
 
 return battery_widget

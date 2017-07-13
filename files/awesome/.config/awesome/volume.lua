@@ -8,6 +8,13 @@ volume_widget = wibox.widget {
 		max_value = 100,
 		ticks = true,
 		widget = wibox.widget.progressbar,
+		border_width = 5,
+		margins = {
+			top = 6,
+			bottom = 6,
+		},
+		clip = false,
+		shape = gears.shape.rounded_bar,
 	},
 	forced_width = 16,
 	direction = "east",
