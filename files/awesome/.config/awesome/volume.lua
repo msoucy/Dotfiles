@@ -2,8 +2,9 @@ local awful = require("awful")
 local wibox = require("wibox")
 local naughty = require("naughty")
 local gears = require("gears")
+local colors = require("colorgradient")
 
-volume_widget = wibox.widget {
+local base_widget = wibox.widget {
 	{
 		max_value = 100,
 		ticks = true,
@@ -21,32 +22,30 @@ volume_widget = wibox.widget {
 	layout = wibox.container.rotate,
 }
 
-local normcolor = function(v, end_color, start_color)
-	return math.floor(v * (end_color - start_color) + start_color)
+local volume_update = function(widget, stdout)
+	local volume = math.min(tonumber(string.match(stdout, "(%d?%d?%d)%%")), 100)
+
+	local status = string.match(stdout, "%[(o[^%]]*)%]")
+
+	local interpol_color = colors.colorFrom(
+		volume,
+		0x3F, 0x3F, 0x3F,
+		0xDC, 0xDC, 0xCC)
+	local couldfind = string.find(status, "on", 1, true)
+
+	widget.widget.color = couldfind and interpol_color or "#FF0000"
+	widget.widget:set_value(volume)
+	widget.volume = volume
 end
 
-volume_widget.update = function()
-	awful.spawn.easy_async("amixer sget Master", function(stdout)
-		local volume = math.min(tonumber(string.match(stdout, "(%d?%d?%d)%%")), 100)
-
-		local status = string.match(stdout, "%[(o[^%]]*)%]")
-
-		local ir = normcolor(volume/100, 0xDC, 0x3F)
-		local ig = normcolor(volume/100, 0xDC, 0x3F)
-		local ib = normcolor(volume/100, 0xCC, 0x3F)
-		local interpol_colour = string.format("#%.2X%.2X%.2X", ir, ig, ib)
-		local couldfind = string.find(status, "on", 1, true)
-
-		volume_widget.widget.color = couldfind and interpol_colour or "#FF0000"
-		volume_widget.widget:set_value(volume)
-		volume_widget.volume = volume
-	end)
-end
+local volume_widget = awful.widget.watch (
+	"amixer sget Master", 1, volume_update, base_widget
+)
 
 local volcommand = function(cmd)
 	return function()
 		awful.spawn.easy_async(cmd, function(stdout)
-			volume_widget.update()
+			volume_update(volume_widget, stdout)
 		end)
 	end
 end
@@ -54,12 +53,6 @@ end
 volume_widget.up = volcommand("amixer set Master 5%+")
 volume_widget.down = volcommand("amixer set Master 5%-")
 volume_widget.toggle = volcommand("amixer set Master toggle")
-
-volume_widget.update()
-
-mytimer = timer({ timeout = 1 })
-mytimer:connect_signal("timeout", volume_widget.update)
-mytimer:start()
 
 volume_widget:buttons(gears.table.join(
 	awful.button({}, 1, function()

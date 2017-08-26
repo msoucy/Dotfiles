@@ -14,6 +14,10 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+hotkeys_popup.merge_duplicates = true
+
+local weather = require("weather")
+local volume_widget = require("volume")
 
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
@@ -253,8 +257,6 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- @DOC_SETUP_WIDGETS@
     -- Add widgets to the wibox
-    local weather = require("weather")
-    local volume_widget = require("volume")
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
@@ -416,9 +418,9 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
     ,
-    awful.key({ }, "XF86AudioRaiseVolume", function() volume_widget.up() end),
-    awful.key({ }, "XF86AudioLowerVolume", function() volume_widget.down() end),
-    awful.key({ }, "XF86AudioMute", function() volume_widget.toggle() end),
+    awful.key({ }, "XF86AudioRaiseVolume", volume_widget.up    ),
+    awful.key({ }, "XF86AudioLowerVolume", volume_widget.down  ),
+    awful.key({ }, "XF86AudioMute",        volume_widget.toggle),
 
     -- Print Screen
     awful.key({ }, "Print",
@@ -428,16 +430,20 @@ globalkeys = gears.table.join(
     awful.key({ modkey, "Shift", "Control" }, "l", extern("pyxtrlock")),
     awful.key({ modkey }, "XF86ScreenSaver", extern("xscreensaver-command -lock")),
     -- Buzzer
-    awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg")),
-    awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg")),
-    awful.key({ "Control" }, "XF86Launch1", extern("mplayer Documents/Aiya.mp3")),
+    awful.key({ }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/buzzer.ogg"),
+              {description = "play buzzer noise", group = "buzzer"}),
+    awful.key({ "Shift" }, "XF86Launch1", extern("mplayer Documents/bzzzzzt/trainbuzzer.ogg"),
+              {description = "play train buzzer noise", group = "buzzer"}),
+    awful.key({ "Control" }, "XF86Launch1", extern("mplayer Documents/Aiya.mp3"),
+              {description = "play uncle noise", group = "buzzer"}),
     -- Displays
     awful.key({ modkey }, "XF86Display", extern("~/bin/dock")),
-    awful.key({ modkey }, "F8", brightness.update(-7)),
-    awful.key({ modkey, "Shift" }, "F8", brightness.update(-15)),
+    -- Brightness
     awful.key({ }, "XF86MonBrightnessDown", brightness.update(-7)),
-    awful.key({ modkey }, "F9", brightness.update(7)),
-    awful.key({ modkey, "Shift" }, "F9", brightness.update(15)),
+    awful.key({ modkey, "Shift" },  "F8", brightness.update(-15)),
+    awful.key({ modkey          },  "F8", brightness.update(-7)),
+    awful.key({ modkey          },  "F9", brightness.update(7)),
+    awful.key({ modkey, "Shift" },  "F9", brightness.update(15)),
     awful.key({ }, "XF86MonBrightnessUp", brightness.update(7))
 )
 
@@ -485,7 +491,12 @@ clientkeys = gears.table.join(
             c.maximized_horizontal = not c.maximized_horizontal
             c:raise()
         end ,
-        {description = "(un)maximize horizontally", group = "client"})
+        {description = "(un)maximize horizontally", group = "client"}),
+    -- Properties
+    awful.key({ modkey, "Control" }, "p", xprop("WM_CLASS", "WM_NAME"),
+              {description = "get x properties for client", group = "client"}),
+    awful.key({ modkey, "Control", "Shift" }, "p", xprop(),
+              {description = "get all x properties for client", group = "client"})
 )
 
 -- @DOC_NUMBER_KEYBINDINGS@
@@ -503,7 +514,7 @@ for i = 1, 9 do
                            tag:view_only()
                         end
                   end,
-                  {description = "view tag #"..i, group = "tag"}),
+                  {description = "switch to numbered tag", group = "tag"}),
         -- Toggle tag display.
         awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
@@ -513,7 +524,7 @@ for i = 1, 9 do
                          awful.tag.viewtoggle(tag)
                       end
                   end,
-                  {description = "toggle tag #" .. i, group = "tag"}),
+                  {description = "toggle numbered tag", group = "tag"}),
         -- Move client to tag.
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
                   function ()
@@ -524,7 +535,7 @@ for i = 1, 9 do
                           end
                      end
                   end,
-                  {description = "move focused client to tag #"..i, group = "tag"}),
+                  {description = "move focused client to numbered tag", group = "tag"}),
         -- Toggle tag on focused client.
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
                   function ()
@@ -535,7 +546,7 @@ for i = 1, 9 do
                           end
                       end
                   end,
-                  {description = "toggle focused client on tag #" .. i, group = "tag"})
+                  {description = "toggle focused client on numbered tag", group = "tag"})
     )
 end
 
@@ -564,7 +575,8 @@ awful.rules.rules = {
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen
-             } },
+     }
+    },
     { rule_any = { class = {"MPlayer", "pinentry", "gimp", "Nautical Game!"} },
       properties = { floating = true } },
     { rule = { class = "Google-chrome-stable", role = "pop-up" },
@@ -573,7 +585,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule_any = { class = {"XTerm", "URxvt", "st-256color", "terminology"} },
       properties = { size_hints_honor = false } },
-
+    { rule_any = { instance = {"plugin-container", "exe"} },
+      properties = { size_hints_honor = false } },
 
     -- @DOC_FLOATING_RULE@
     -- Floating clients.
@@ -601,17 +614,12 @@ awful.rules.rules = {
           "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
         }
       }, properties = { floating = true }},
-    { rule_any = { class = {"MPlayer", "pinentry", "gimp", "Nautical Game!"}
-      }, properties = { floating = true } },
 
     -- @DOC_DIALOG_RULE@
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
       }, properties = { titlebars_enabled = true }
     },
-
-    { rule_any = { instance = {"plugin-container", "exe"} },
-      properties = { size_hints_honor = false } },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
@@ -676,6 +684,7 @@ client.connect_signal("request::titlebars", function(c)
         },
         layout = wibox.layout.align.horizontal
     }
+    -- Hide by default
     awful.titlebar.hide(c)
 end)
 
@@ -712,6 +721,7 @@ run_once("xscreensaver", "-no-splash")
 run_once("amixer", "-c 0 set Headphone 100%")
 run_once("nm-applet")
 run_once("gnome-keyring-daemon")
+run_once("setxkbmap", "us,epo")
 -- run_once("keepass")
 --- }}}
 
