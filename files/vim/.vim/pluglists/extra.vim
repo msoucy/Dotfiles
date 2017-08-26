@@ -15,7 +15,7 @@ Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
 " C++ related
 Plug 'dpwright/vim-tup'
 Plug 'vim-jp/cpp-vim', { 'for': 'cpp' } " Has C++11 support
-Plug 'SWIG-syntax', { 'for': 'swig' }
+Plug 'vim-scripts/SWIG-syntax', { 'for': 'swig' }
 Plug 'rhysd/vim-clang-format'
 " Web-based
 Plug 'lepture/vim-jinja'
