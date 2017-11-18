@@ -5,9 +5,7 @@ set laststatus=2
 set tabstop=4
 set shiftwidth=0 " Set it to the tabstop value
 set number
-if exists('&relativenumber')
-    set relativenumber
-endif
+set mouse=a
 set ignorecase
 set modeline
 set nobackup
@@ -36,7 +34,7 @@ let g:table_mode_corner = '|'
 let g:vim_markdown_folding_disabled=1
 let g:netrw_liststyle=3
 let g:haskell_conceal_wide=1
-let g:pandoc#syntax#codeblocks#embeds#langs = ['java', 'python', 'sh', 'dot', 'cpp', 'd']
+let g:pandoc#syntax#codeblocks#embeds#langs = ['java', 'python', 'sh', 'dot', 'cpp', 'd', 'cs']
 " {{{ Clang-format
 let g:clang_format#auto_format = 0
 let g:clang_format#code_style = 'llvm'
