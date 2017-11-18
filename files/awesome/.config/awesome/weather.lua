@@ -14,24 +14,20 @@ function weather(zip, config)
 		units = "imperial", -- Yes, I'm a terrible person
 		formats = {
 			-- Sunny
-			["01"] = {icon="&#9728;", fg="#FFF92E"},
+			["01"] = {icon="&#x2600;", fg="#FFF92E"},
 			-- Cloudy
-			["02"] = {icon="&#9925;", fg="#F3F2E7"}, -- Partly Cloudy
-			["03"] = {icon="&#9729;", fg="#F3F2E7"}, -- Cloudy
-			["04"] = {icon="&#9729;", fg="#F3F2E7"},
+			["02"] = {icon="&#x26c5;", fg="#F3F2E7"}, -- Partly Cloudy
+			["03"] = {icon="&#x2601;", fg="#F3F2E7"}, -- Cloudy
+			["04"] = {icon="&#x2601;", fg="#F3F2E7"},
 			-- Rain
 			["09"] = {icon="&#9730;", fg="#008080"}, -- Rain
 			["10"] = {icon="&#9748;", fg="#008080"}, -- Shower Rain
 			-- Lightning
-			["11"] = {
-				-- icon="&#9736;", -- The "official" symbol for thunder storm
-				-- icon="&#9928;", -- "thunder cloud and rain"
-				icon="&#9889;", -- The "high voltage" sign
-				fg="#FCC01E"},
+			["11"] = {icon="&#x26a1;", fg="#FCC01E"},
 			-- Snow
-			["13"] = {icon="&#10052;", fg="Snow"},
+			["13"] = {icon="&#x2744;", fg="Snow"},
 			-- Mist
-			["50"] = {icon="&#127787;", fg="#BCBBA9"}
+			["50"] = {icon="&#x1f32b;", fg="#BCBBA9"}
 		},
 		align = "right",
 	}
