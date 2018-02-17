@@ -3,6 +3,6 @@
 # ls colors
 dircolorfile=~/.dircolors
 # Is it older than ~1 month?
-if test $(( $(date "+%s") - $(date -r "${dircolorfile}" "+%s") )) -gt $(( 30*24*60*60 )); then
+if test $(( $(date "+%s") - $(date -r "${dircolorfile}" "+%s" || echo "0") )) -gt $(( 30*24*60*60 )); then
 	echo wget https://raw.githubusercontent.com/trapd00r/LS_COLORS/master/LS_COLORS -O "${dircolorfile}" --no-check-certificate
 fi

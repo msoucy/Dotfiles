@@ -9,8 +9,8 @@ end
 set fish_greeting ""
 
 set VIRTUALFISH_HOME "$HOME/.virtualenv"
-if python -c 'import virtualfish' > /dev/null 2>&1
-	eval (python -m virtualfish compat_aliases auto_activation)
+if python3 -c 'import virtualfish' > /dev/null 2>&1
+	eval (python3 -m virtualfish compat_aliases auto_activation)
 	complete -f -c workon -a "(vf ls)"
 else
 	echo "Virtualfish not found, will not be in prompt"
@@ -27,7 +27,12 @@ else
 end
 set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
 set -gx LD_LIBRARY_PATH /usr/local/lib
-set -gx fish_user_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin
+set -x extra_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin
+for p in $extra_paths
+	if test -d $p
+		set -gx fish_user_paths $fish_user_paths $p
+	end
+end
 if test -f ~/.dircolors
 	eval (dircolors -c ~/.dircolors)
 end
