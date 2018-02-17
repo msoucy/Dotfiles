@@ -8,18 +8,18 @@ It is meant to be used with [GNU Stow][], and provides scripts to set it up.
 Usage
 -----
 
-Running `./setup` will download a version of [GNU Stow][] for use.
+Running `usesh/use` will download a version of [GNU Stow][] for use, if one is not already installed.
 
-After that, use the executable `./use` instead of `./stow`:
+Use the executable `./use` instead of `./stow`:
 
 ```sh
-./use git vim zsh fish
+usesh/use git vim zsh fish
 ```
 
 `use` will store all `use`d directories, so afterwards synchronizing is done via:
 
 ```sh
-./use
+usesh/use
 ```
 
 Requirements
