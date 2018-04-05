@@ -27,7 +27,7 @@ else
 end
 set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
 set -gx LD_LIBRARY_PATH /usr/local/lib
-set -x extra_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin
+set -x extra_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin ~/Code/esp/xtensa-esp32-elf/bin
 for p in $extra_paths
 	if test -d $p
 		set -gx fish_user_paths $fish_user_paths $p
@@ -36,6 +36,8 @@ end
 if test -f ~/.dircolors
 	eval (dircolors -c ~/.dircolors)
 end
+set -gx POCKETSPRITE_PATH ~/Code/esp/8bkc-sdk
+set -gx IDF_PATH ~/Code/esp/esp-idf
 abbr ll 'ls -lh'
 abbr la 'ls -lah'
 abbr gman 'man -k'
