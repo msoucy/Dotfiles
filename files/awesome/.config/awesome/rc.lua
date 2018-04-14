@@ -18,6 +18,10 @@ hotkeys_popup.merge_duplicates = true
 local weather = require("weather")
 local volume_widget = require("volume")
 
+-- {{{ Naughty configs
+naughty.config.defaults.icon_size = 96
+-- }}}
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
