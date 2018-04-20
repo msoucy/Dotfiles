@@ -121,10 +121,6 @@ nnoremap <silent> <Leader>h :set cursorline! cursorcolumn!<CR>
 " Use %% in the commands bar to mean 'current file directory'
 cabbr <expr> %% expand('%:p:h')
 
-if exists(":TagbarToggle")
-    nmap <silent> <Leader>t :TagbarToggle<CR>
-endif
-
 " Select a program to search with
 if executable('ag')
     set grepprg=ag\ --column\ --nopager\ --nocolor\ --nogroup\ $*\ /dev/null"
@@ -141,72 +137,6 @@ set ofu=syntaxcomplete#Complete
 set completeopt=longest,menuone
 " }}}
 
-" {{{ Lightline controls
-let g:lightline = {
-            \ 'colorscheme': g:colors_name,
-            \ 'active': {
-            \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'readonly', 'modified', 'fugitive', 'filename' ]],
-            \   'right': [ [ 'neomake', 'lineinfo' ],
-            \              ['percent'],
-            \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
-            \ },
-            \ 'component_function': {
-            \   'fugitive': 'LightlineFugitive',
-            \   'modified': 'LightlineModified',
-            \   'readonly': 'LightlineReadonly',
-            \   'fileformat': 'LightlineFileformat',
-            \   'filetype': 'LightlineFiletype',
-            \   'fileencoding': 'LightlineFileencoding',
-            \ },
-            \ 'component_expand': {
-            \   'neomake': 'neomake#statusline#LoclistStatus',
-            \ },
-            \ 'component_type': {
-            \   'neomake': 'error',
-            \ },
-            \ }
-
-function! LightlineModified()
-    return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function! LightlineReadonly()
-    return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-function! LightlineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! LightlineFiletype()
-  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-endfunction
-
-function! LightlineFileencoding()
-  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
-endfunction
-
-function! LightlineFugitive()
-  try
-    if &ft !~? 'vimfiler\|tagbar' && exists('*fugitive#head')
-      let mark = '⎇'  " edit here for cool mark
-      let branch = fugitive#head()
-      return branch !=# '' ? mark.branch : ''
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-
-let g:tagbar_status_func = 'TagbarStatusFunc'
-
-function! TagbarStatusFunc(current, sort, fname, ...) abort
-    let g:lightline.fname = a:fname
-    return lightline#statusline(0)
-endfunction
-" }}}
-
 " {{{ Custom term behavior
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
@@ -217,8 +147,6 @@ if &term =~ '^screen'
 endif
 " }}}
 
-if filereadable(glob("~/.vimrc.local"))
-    source ~/.vimrc.local
-endif
+runtime! ~/.vimrc.local
 
 " vim: foldmethod=marker expandtab

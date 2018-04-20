@@ -5,6 +5,8 @@ Plug 'Chiel92/vim-autoformat', { 'for': 'cpp' }
 
 " UI {{{1
 Plug 'majutsushi/tagbar'
+nmap <silent> <Leader>t :TagbarToggle<CR>
+
 Plug 'edkolev/tmuxline.vim'
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = {
