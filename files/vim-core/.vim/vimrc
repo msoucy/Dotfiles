@@ -81,17 +81,17 @@ function! RunMaker(...)
 endfunction
 
 " Fix highlighting issues
-noremap <F3> <Esc>:syntax sync fromstart<CR>
+nnoremap <F3> <Esc>:syntax sync fromstart<CR>
 inoremap <F3> <C-o>:syntax sync fromstart<CR>
 
 "Mapped some FUNCTION keys to be more useful
-noremap <F8> :call RunMaker()<Return>
-noremap <F10> :cprevious<Return>
-noremap <F11> :cnext<Return>
+nnoremap <F8> :call RunMaker()<Return>
+nnoremap <F10> :cprevious<Return>
+nnoremap <F11> :cnext<Return>
 
 " paste mode toggle (needed when using autoindent/smartindent)
-noremap <F7> :set paste<CR>
-noremap <F7> :set nopaste<CR>
+nnoremap <F7> :set paste<CR>
+nnoremap <F7> :set nopaste<CR>
 inoremap <F6> <C-O>:set paste<CR>
 inoremap <F8> <C-O>:set nopaste<CR>
 set pastetoggle=<F12>
@@ -103,11 +103,11 @@ nnoremap <F5> :buffers<CR>:buffer<Space>
 inoremap jj <ESC>
 
 " Hide search highlighting
-nmap <silent> <Leader>/ :nohlsearch<CR>
-nmap <silent> <Leader>l :lclose<CR>
+nnoremap <silent> <Leader>/ :nohlsearch<CR>
+nnoremap <silent> <Leader>l :lclose<CR>
 
 " Re-source config
-nmap <silent> <Leader>r :so $MYVIMRC<CR>
+nnoremap <silent> <Leader>r :so $MYVIMRC<CR>
 
 " Move by row, not line
 nnoremap j gj
