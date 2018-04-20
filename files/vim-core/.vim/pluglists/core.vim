@@ -18,6 +18,9 @@ Plug 'kshenoy/vim-signature'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'jreybert/vimagit', { 'on': 'Magit' }
 
+" Editorconfig
+Plug 'editorconfig/editorconfig-vim'
+
 " Misc Plugs
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-vinegar'
