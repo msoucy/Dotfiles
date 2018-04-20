@@ -1,1 +1,1 @@
-set fdm=marker
+setlocal fdm=marker
