@@ -31,7 +31,7 @@ syntax on "Syntax highlighting
 
 " {{{ Plugins
 
-function! Cond(cond, ...)
+function! Cond(cond, ...) abort
     " Conditionally enable plugins for vim-plug
     let opts = get(a:000, 0, {})
     return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
@@ -56,7 +56,7 @@ endif
 " }}} Plugins
 
 " {{{ Color
-function! s:UseColors(...)
+function! s:UseColors(...) abort
     for scheme in a:000
         if len(globpath(&rtp, 'colors/'.scheme.'.vim'))
             exec 'colorscheme '.scheme
@@ -72,7 +72,7 @@ hi clear Conceal " Causes weird color errors otherwise
 
 " {{{ Keybindings
 
-function! RunMaker(...)
+function! RunMaker(...) abort
     if exists(':Neomake')
         :Neomake
     else

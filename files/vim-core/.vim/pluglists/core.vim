@@ -45,27 +45,27 @@ let g:lightline = {
             \ },
             \ }
 
-function! LightlineModified()
+function! LightlineModified() abort
     return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
-function! LightlineReadonly()
+function! LightlineReadonly() abort
     return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
 
-function! LightlineFileformat()
+function! LightlineFileformat() abort
   return winwidth(0) > 70 ? &fileformat : ''
 endfunction
 
-function! LightlineFiletype()
+function! LightlineFiletype() abort
   return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
 endfunction
 
-function! LightlineFileencoding()
+function! LightlineFileencoding() abort
   return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
 endfunction
 
-function! LightlineFugitive()
+function! LightlineFugitive() abort
   try
     if &ft !~? 'vimfiler\|tagbar' && exists('*fugitive#head')
       let mark = '⎇'  " edit here for cool mark
