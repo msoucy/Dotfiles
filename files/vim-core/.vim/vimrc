@@ -122,10 +122,12 @@ nnoremap <silent> <Leader>h :set cursorline! cursorcolumn!<CR>
 cabbr <expr> %% expand('%:p:h')
 
 " Select a program to search with
-if executable('ag')
-    set grepprg=ag\ --column\ --nopager\ --nocolor\ --nogroup\ $*\ /dev/null"
+if executable('rg')
+    set grepprg=rg\ --vimgrep\ --no-heading\ $*
+elseif executable('ag')
+    set grepprg=ag\ --column\ --vimgrep\ $*
 elseif executable('ack')
-    set grepprg=ack\ --column\ --nopager\ --nocolor\ --nogroup\ $*\ /dev/null"
+    set grepprg=ack\ --column\ --nopager\ --nocolor\ --nogroup\ $*
 endif
 " }}}
 
