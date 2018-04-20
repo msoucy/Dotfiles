@@ -3,10 +3,13 @@
 Plug 'tpope/vim-sensible', Cond(!has('nvim'))
 Plug 'noahfrederick/vim-neovim-defaults', Cond(!has('nvim'))
 
+" netrw comes with vim by default, but it's still a plugin
+let g:netrw_liststyle=3
+
 " Themes
 Plug 'sjl/badwolf'
-Plug 'NLKNguyen/papercolor-theme'
 Plug '844196/lightline-badwolf.vim'
+Plug 'NLKNguyen/papercolor-theme'
 
 " UI
 Plug 'airblade/vim-gitgutter'

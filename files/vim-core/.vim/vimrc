@@ -2,8 +2,9 @@
 
 " {{{ vim settings
 set laststatus=2
-set tabstop=4
-set shiftwidth=0 " Set it to the tabstop value
+set shiftwidth=4
+set softtabstop=4
+set expandtab
 set number
 set mouse=a
 set ignorecase
@@ -29,43 +30,7 @@ syntax on "Syntax highlighting
 " }}}
 
 " {{{ Plugins
-" {{{ Plugin settings
-let g:table_mode_corner = '|'
-let g:vim_markdown_folding_disabled=1
-let g:netrw_liststyle=3
-let g:haskell_conceal_wide=1
-let g:pandoc#syntax#codeblocks#embeds#langs = ['java', 'python', 'sh', 'dot', 'cpp', 'd', 'cs']
-" {{{ Clang-format
-let g:clang_format#auto_format = 0
-let g:clang_format#code_style = 'llvm'
-let g:clang_format#style_options = {
-            \ 'IndentWidth': 4,
-            \ 'TabWidth': 4,
-            \ 'UseTab': "Always",
-            \ 'AlwaysBreakTemplateDeclarations': "true",
-            \ 'ColumnLimit': 80
-            \}
-let g:clang_format#auto_formatexpr = 1
-" }}}
-" {{{ Neomake
-let g:neomake_open_list=2
-" }}}
-" {{{ tmuxline
-let g:tmuxline_powerline_separators = 0
-let g:tmuxline_preset = {
-            \'a'    : '#S',
-            \'b'    : '#W',
-            \'c'    : '#H',
-            \'win'  : '#I | #W',
-            \'cwin' : '#I | #W',
-            \'y'    : '%a',
-            \'z'    : '%R'}
 
-" }}}
-
-" }}}
-
-" {{{ Load plugins
 function! Cond(cond, ...)
     " Conditionally enable plugins for vim-plug
     let opts = get(a:000, 0, {})
@@ -79,14 +44,14 @@ if !empty(globpath(&rtp, "autoload/plug.vim"))
         let g:plug_home = expand('~/.vim/plugged')
     endif
     call plug#begin()
+    " Split plugins into multiple files
+    " to selectively enable based on the environment
     runtime! pluglists/*.vim
     call plug#end()
 else
     filetype plugin indent on
     syntax on
 endif
-
-" }}}
 
 " }}} Plugins
 
@@ -115,7 +80,7 @@ function! RunMaker(...)
     endif
 endfunction
 
-" Fix weird issues
+" Fix highlighting issues
 noremap <F3> <Esc>:syntax sync fromstart<CR>
 inoremap <F3> <C-o>:syntax sync fromstart<CR>
 
@@ -134,9 +99,14 @@ set pastetoggle=<F12>
 "This is a nice buffer switcher
 nnoremap <F5> :buffers<CR>:buffer<Space>
 
+" Quick escape insert mode
 inoremap jj <ESC>
+
+" Hide search highlighting
 nmap <silent> <Leader>/ :nohlsearch<CR>
 nmap <silent> <Leader>l :lclose<CR>
+
+" Re-source config
 nmap <silent> <Leader>r :so $MYVIMRC<CR>
 
 " Move by row, not line
@@ -146,13 +116,16 @@ nnoremap gj j
 nnoremap gk k
 
 " Highlight line and column
-nnoremap H :set cursorline! cursorcolumn!<CR>
+nnoremap <silent> <Leader>h :set cursorline! cursorcolumn!<CR>
 
+" Use %% in the commands bar to mean 'current file directory'
 cabbr <expr> %% expand('%:p:h')
 
 if exists(":TagbarToggle")
     nmap <silent> <Leader>t :TagbarToggle<CR>
 endif
+
+" Select a program to search with
 if executable('ag')
     set grepprg=ag\ --column\ --nopager\ --nocolor\ --nogroup\ $*\ /dev/null"
 elseif executable('ack')
