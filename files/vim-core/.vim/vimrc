@@ -149,6 +149,8 @@ if &term =~ '^screen'
 endif
 " }}}
 
-runtime! ~/.vimrc.local
+if filereadable(glob("~/.vimrc.local"))
+    source ~/.vimrc.local
+endif
 
 " vim: foldmethod=marker expandtab
