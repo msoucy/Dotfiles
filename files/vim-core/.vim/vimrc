@@ -85,14 +85,14 @@ nnoremap <F3> <Esc>:syntax sync fromstart<CR>
 inoremap <F3> <C-o>:syntax sync fromstart<CR>
 
 "Mapped some FUNCTION keys to be more useful
-nnoremap <F8> :call RunMaker()<Return>
+nnoremap <F9> :call RunMaker()<Return>
 nnoremap <F10> :cprevious<Return>
 nnoremap <F11> :cnext<Return>
 
 " paste mode toggle (needed when using autoindent/smartindent)
 nnoremap <F7> :set paste<CR>
-nnoremap <F7> :set nopaste<CR>
-inoremap <F6> <C-O>:set paste<CR>
+nnoremap <F8> :set nopaste<CR>
+inoremap <F7> <C-O>:set paste<CR>
 inoremap <F8> <C-O>:set nopaste<CR>
 set pastetoggle=<F12>
 
