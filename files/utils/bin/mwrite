@@ -1,20 +1,25 @@
 #!/usr/bin/python3
 
-from subprocess import Popen
+from subprocess import Popen, PIPE
 import sys
+
 
 def printHelp():
     print("""Usage:
  write <user> [<ttyname>] ...
 """)
 
+
 class ProcessGroup(object):
     def __init__(self, cmds):
-        self.procs = [Popen(args, stdin=subprocess.PIPE) for args in cmds]
+        self.procs = [Popen(args, stdin=PIPE) for args in cmds]
+
     def write(self, data):
         return all(p.stdin.write(data) for p in self.procs)
+
     def communicate(self):
         return [p.communicate() for p in self.procs]
+
 
 def main(argv):
     if not len(argv):
@@ -32,6 +37,7 @@ def main(argv):
     except EOFError:
         pass
     procs.communicate()
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

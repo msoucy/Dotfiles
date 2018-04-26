@@ -308,16 +308,21 @@ if ! zgen saved; then
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor line root)
   zgen load zsh-users/zsh-syntax-highlighting
 
+  zgen load gangleri/pipenv
+
   # oh-my-zsh plugins{{{
-  zgen oh-my-zsh plugins/misc           # Misc basic aliases
-  zgen oh-my-zsh plugins/common-aliases # Normal aliases
-  zgen oh-my-zsh plugins/colored-man    # Colored Manpages
-  # zgen oh-my-zsh plugins/profiles       # Look for custom user profiles
-  zgen oh-my-zsh plugins/screen         # GNU Screen configuration
-  # zgen oh-my-zsh plugins/ssh-agent      # SSH agent
-  zgen oh-my-zsh plugins/sudo           # <Esc><Esc> prepends sudo
-  zgen oh-my-zsh plugins/tmux           # TMUXinator
-  zgen oh-my-zsh plugins/tmuxinator     # TMUXinator
+  # zgen oh-my-zsh plugins/misc                 # Misc basic aliases
+  zgen oh-my-zsh plugins/common-aliases
+  zgen oh-my-zsh plugins/colored-man-pages
+  zgen oh-my-zsh plugins/dotenv
+  # zgen oh-my-zsh plugins/profiles             # Look for custom user profiles
+  zgen oh-my-zsh plugins/screen               # GNU Screen configuration
+  # zgen oh-my-zsh plugins/ssh-agent            # SSH agent
+  zgen oh-my-zsh plugins/sudo                 # <Esc><Esc> prepends sudo
+  zgen oh-my-zsh plugins/tmux
+  zgen oh-my-zsh plugins/tmuxinator
+  zgen oh-my-zsh plugins/tig
+  zgen oh-my-zsh plugins/command-not-found
   # }}}
 
   # Languages {{{
@@ -330,6 +335,7 @@ if ! zgen saved; then
 fi
 # }}}
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # vim: fdm=marker et ts=2 sw=2
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

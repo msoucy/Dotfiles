@@ -5,16 +5,6 @@ if [[ -f /etc/bashrc ]]; then
 	. /etc/bashrc
 fi
 
-case $- in
-    *l*) FISHFLAGS=-l;;
-    *i*) FISHFLAGS=-i;;
-    *)   FISHFLAGS=  ;;
-esac
-
-if [[ $- == *i* ]] && which fish > /dev/null 2>&1 && [[ -t 0 || -p /dev/stdin ]]; then
-    exec fish ${FISHFLAGS}
-fi
-
 if [[ -z "$PS1" ]]; then
     return
 fi
@@ -27,7 +17,7 @@ trysource() {
 	done
 }
 
-function up {
+up() {
     local ups="."
     for((i=0;i<${1:-1};i++)); do
 		ups="${ups}/.."

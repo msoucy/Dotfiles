@@ -27,7 +27,7 @@ else
 end
 set -gx VIDIR_EDITOR_ARGS '-c :set nolist | :set ft=vidir-ls'
 set -gx LD_LIBRARY_PATH /usr/local/lib
-set -x extra_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin ~/Code/esp/xtensa-esp32-elf/bin
+set -x extra_paths ~/bin ~/.cabal/bin ~/.local/bin ~/.fzf/bin /usr/sbin ~/Code/esp/xtensa-esp32-elf/bin ~/.luarocks/bin
 for p in $extra_paths
 	if test -d $p
 		set -gx fish_user_paths $fish_user_paths $p
