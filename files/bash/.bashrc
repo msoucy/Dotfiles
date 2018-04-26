@@ -12,28 +12,36 @@ fi
 # User specific aliases and functions {{{
 export PATH="~/bin:$PATH"
 trysource() {
-	for i; do
-		[[ -f $i ]] && source $i # || echo "$i not found"
-	done
+    for i; do
+        [[ -f $i ]] && source $i # || echo "$i not found"
+    done
 }
 
 up() {
     local ups="."
     for((i=0;i<${1:-1};i++)); do
-		ups="${ups}/.."
-	done
-	cd "$ups"
+        ups="${ups}/.."
+    done
+    cd "$ups"
 }
 
 vim() {
-	if which nvim > /dev/null 2>&1; then
-		nvim "$@"
-	elif which vim > /dev/null 2>&1; then
-		command vim "$@"
-	else
-		command vi "$@"
-	fi
+    if which nvim > /dev/null 2>&1; then
+        nvim "$@"
+    elif which vim > /dev/null 2>&1; then
+        command vim "$@"
+    else
+        command vi "$@"
+    fi
 }
+
+if which nvim > /dev/null 2>&1; then
+    export EDITOR=nvim
+elif which vim > /dev/null 2>&1; then
+    export EDITOR=vim
+else
+    export EDITOR=vi
+fi
 
 alias ls='command ls --color=auto'
 
