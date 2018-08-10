@@ -54,7 +54,7 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "zenburn/theme.lua")
 beautiful.get().wallpaper = os.getenv("HOME") .. "/.wallpaper/void.png"
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt256c"
+terminal = "terminator"
 editor = os.getenv("EDITOR") or "vi"
 editor_cmd = terminal .. " -e " .. editor
 

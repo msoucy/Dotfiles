@@ -321,7 +321,6 @@ if ! zgen saved; then
   zgen oh-my-zsh plugins/sudo                 # <Esc><Esc> prepends sudo
   zgen oh-my-zsh plugins/tmux
   zgen oh-my-zsh plugins/tmuxinator
-  zgen oh-my-zsh plugins/tig
   zgen oh-my-zsh plugins/command-not-found
   # }}}
 

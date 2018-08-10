@@ -36,7 +36,7 @@ PR_BODY_COLOR="${PR_LIGHT_CYAN}"
 # Modules {{{
 typeset -gA _pr_modlist
 _pr_modlist=(
-  time     "${PR_WHITE}%D{%H:%m:%S}"
+  time     "${PR_WHITE}%D{%H:%M:%S}"
   userhost "${PR_RED}%n${PR_YELLOW}@%M"
   pwd      "${PR_NO_COLOR}${PR_YELLOW}%~"
   smiley   "%(?.${PR_LIGHT_GREEN}^_^${PR_NO_COLOR}.${PR_LIGHT_RED}O_O [%?])"

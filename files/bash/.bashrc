@@ -9,6 +9,8 @@ if [[ -z "$PS1" ]]; then
     return
 fi
 
+export HISTCONTROL=ignoreboth:erasedups
+
 # User specific aliases and functions {{{
 export PATH="~/bin:$PATH"
 trysource() {
@@ -80,7 +82,7 @@ PR_BODY_COLOR="${PR_NO_COLOR}${PR_LIGHT_CYAN}"
 
 # Prompt configuration
 typeset -a _prc_modules
-_prc_modules=( userhost time smiley pwd git )
+_prc_modules=( userhost time smiley pwd git venv )
 
 setprompt () {
     local ret=$?
@@ -99,6 +101,9 @@ setprompt () {
         _prc_git="$(__git_ps1 "${PR_LIGHT_MAGENTA}%s")"
     fi
     # }}}
+    if [[ ! -z "${VIRTUAL_ENV}" ]]; then
+        _prc_venv="${PR_BLUE}$(basename "${VIRTUAL_ENV}")"
+    fi
     # Now actually print
     echo -ne "${PR_BODY_COLOR}${PR_ULCORNER}"
     for mod in ${_prc_modules[@]}; do
