@@ -27,7 +27,7 @@ function fish_right_prompt -d 'Print out useful information on the side'
 	if set -q VIRTUAL_ENV
 		set PR_venv "$green""env|"(basename "$VIRTUAL_ENV")
 	end
-	set PR_git $green"git"(__terlar_git_prompt)
+	set PR_git $green"git"(__fish_git_prompt)
 	set PR_hg $green"hg"(__fish_hg_prompt)
 	set PR_time (set_color white)(date "+%H:%M:%S")
 	echo -n "$pbase$__msoucy_cap_right"(_msoucy_prompt_box right "$PR_venv" "$PR_git" "$PR_hg" "$PR_time")

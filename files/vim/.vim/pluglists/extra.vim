@@ -44,4 +44,4 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#syntax#codeblocks#embeds#langs = [
 			\ 'java', 'python', 'sh',
-			\ 'dot', 'cpp', 'd', 'cs', 'scala']
+			\ 'dot', 'cpp', 'd', 'csharp=cs', 'scala']
