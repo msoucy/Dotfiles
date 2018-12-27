@@ -28,7 +28,7 @@ cmdfunc() {
 			(
 				this_pwd="$PWD"
 				cd "files/${cmd}"
-				sh "${this_pwd}/${pth}/${cmd}"
+				"${this_pwd}/${pth}/${cmd}"
 			)
 		fi
 	done
