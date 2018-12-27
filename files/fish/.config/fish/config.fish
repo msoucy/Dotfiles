@@ -39,6 +39,7 @@ end
 set -gx POCKETSPRITE_PATH ~/Code/esp/8bkc-sdk
 set -gx IDF_PATH ~/Code/esp/esp-idf
 set -gx VIRTUAL_ENV_DISABLE_PROMPT 1
+set -gx PIPENV_VENV_IN_PROJECT 1
 
 abbr ll 'ls -lh'
 abbr la 'ls -lah'

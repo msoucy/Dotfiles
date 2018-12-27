@@ -58,6 +58,9 @@ prompt_pwd() {
             ;;
     esac
 }
+
+export PIPENV_VENV_IN_PROJECT=1
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 # }}}
 
 # Prompt {{{
