@@ -220,8 +220,6 @@ bindkey ",." globalias
 # Tweak some default settings
 alias -g please='sudo'
 alias ls="ls --color=auto"
-alias make="make -s"
-alias cp="scp"
 export LESS="-F -R"
 
 # LS color highlighting
