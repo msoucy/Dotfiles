@@ -18,7 +18,9 @@ if exists('&cc')
     set cc=80,120
 endif
 set cursorline cursorcolumn
-set shortmess+=I " Don't show the intro message
+if !has('nvim')
+    set shortmess+=I " Don't show the intro message
+endif
 set splitbelow splitright " Make splits go southeast
 if has('gui_running')
     set guioptions+=M
