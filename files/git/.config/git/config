@@ -1,6 +1,6 @@
 [user]
 	name = Matt Soucy
-	email = msoucy@csh.rit.edu
+	email = git@msoucy.me
 	signingkey = "B2370F0C"
 [alias]
 	tree = log --graph --decorate --pretty=short --abbrev-commit
@@ -24,8 +24,6 @@
 	root = rev-parse --show-toplevel
 	exec = "!exec "
 	ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
-	nazi = !echo \"git: 'nazi' is not a git command. See 'git --help'.\n\nDid you mean one of these?\n\talt-right\"
-	alt-right = !echo \"git: 'alt-right' is not a git command. See 'git --help'.\n\nDid you mean one of these?\n\tnazi\"
 [color]
 	ui = true
 	[color "branch"]
