@@ -90,7 +90,7 @@ _prc_modules=( userhost time smiley pwd git venv )
 setprompt () {
     local ret=$?
     _prc_userhost="${PR_RED}$(whoami)${PR_YELLOW}@$(hostname)"
-    _prc_time="${PR_WHITE}$(date +"%H:%m:%S")"
+    _prc_time="${PR_WHITE}$(date +"%H:%M:%S")"
     _prc_smiley="$([[ $ret == 0 ]] && echo "${PR_LIGHT_GREEN}^_^" || echo "${PR_LIGHT_RED}O_O [$ret]")"
     _prc_pwd="${PR_YELLOW}$(prompt_pwd)"
     # Git prompt {{{
