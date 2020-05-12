@@ -65,14 +65,11 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # Prompt {{{
 # Setup {{{
-shiftput() {
-    tput enacs && printf "$(tput smacs)$1$(tput rmacs)" || printf "$2"
-}
-PR_HBAR="$(shiftput q "-")"
-PR_ULCORNER="$(shiftput l "+")"
-PR_LLCORNER="$(shiftput m "+")"
-PR_LRCORNER="$(shiftput j "+")"
-PR_URCORNER="$(shiftput k "+")"
+PR_HBAR="$(printf '\u2500')"
+PR_ULCORNER="$(printf '\u250c')"
+PR_LLCORNER="$(printf '\u2514')"
+PR_LRCORNER="$(printf '\u2510')"
+PR_URCORNER="$(printf '\u2518')"
 COLORNAMES=(BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE)
 for index in ${!COLORNAMES[@]}; do
     eval color="${COLORNAMES[$index]}"
@@ -119,7 +116,7 @@ setprompt () {
     echo
 }
 export PROMPT_COMMAND=
-export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}\]>\[${PR_NO_COLOR}\] '
+export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}>\[${PR_NO_COLOR}\] '
 # }}}
 
 trysource ~/.bashrc.local ~/.local/bashrc
