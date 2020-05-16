@@ -1,9 +1,8 @@
 # .bashrc
+# shellcheck shell=bash
 
 # Source global definitions
-if [[ -f /etc/bashrc ]]; then
-	. /etc/bashrc
-fi
+[[ -f /etc/bashrc ]] && . /etc/bashrc
 
 if [[ -z "$PS1" ]]; then
     return
@@ -12,10 +11,10 @@ fi
 export HISTCONTROL=ignoreboth:erasedups
 
 # User specific aliases and functions {{{
-export PATH="~/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 trysource() {
     for i; do
-        [[ -f $i ]] && source $i # || echo "$i not found"
+        [[ -f $i ]] && source "$i" # || echo "$i not found"
     done
 }
 
@@ -24,7 +23,7 @@ up() {
     for((i=0;i<${1:-1};i++)); do
         ups="${ups}/.."
     done
-    cd "$ups"
+    cd "$ups" || return
 }
 
 vim() {
@@ -53,7 +52,7 @@ prompt_pwd() {
             echo "~"
             ;;
         *)
-            printf "%s" $(echo $PWD|sed -e "s|^$HOME|~|" -e 's-/\(\.\{0,1\}[^/]\)\([^/]*\)-/\1-g')
+            printf "%s" "$(echo "$PWD"|sed -e "s|^$HOME|~|" -e 's-/\(\.\{0,1\}[^/]\)\([^/]*\)-/\1-g')"
             echo "$PWD" | sed -n -e 's-.*/\.\{0,1\}.\([^/]*\)-\1-p'
             ;;
     esac
@@ -71,58 +70,57 @@ PR_LLCORNER="$(printf '\u2514')"
 PR_LRCORNER="$(printf '\u2510')"
 PR_URCORNER="$(printf '\u2518')"
 COLORNAMES=(BLACK RED GREEN YELLOW BLUE MAGENTA CYAN WHITE)
-for index in ${!COLORNAMES[@]}; do
-    eval color="${COLORNAMES[$index]}"
-    eval "PR_$color='$(tput setaf $index)'"
-    eval "PR_LIGHT_$color='$(tput setaf $(expr $index + 8))'"
+typeset -A PR_COLOR
+for index in "${!COLORNAMES[@]}"; do
+    color="${COLORNAMES[$index]}"
+    PR_COLOR["$color"]="\033[0;$((30 + "index"))m"
+    PR_COLOR["LIGHT_$color"]="\033[0;$((30 + "index"))m"
 done
-PR_NO_COLOR="$(tput sgr0)"
-PR_BODY_COLOR="${PR_NO_COLOR}${PR_LIGHT_CYAN}"
+PR_COLOR[NONE]="\033[0m"
+PR_COLOR[BODY]="${PR_COLOR[NONE]}${PR_COLOR[LIGHT_CYAN]}"
+export GIT_PS1_SHOWDIRTYSTATE=0
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=0
+#export GIT_PS1_DESCRIBE_STYLE="branch"
+export GIT_PS1_SHOWUPSTREAM="auto git"
+export GIT_PS1_HIDE_IF_PWD_IGNORED=1
 # }}}
 
 # Prompt configuration
 typeset -a _prc_modules
 _prc_modules=( userhost time smiley pwd git venv )
+typeset -A _prc_moddata
+_prc_moddata[userhost]="${PR_COLOR[RED]}$(whoami)${PR_COLOR[YELLOW]}@$(hostname)"
 
 setprompt () {
     local ret=$?
-    _prc_userhost="${PR_RED}$(whoami)${PR_YELLOW}@$(hostname)"
-    _prc_time="${PR_WHITE}$(date +"%H:%M:%S")"
-    _prc_smiley="$([[ $ret == 0 ]] && echo "${PR_LIGHT_GREEN}^_^" || echo "${PR_LIGHT_RED}O_O [$ret]")"
-    _prc_pwd="${PR_YELLOW}$(prompt_pwd)"
+    _prc_moddata[time]="${PR_COLOR[WHITE]}$(date +"%H:%M:%S")"
+    _prc_moddata[smiley]="$([[ $ret == 0 ]] && echo "${PR_COLOR[LIGHT_GREEN]}^_^" || echo "${PR_COLOR[LIGHT_RED]}O_O [$ret]")"
+    _prc_moddata[pwd]="${PR_COLOR[YELLOW]}$(prompt_pwd)"
     # Git prompt {{{
     if source git-prompt.sh 2>/dev/null; then
-        GIT_PS1_SHOWDIRTYSTATE=0
-        GIT_PS1_SHOWSTASHSTATE=1
-        GIT_PS1_SHOWUNTRACKEDFILES=0
-        #GIT_PS1_DESCRIBE_STYLE="branch"
-        GIT_PS1_SHOWUPSTREAM="auto git"
-        GIT_PS1_HIDE_IF_PWD_IGNORED=1
-        _prc_git="$(__git_ps1 "${PR_LIGHT_MAGENTA}%s")"
+        _prc_moddata[git]="$(__git_ps1 "${PR_COLOR[LIGHT_MAGENTA]}%s")"
     fi
     # }}}
-    if [[ ! -z "${VIRTUAL_ENV}" ]]; then
-        _prc_venv="${PR_BLUE}$(basename "${VIRTUAL_ENV}")"
+    if [[ -n "${VIRTUAL_ENV}" ]]; then
+        _prc_moddata[venv]="${PR_COLOR[BLUE]}$(basename "${VIRTUAL_ENV}")"
     fi
     # Now actually print
-    echo -ne "${PR_BODY_COLOR}${PR_ULCORNER}"
-    for mod in ${_prc_modules[@]}; do
-        if eval "test -n \"\${_prc_$mod}\""; then
-            echo -ne "${PR_BODY_COLOR}${PR_HBAR}[${PR_NO_COLOR}"
-            eval echo -ne "\${_prc_$mod}"
-            echo -ne "${PR_BODY_COLOR}]${PR_NO_COLOR}"
-        fi
+    echo -ne "${PR_COLOR[BODY]}${PR_ULCORNER}"
+    for mod in "${_prc_modules[@]}"; do
+        test -v "_prc_moddata[$mod]" &&
+            echo -ne "${PR_COLOR[BODY]}${PR_HBAR}[${PR_COLOR[NONE]}${_prc_moddata[$mod]}${PR_COLOR[BODY]}]${PR_COLOR[NONE]}"
     done
     echo
 }
 export PROMPT_COMMAND=
-export PS1='$(setprompt)\n\[${PR_BODY_COLOR}\]${PR_LLCORNER}>\[${PR_NO_COLOR}\] '
+export PS1="\$(setprompt)\012\[${PR_COLOR[BODY]}\]${PR_LLCORNER}>\[${PR_COLOR[NONE]}\] "
 # }}}
 
 trysource ~/.bashrc.local ~/.local/bashrc
 
-[ -f "${HOME}/.dircolors" ] && eval $(dircolors -b ${HOME}/.dircolors)
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+test -f "${HOME}/.dircolors" && eval "$(dircolors -b "$HOME/.dircolors")"
+test -f ~/.fzf.bash && source ~/.fzf.bash
 
 : # Just so that the shell starts with a non-error code
 
