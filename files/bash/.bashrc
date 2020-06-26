@@ -74,7 +74,7 @@ typeset -A PR_COLOR
 for index in "${!COLORNAMES[@]}"; do
     color="${COLORNAMES[$index]}"
     PR_COLOR["$color"]="\033[0;$((30 + "index"))m"
-    PR_COLOR["LIGHT_$color"]="\033[0;$((30 + "index"))m"
+    PR_COLOR["LIGHT_$color"]="\033[0;$((90 + "index"))m"
 done
 PR_COLOR[NONE]="\033[0m"
 PR_COLOR[BODY]="${PR_COLOR[NONE]}${PR_COLOR[LIGHT_CYAN]}"
@@ -84,6 +84,7 @@ export GIT_PS1_SHOWUNTRACKEDFILES=0
 #export GIT_PS1_DESCRIBE_STYLE="branch"
 export GIT_PS1_SHOWUPSTREAM="auto git"
 export GIT_PS1_HIDE_IF_PWD_IGNORED=1
+source /usr/share/doc/git/contrib/completion/git-prompt.sh 2>/dev/null
 # }}}
 
 # Prompt configuration
@@ -98,18 +99,23 @@ setprompt () {
     _prc_moddata[smiley]="$([[ $ret == 0 ]] && echo "${PR_COLOR[LIGHT_GREEN]}^_^" || echo "${PR_COLOR[LIGHT_RED]}O_O [$ret]")"
     _prc_moddata[pwd]="${PR_COLOR[YELLOW]}$(prompt_pwd)"
     # Git prompt {{{
-    if source git-prompt.sh 2>/dev/null; then
+    if type -t __git_ps1 > /dev/null 2>&1; then
         _prc_moddata[git]="$(__git_ps1 "${PR_COLOR[LIGHT_MAGENTA]}%s")"
+    else
+        _prc_moddata[git]=""
     fi
     # }}}
     if [[ -n "${VIRTUAL_ENV}" ]]; then
         _prc_moddata[venv]="${PR_COLOR[BLUE]}$(basename "${VIRTUAL_ENV}")"
+    else
+        _prc_moddata[venv]=""
     fi
     # Now actually print
     echo -ne "${PR_COLOR[BODY]}${PR_ULCORNER}"
     for mod in "${_prc_modules[@]}"; do
-        test -v "_prc_moddata[$mod]" &&
+        if test -n "${_prc_moddata[$mod]}"; then
             echo -ne "${PR_COLOR[BODY]}${PR_HBAR}[${PR_COLOR[NONE]}${_prc_moddata[$mod]}${PR_COLOR[BODY]}]${PR_COLOR[NONE]}"
+        fi
     done
     echo
 }
