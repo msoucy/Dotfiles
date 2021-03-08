@@ -64,3 +64,5 @@
 	changelog-nocolor = format:"%h -%d %s (%cr) <%an>"
 [include]
 	path = gitlocal
+[pull]
+	rebase = false
