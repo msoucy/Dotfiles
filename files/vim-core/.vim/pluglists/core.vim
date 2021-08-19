@@ -61,7 +61,7 @@ function! StatusLine(current, width) abort
         endif
         try
             let l:s .= pom#uphase() . ' '
-        catch E117
+        catch /E117/
         endtry
     endif
 
