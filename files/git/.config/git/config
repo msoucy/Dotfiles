@@ -14,16 +14,16 @@
 	ll = log --pretty=ll --numstat
 	ld = log --pretty=ld --decorate
 	purr = pull --rebase
+	puff = push --force-with-lease
 	ignored = ls-files --others --i --exclude-standard
 	wipe = reset --hard HEAD
-	standup = "!git log --since yesterday --author `git config user.email` --pretty=short"
+	standup = "!git log --since yesterday --author '$(git config user.email)' --pretty=short"
 	unstage = reset --
 	forget = rm --cached
 	graph = log --graph --oneline --decorate=short
 	changelog = log --graph --pretty=changelog-nocolor
 	root = rev-parse --show-toplevel
 	exec = "!exec "
-	ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
 [color]
 	ui = true
 	[color "branch"]
