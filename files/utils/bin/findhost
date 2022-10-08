@@ -26,8 +26,8 @@ def matchHosts(hostlist, username, threshold, filt):
             ssh.connect(host, username=username, password=password)
         stdin, stdout, stderr = ssh.exec_command("cat /proc/loadavg")
         load = float(stdout.read().split()[2])
-        stdin, stdout, stderr = ssh.exec_command("cat /proc/cpuinfo")
-        load /= stdout.read().count("model name")
+        stdin, stdout, stderr = ssh.exec_command("nproc --all")
+        load /= float(stdout.read())
         ssh.close()
         if(filt(username, host, load, threshold)):
             return

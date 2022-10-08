@@ -44,7 +44,7 @@ function! StatusLine(current, width) abort
 
     if &ft !~? 'help'
         let l:s .= &modified ? '+' : &modifiable ? '' : '-'
-        let l:s .= &readonly ? 'RO' : ''
+        let l:s .= &readonly ? '|RO' : ''
     endif
 
     let l:s .= ' '
@@ -60,7 +60,7 @@ function! StatusLine(current, width) abort
             let l:s .= ' %{&ff} | %{&enc} | %{&ft} '
         endif
         try
-            let l:s .= pom#uphase() . ' '
+            let l:s .= pom#upom() . ' '
         catch /E117/
         endtry
     endif
