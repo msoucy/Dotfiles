@@ -1,3 +1,9 @@
+" Set the python host properly
+let g:python3_host_prog="/home/msoucy/.venv/bin/python"
+
+" Set terminal gui colors
+set termguicolors
+
 " Add ~/.vim to the runtime path
 set rtp+=~/.vim
 
